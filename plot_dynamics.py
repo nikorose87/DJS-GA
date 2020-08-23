@@ -20,10 +20,13 @@ from shapely.geometry import MultiPoint, Polygon
 from descartes import PolygonPatch
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
+from pathlib import PurePath
+import os
 
 class plot_dynamic:
     def __init__(self, SD = False, ext='png', 
-                 dpi=500, save=False, plt_style='seaborn', alpha=1.5):
+                 dpi=500, save=False, plt_style='seaborn', alpha=1.5,
+                 folder='Figures'):
         
         """
         Parameters
@@ -53,6 +56,11 @@ class plot_dynamic:
         self.alpha = alpha
         plt.style.use(plt_style)
         self.colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+        self.root_path = PurePath(os.getcwd())
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        self.save_folder =  self.root_path / folder
+        
     
     def rc_params(self, proportion = 1):
         # Adjusting plot parameters
@@ -172,11 +180,16 @@ class plot_dynamic:
         if title:  plt.suptitle('{} {}'.format(title, y_label))
         if show: plt.show()
         if self.save:
-            fig.savefig('{}.{}'.format(title, self.ext), 
-                        format= self.ext, dpi=self.dpi)
-            
+            self.save_fig(fig, title)
+
         return fig
     
+    def save_fig(self, fig, title):
+        os.chdir(self.save_folder)
+        fig.savefig('{}.{}'.format(title, self.ext), 
+                        format= self.ext, dpi=self.dpi)
+        os.chdir(self.root_path)
+        
     def clear_plot_mem(self):
         """
         In order to not accumulate memory data on every plot
@@ -211,6 +224,10 @@ class plot_ankle_DJS(plot_dynamic):
         self.df_.loc[self.idx[row_name,:],:] = self.df_.loc[self.idx[row_name,:],
                                                     :].apply(np.deg2rad, axis=0)
     
+    def rm_static_pos(self, row_name):
+    
+        self.df_.loc[self.idx[row_name,:],:] = self.df_.loc[self.idx[row_name,:],
+                                                    :].apply(lambda x: x - x[0])
     def separared(self, rows):
         areas = []
         for _ , self.ax in np.ndenumerate(self.axs):
@@ -315,7 +332,7 @@ class plot_ankle_DJS(plot_dynamic):
             
     def plot_DJS(self, df_, cols=None, rows= [0,2],
                  title=False, legend=True, reg=False,
-                 integration= True, rad= True):
+                 integration= True, rad= True, sup_static= True):
         self.clear_plot_mem()
         # Suitable distribution for plotting
         self.TP = reg
@@ -335,6 +352,9 @@ class plot_ankle_DJS(plot_dynamic):
         if rad:
             self.deg2rad(self.index_first[rows[0]])
             self.x_label = 'Angle [rad]'
+        if sup_static:
+            self.rm_static_pos(self.index_first[rows[0]])
+                        
         if rows is None:
             rows = self.index_first
         
@@ -363,8 +383,7 @@ class plot_ankle_DJS(plot_dynamic):
         if title: 
             self.fig.suptitle(title)
         if self.save:
-            self.fig.savefig('{}.{}'.format(title, self.ext), 
-                        format= self.ext, dpi=self.dpi)
+            self.save_fig(self.fig, title)
         return self.fig
 
     
