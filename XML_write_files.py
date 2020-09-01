@@ -12,7 +12,7 @@ import os
 
 class XML_scaling():
     
-    def __init__(self, mass=80.0, height= 1.65, age=30,
+    def __init__(self, time, mass=80.0, height= 1.65, age=30,
                  model_file_name="custom_model.osim",
                  static_marker_data= "subject_Static.trc",
                  marker_set_xml_file = "Scale_MarkerSet.xml",
@@ -28,6 +28,7 @@ class XML_scaling():
             self.source_dir = source_dir
         else:
             self.source_dir = self.current_dir
+        self.time = '0 {}'.format(time)
         self.mass_value = str(mass)
         self.height = str(height)
         self.age = str(age)
@@ -55,11 +56,16 @@ class XML_scaling():
         print( "Unedited <mass>: " + file.getElementsByTagName("mass" )[ 0 ].firstChild.nodeValue )
         print( "Unedited <model_file>: " + file.getElementsByTagName( "model_file" )[ 0 ].firstChild.nodeValue )
         marker_file_name = file.getElementsByTagName( "marker_file" )
+        time_range = file.getElementsByTagName( "time_range" )
         output_file_name = file.getElementsByTagName( "output_model_file" )
         for i in marker_file_name: 
             print("Unedited Static <marker_file>"+i.firstChild.nodeValue)
             # Modifies <marker_file> tag values
             i.firstChild.nodeValue = self.static_marker_data
+        for i in time_range: 
+            print("Unedited Static <time_range>"+i.firstChild.nodeValue)
+            # Modifies <marker_file> tag values
+            i.firstChild.nodeValue = self.time
         print("Unedited <marker_set_file>: "+file.getElementsByTagName( \
                 "marker_set_file" )[ 0 ].firstChild.nodeValue)
         for i in output_file_name: 
@@ -94,7 +100,7 @@ class XML_scaling():
         os.chdir(self.current_dir)
         
 class XML_IK():
-    def __init__(self, IK_output_name = "subject_IK",
+    def __init__(self, time, IK_output_name = "subject_IK",
         save_IK_path_file = "custom_Setup_IK_File.xml",
         input_model_file_name = "subject_model.osim",
         gait_marker_file = "subject_gait.sto",
@@ -102,7 +108,7 @@ class XML_IK():
         setup_IK_file = "Setup_IK.xml",
         source_dir = None):
                 
-
+        self.time = '0 {}'.format(time)
         self.IK_output_name = IK_output_name
         self.save_IK_path_file = save_IK_path_file
         self.input_model_file_name = input_model_file_name
@@ -130,6 +136,8 @@ class XML_IK():
                                "marker_file" )[0].firstChild.nodeValue )
         print( "Unedited <output_motion_file>: " + file.getElementsByTagName( \
                         "output_motion_file" )[0].firstChild.nodeValue )
+        print( "Unedited <time_range>: " + file.getElementsByTagName( \
+                        "time_range" )[0].firstChild.nodeValue )
         # Set Custom IK tag values
         file.getElementsByTagName( \
              "model_file" )[0].childNodes[0].nodeValue = self.input_model_file_name
@@ -137,12 +145,16 @@ class XML_IK():
                                          0].nodeValue = self.gait_marker_file
         file.getElementsByTagName("output_motion_file" )[\
                     0].childNodes[0].nodeValue = self.output_motion_file_name
+        file.getElementsByTagName("time_range" )[\
+                    0].childNodes[0].nodeValue = self.time
         print( "Edited <model_file>: " + 
               file.getElementsByTagName( "model_file" )[0].firstChild.nodeValue )
         print( "Edited <marker_file>: " + 
               file.getElementsByTagName( "marker_file" )[0].firstChild.nodeValue )
         print( "Edited <output_motion_file>: " + 
               file.getElementsByTagName( "output_motion_file" )[0].firstChild.nodeValue )
+        print( "Edited <time_range>: " + 
+              file.getElementsByTagName( "time_range" )[0].firstChild.nodeValue )
         # writing the changes in "file" object to  
         # the "Custom_Setup_IK_File.xml" file 
         with open( self.save_IK_path_file, "w" ) as fs:  
@@ -152,7 +164,7 @@ class XML_IK():
 
 
 class XML_ID():
-    def __init__(self,  ID_output_name = "subject_ID",
+    def __init__(self,  time, ID_output_name = "subject_ID",
         save_ID_path_file = "Custom_Setup_ID_File.xml",
         input_model_file_name = "subject_model.osim",
         GRF_Setup_file = "Custom_Setup_GRF_File.xml",
@@ -161,8 +173,12 @@ class XML_ID():
         output_motion_file_name = "subject_ID.sto",
         setup_ID_file = "Setup_ID.xml",
         setup_GRF_file = "Setup_GRF.xml",
-        source_dir=None):
+        cutoff_freq = 250,
+        source_dir=None,
+        save_dir = None):
         
+        self.time = '0 {}'.format(time)
+        self.cutoff_freq = str(cutoff_freq)
         self.ID_output_name = ID_output_name
         self.save_ID_path_file = save_ID_path_file
         self.input_model_file_name = input_model_file_name
@@ -178,6 +194,11 @@ class XML_ID():
             self.source_dir = source_dir
         else:
             self.source_dir = self.current_dir
+            
+        if save_dir is not None:
+            self.save_dir = save_dir
+        else:
+            self.save_dir = self.current_dir
         self.writing_ID()
         self.writing_GRF()
         
@@ -188,35 +209,57 @@ class XML_ID():
         # Set output name
         output_name = file.getElementsByTagName('InverseDynamicsTool')
         output_name[0].setAttribute('name', self.ID_output_name)
+        
         # Print unedited tag values
+        
+        print( "Unedited <results_directory>: " + file.getElementsByTagName( \
+                              "results_directory" )[ 0 ].firstChild.nodeValue )
         print( "Unedited <model_file>: " + file.getElementsByTagName( \
                               "model_file" )[ 0 ].firstChild.nodeValue )
+        print( "Unedited <time_range>: " + file.getElementsByTagName( \
+                              "time_range" )[ 0 ].firstChild.nodeValue )
         print( "Unedited <external_loads_file>: " + file.getElementsByTagName( \
                             "external_loads_file" )[ 0 ].firstChild.nodeValue )
         print( "Unedited <coordinates_file>: " + file.getElementsByTagName( \
                                 "coordinates_file" )[ 0 ].firstChild.nodeValue )
+        print( "Unedited <lowpass_cutoff_frequency_for_coordinates>: " + 
+              file.getElementsByTagName("lowpass_cutoff_frequency_for_coordinates" )[\
+                                        0].firstChild.nodeValue )
         print( "Unedited <output_gen_force_file>: " + file.getElementsByTagName( \
                             "output_gen_force_file" )[ 0 ].firstChild.nodeValue )
         
         # Set Custom ID tag values
+        file.getElementsByTagName( "results_directory" )[ 0 ].childNodes[ \
+                            0].nodeValue = self.save_dir
         file.getElementsByTagName( "model_file" )[ 0 ].childNodes[ \
-                            0 ].nodeValue = self.input_model_file_name
+                            0].nodeValue = self.input_model_file_name
         file.getElementsByTagName( "external_loads_file" )[ 0 ].childNodes[ \
-                            0 ].nodeValue = self.GRF_Setup_file
+                            0].nodeValue = self.GRF_Setup_file
         file.getElementsByTagName( "coordinates_file" )[ 0 ].childNodes[ \
-                            0 ].nodeValue = self.IK_coordinates_file
+                            0].nodeValue = self.IK_coordinates_file
+        file.getElementsByTagName( "time_range" )[ 0 ].childNodes[ \
+                            0].nodeValue = self.time
+        file.getElementsByTagName( "lowpass_cutoff_frequency_for_coordinates" )[\
+                                0].childNodes[0].nodeValue = self.cutoff_freq
         file.getElementsByTagName( "output_gen_force_file" )[ 0 ].childNodes[ \
-                            0 ].nodeValue = self.output_motion_file_name
+                            0].nodeValue = self.output_motion_file_name
         
         # Print Custom tag values
+        print( "Unedited <results_directory>: " + file.getElementsByTagName( \
+                              "results_directory" )[ 0 ].firstChild.nodeValue )
         print( "Edited <model_file>: " + file.getElementsByTagName( \
                          "model_file" )[ 0 ].firstChild.nodeValue )
         print( "Edited <external_loads_file>: " + file.getElementsByTagName( \
                         "external_loads_file" )[ 0 ].firstChild.nodeValue )
         print( "Edited <coordinates_file>: " + file.getElementsByTagName( \
-                        "coordinates_file" )[ 0 ].firstChild.nodeValue )
+                        "coordinates_file" )[0].firstChild.nodeValue)
+        print( "Edited <time_range>: " + file.getElementsByTagName( \
+                        "time_range" )[0].firstChild.nodeValue)
+        print( "Edited <clowpass_cutoff_frequency_for_coordinates>: " + 
+              file.getElementsByTagName("lowpass_cutoff_frequency_for_coordinates" )[\
+                                        0].firstChild.nodeValue)
         print( "Edited <output_gen_force_file>: " + file.getElementsByTagName( \
-                        "output_gen_force_file" )[ 0 ].firstChild.nodeValue )
+                        "output_gen_force_file" )[0].firstChild.nodeValue)
         # writing the changes in "file" object to  
         # the "Custom_Setup_ID_File.xml" file 
         with open( self.save_ID_path_file, "w" ) as fs:  

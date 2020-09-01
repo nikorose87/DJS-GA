@@ -162,12 +162,10 @@ amputee_dir = root_dir / "TRANSTIBIAL/Transtibial  Izquierda/Gerson Tafud/Opensi
 # =============================================================================
 # Loading gaits
 # =============================================================================
-S1_static = os.path.join(info_dir, "S01_0001_Static.c3d")
-S1_gait = os.path.join(info_dir, "S01_0002_Gait.c3d")
-S1_gait = os.path.join(info_dir, "S01_0002_Gait.c3d")
-S2_gait = os.path.join(info_dir, "S02_0003_Gait.c3d")
-GT_gait = os.path.join(amputee_dir, "0143~ab~Walking_01.c3d")
-
+S1_static = "S01_0001_Static.c3d"
+S1_gait = "S01_0002_Gait.c3d"
+S2_gait = "S01_0018_Gait.c3d"
+GT_gait = "0143~ab~Walking_01.c3d"
 
 anthro_info = pd.read_csv('C3D/Gait_subject_info.csv', sep=";",
                           decimal=',')
@@ -178,20 +176,21 @@ anthro_info.columns = ['ID','mass','age','gender','height']
 # Reading the data from c3d with ezc3d
 # We could not integrate it with opensim
 # =============================================================================
+os.chdir(info_dir)
 S1 = process_C3D(S1_gait, run=True, forces=True, 
-                 **anthro_info.iloc[0].to_dict()) # , extract_forceplat_data=True
+                  **anthro_info.iloc[0].to_dict()) # , extract_forceplat_data=True
 S1.markers_GaitCycle('R FOOT MED','R HEEL','SACRUM')
+
 S2 = process_C3D(S2_gait, run=True, forces=True, 
                  **anthro_info.iloc[1].to_dict()) 
-S1.markers_GaitCycle('R FOOT MED','R HEEL','SACRUM')
+S2.markers_GaitCycle('R FOOT MED','R HEEL','SACRUM')
+
 # points_residuals = c['data']['meta_points']['residuals']
 # analog_data = c['data']['analogs']
 
+os.chdir(amputee_dir)
 Gerson_C3D = process_C3D(GT_gait, run=True, forces=False)
 Gerson_C3D.markers_GaitCycle('l met','l heel','sacrum')
 
-# tables = osim.opensim.C3DFileAdapter.readFile(info_dir, 1)
-# markers = tables['markers']
-# forces = tables['forces']
 
 
