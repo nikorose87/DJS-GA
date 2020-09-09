@@ -30,7 +30,7 @@ class process_C3D():
             if self.forces:
                 self.data_points_platform()
     
-    def data_points_markers(self):
+    def data_points_markers(self, begin=0, finish=None):
         """
         Generates the dataframes to process easily the information in the three 
         coordinates 
@@ -44,11 +44,11 @@ class process_C3D():
             self.main_info()
         self.point_data_mk = self.C3D['data']['points']
         self.idx = np.linspace(0, self.tot_time, self.frames)
-        self.point_data_xdf = pd.DataFrame(self.point_data_mk[0,:,:],
+        self.point_data_xdf = pd.DataFrame(self.point_data_mk[0,:,begin:finish],
                     index = self.labels, columns= self.idx).T
-        self.point_data_ydf = pd.DataFrame(self.point_data_mk[1,:,:],
+        self.point_data_ydf = pd.DataFrame(self.point_data_mk[1,:,begin:finish],
                     index = self.labels, columns= self.idx).T
-        self.point_data_zdf = pd.DataFrame(self.point_data_mk[2,:,:],
+        self.point_data_zdf = pd.DataFrame(self.point_data_mk[2,:,begin:finish],
                     index = self.labels, columns= self.idx).T
         
         return 
@@ -57,9 +57,9 @@ class process_C3D():
         if not hasattr(self, 'labels'):
             self.main_info()
         self.point_data_pf = self.C3D['data']['platform']
-        self.point_data_pf_df = []
+        self.platform_data = []
         for platform in self.point_data_pf:
-            self.point_data_pf_df.append(platform['Tz'])
+            self.platform_data.append({key:platform[key] for key in platform.keys()})
             
         
     def main_info(self):
@@ -71,19 +71,41 @@ class process_C3D():
         None.
 
         """
-        self.points = self.C3D['parameters']['POINT']
-        self.analog_params = self.C3D['parameters']['ANALOG']
+        self.params_points = self.C3D['parameters']['POINT']
+        self.params_analog = self.C3D['parameters']['ANALOG']
         self.analogs = self.C3D['data']['analogs']
-        self.force_platform = self.C3D['parameters']['FORCE_PLATFORM']
-        self.npoints = self.points['USED']['value'][0]
-        self.nframes = self.points['FRAMES']['value'][0]
-        self.labels = self.points['LABELS']['value']
-        self.rate = self.points['RATE']['value'][0]
-        self.frames = self.points['FRAMES']['value'][0]
+        self.params_platform = self.C3D['parameters']['FORCE_PLATFORM']
+        self.npoints = self.params_points['USED']['value'][0]
+        self.nframes = self.params_points['FRAMES']['value'][0]
+        self.labels = self.params_points['LABELS']['value']
+        self.rate = self.params_points['RATE']['value'][0]
+        self.frames = self.params_points['FRAMES']['value'][0]
         self.tot_time = self.frames / self.rate
         
-    
-    def detectHS(self, heel_str, sacrum_str):
+    def change_YZ(self):
+        #Swapping marker position
+        if not hasattr(self, 'point_data_mk'):
+            self.data_points_markers()
+        Y = np.copy(self.point_data_mk[1,:,:])
+        Z = np.copy(self.point_data_mk[2,:,:])
+        #Changing coordinates
+        self.point_data_mk[2,:,:] = Y
+        self.point_data_mk[1,:,:] = Z
+        self.C3D['data']['points'] = self.point_data_mk
+        self.data_points_markers()
+        #Swapping force platform information
+        if not hasattr(self, 'platform_data'):
+            self.data_points_platform()
+        for platform in self.platform_data:
+            for key in ['origin', 'force', 'moment', 'center_of_pressure',
+                        'Tz']:
+                platform[key][[1,2]] = platform[key][[2,1]]
+        
+        self.C3D['data']['platform'] = self.platform_data
+        self.params_points['X_SCREEN']['value'][0] = '+X'
+        self.params_points['Y_SCREEN']['value'][0] = '+Y'
+        
+    def detectHS(self, heel_str, sacrum_str, order=5):
         """
         From the paper
         Zeni, J. A., Richards, J. G., & Higginson, J. S. (2008). 
@@ -110,11 +132,14 @@ class process_C3D():
         diff = pd.Series(self.point_data_xdf[heel_str] - 
                          self.point_data_xdf[sacrum_str])
         
-        HS = argrelextrema(diff.values, np.greater)
-        self.HSidx= self.point_data_xdf.index[HS]
+        HS = argrelextrema(diff.values, np.greater, order=order)
+        if hasattr(self, 'HSidx'):
+            self.HSidx.extend(list(self.point_data_xdf.index[HS]))
+        else:
+            self.HSidx= list(self.point_data_xdf.index[HS])
         return self.HSidx
     
-    def detectTO(self, toe_str, sacrum_str):
+    def detectTO(self, toe_str, sacrum_str, order=5):
         """
         From the paper
         Zeni, J. A., Richards, J. G., & Higginson, J. S. (2008). 
@@ -140,8 +165,11 @@ class process_C3D():
         diff = pd.Series(self.point_data_xdf[toe_str] - 
                          self.point_data_xdf[sacrum_str])
         
-        TO = argrelextrema(diff.values, np.less)
-        self.TOidx = self.point_data_xdf.index[TO]
+        TO = argrelextrema(diff.values, np.less, order=order)
+        if hasattr(self, 'TOidx'):
+            self.TOidx.extend(list(self.point_data_xdf.index[TO]))
+        else:
+            self.TOidx = list(self.point_data_xdf.index[TO])
         return self.TOidx
     
     def markers_GaitCycle(self, toe_str, heel_str, sacrum_str):
@@ -156,7 +184,8 @@ class process_C3D():
 # Charging the folders 
 # =============================================================================
 root_dir = PurePath(os.getcwd())
-info_dir = root_dir / 'C3D/Gait_rawdata_c3d'
+# info_dir = '/home/nikorose/enprietop@unal.edu.co/Tesis de Doctorado/Gait Analysis Data/Downloaded/Horst et al./Nature_paper/Gait_rawdata_c3d'
+info_dir = os.path.join( root_dir, 'C3D/Gait_rawdata_c3d')
 amputee_dir = root_dir / "TRANSTIBIAL/Transtibial  Izquierda/Gerson Tafud/Opensim files"
 
 # =============================================================================
@@ -173,24 +202,36 @@ anthro_info.columns = ['ID','mass','age','gender','height']
         
         
 # =============================================================================
-# Reading the data from c3d with ezc3d
-# We could not integrate it with opensim
+# Generating all HS and TO points in Horst Data
 # =============================================================================
+Gait_cycle_points = {'HS1r':[],'HS2r':[],'HSl':[],
+                     'TOr':[], 'TO1l':[],'TO2l':[]}
+labels = []
+
 os.chdir(info_dir)
-S1 = process_C3D(S1_gait, run=True, forces=True, 
-                  **anthro_info.iloc[0].to_dict()) # , extract_forceplat_data=True
-S1.markers_GaitCycle('R FOOT MED','R HEEL','SACRUM')
+for sub in range(1,2):
+    subject = 'S{}'.format(str(sub).zfill(2))
+    
+    for trial in range(2,22):
+        sub_plus_trial = '{}_{}_Gait.c3d'.format(subject, str(trial).zfill(4))
+        try:
+            S = process_C3D(sub_plus_trial, run=True, forces=True, 
+                              **anthro_info.iloc[0].to_dict()) # , extract_forceplat_data=True
+            S.markers_GaitCycle('R FOOT MED','R HEEL','SACRUM')
+            S.markers_GaitCycle('L FOOT MED','L HEEL','SACRUM')
+            try:
+                concat_HS_TO = np.array([S.HSidx, S.TOidx]).reshape(1,6)
+                #Appending to the dict in order to transform in df
+                for i, key in enumerate(Gait_cycle_points.keys()):
+                    Gait_cycle_points[key].append(concat_HS_TO[0,i])
+                labels.append(sub_plus_trial[:-4])
+            except ValueError:
+                print('Trial {} has more than 1 gait cycle'.format(trial))
+                print(S.HSidx, S.TOidx)
+            
+            Gait_cp_df = pd.DataFrame(Gait_cycle_points, index=labels)
+        except OSError:
+            print('Trial {} does not exist. Is it static?'.format(sub_plus_trial))
+            continue
 
-S2 = process_C3D(S2_gait, run=True, forces=True, 
-                 **anthro_info.iloc[1].to_dict()) 
-S2.markers_GaitCycle('R FOOT MED','R HEEL','SACRUM')
-
-# points_residuals = c['data']['meta_points']['residuals']
-# analog_data = c['data']['analogs']
-
-os.chdir(amputee_dir)
-Gerson_C3D = process_C3D(GT_gait, run=True, forces=False)
-Gerson_C3D.markers_GaitCycle('l met','l heel','sacrum')
-
-
-
+Gait_cp_df.to_csv('Gait_cycle_bounds.csv')

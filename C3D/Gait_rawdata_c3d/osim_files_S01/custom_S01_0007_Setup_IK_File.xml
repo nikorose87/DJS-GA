@@ -1,0 +1,241 @@
+<?xml version="1.0" ?><OpenSimDocument Version="30000">
+	<InverseKinematicsTool name="S01_0007_IK">
+		<!--Name of the .osim file used to construct a model.-->
+		<model_file>/home/nikorose/Documents/DJS-GA/C3D/Gait_rawdata_c3d/osim_files_S01/S01_model.osim</model_file>
+		<!--A positive scalar that is used to weight the importance of satisfying constraints.A weighting of 'Infinity' or if it is unassigned results in the constraints being strictly enforced.-->
+		<constraint_weight>20</constraint_weight>
+		<!--The accuracy of the solution in absolute terms. I.e. the number of significantdigits to which the solution can be trusted.-->
+		<accuracy>1e-005</accuracy>
+		<!--Markers and coordinates to be considered (tasks) and their weightings.-->
+		<IKTaskSet name="gait2354_IK">
+			<objects>
+				<IKMarkerTask name="C7">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_ACROMION">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_ACROMION">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_HUM_PROX">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_HUM_ANT">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.0 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_ELBOW_LAT">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_ELBOW_MED">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_WIRST_LAT">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_WRITS_MED">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_HUM_PROX">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_HUM_ANT">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_ELBOW_LAT">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_ELBOW_MED">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_WRIST_LAT">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_WIRST_MED">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_ILIAC">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_ILIAC">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_THIGH_2">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_THIGH_3">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_SHANK_2">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_SHANK_3">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_HEEL">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_FOOT_MED">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="R_FOOT_LAT">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_THIGH_1">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_THIGH_4">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_SHANK_1">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_SHANK_4">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_HEEL">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_FOOT_MED">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>       1.00000000 </weight>
+					</IKMarkerTask>
+					<IKMarkerTask name="L_FOOT_LAT">
+						<!--Whether or not this task will be used during inverse kinematics solve.-->
+						<apply> true </apply>
+						<!--Weight given to a marker or coordinate for solving inverse kinematics
+						    problems.-->
+						<weight>    1.00000000 </weight>
+					</IKMarkerTask>
+			</objects>
+			<groups/>
+		</IKTaskSet>
+		<!--TRC file (.trc) containing the time history of observations of marker positions.-->
+		<marker_file>/home/nikorose/Documents/DJS-GA/C3D/Gait_rawdata_c3d/S01_0007_Gait/S01_0007_Gait_markers.trc</marker_file>
+		<!--The name of the storage (.sto or .mot) file containing coordinate observations.Coordinate values from this file are included if there is a corresponding coordinate task. -->
+		<coordinate_file/>
+		<!--Time range over which the inverse kinematics problem is solved.-->
+		<time_range>0 1.204</time_range>
+		<!--Name of the motion file (.mot) to which the results should be written.-->
+		<output_motion_file>/home/nikorose/Documents/DJS-GA/C3D/Gait_rawdata_c3d/S01_0007_Gait/S01_0007_IK.mot</output_motion_file>
+	</InverseKinematicsTool>
+</OpenSimDocument>

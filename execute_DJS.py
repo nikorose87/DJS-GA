@@ -100,8 +100,9 @@ fig4 = DJS.plot_DJS(Ferrarin_.all_dfs_ankle,
 root_dir = PurePath(os.getcwd())
 amp_dir = os.path.join(root_dir, 
         "TRANSTIBIAL/Transtibial  Izquierda/Gerson Tafud/Opensim files")
-S1_dir = os.path.join(root_dir, 
-                      'C3D/IK_and_ID_S01_0002_Gait')
+# S1_dir = os.path.join(root_dir, 
+#                       'C3D/IK_and_ID_S01_0002_Gait')
+S1_dir = '/home/nikorose/enprietop@unal.edu.co/Simulations/Quasi-stiffness/Opensim-c3d'
 # Finding where the dataset begins in the sto or mot file
 def endheader_line(file):
     with open(file,'r') as f:

@@ -34,7 +34,7 @@
 		<marker_file>/home/nikorose/Documents/DJS-GA/C3D/Gait_rawdata_c3d/S01_0001_Static/S01_0001_Static_markers.trc</marker_file>
 		<!--Time range over which to average marker-pair distances in the marker
 		    file (.trc) for measurement-based scaling.-->
-			<time_range>0 0.408</time_range>
+			<time_range>0 0.404</time_range>
 		<!--Flag (true or false) indicating whether or not to preserve relative
 		    mass between segments.-->
 		<preserve_mass_distribution> true </preserve_mass_distribution>
@@ -348,7 +348,7 @@
 		    is used to solve the IK problem.-->
 		<coordinate_file> </coordinate_file>
 		<!--Time range over which the marker positions are averaged.-->
-			<time_range>0 0.408</time_range>
+			<time_range>0 0.404</time_range>
 		<!--Name of the motion file (.mot) written after marker relocation
 		    (optional).-->
 		<output_motion_file>/home/nikorose/Documents/DJS-GA/C3D/Gait_rawdata_c3d/osim_files_S01/S01_static_output.mot</output_motion_file>

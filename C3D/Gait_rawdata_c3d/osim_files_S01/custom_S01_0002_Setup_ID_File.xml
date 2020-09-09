@@ -7,7 +7,7 @@
 		<!--Name of the .osim file used to construct a model.-->
 		<model_file>/home/nikorose/Documents/DJS-GA/C3D/Gait_rawdata_c3d/osim_files_S01/S01_model.osim</model_file>
 		<!--Time range over which the inverse dynamics problem is solved.-->
-		<time_range>0 1.32</time_range>
+		<time_range>0 1.316</time_range>
 		<!--List of forces by individual or grouping name (e.g. All, actuators,
 		    muscles, ...) to be excluded when computing model dynamics.-->
 		<forces_to_exclude> Muscles </forces_to_exclude>
@@ -21,7 +21,7 @@
 		    (currently does not apply to states_file or speeds_file). A negative
 		    value results in no filtering. The default value is -1.0, so no
 		    filtering.-->
-		<lowpass_cutoff_frequency_for_coordinates>-1.0</lowpass_cutoff_frequency_for_coordinates>
+		<lowpass_cutoff_frequency_for_coordinates>10</lowpass_cutoff_frequency_for_coordinates>
 		<!--Name of the storage file (.sto) to which the results should be
 		    written.-->
 		<output_gen_force_file>S01_0002_ID.sto</output_gen_force_file>

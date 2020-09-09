@@ -234,7 +234,7 @@
 		<!--The name of the storage (.sto or .mot) file containing coordinate observations.Coordinate values from this file are included if there is a corresponding coordinate task. -->
 		<coordinate_file/>
 		<!--Time range over which the inverse kinematics problem is solved.-->
-		<time_range>0 1.28</time_range>
+		<time_range>0 1.276</time_range>
 		<!--Name of the motion file (.mot) to which the results should be written.-->
 		<output_motion_file>/home/nikorose/Documents/DJS-GA/C3D/Gait_rawdata_c3d/S01_0004_Gait/S01_0004_IK.mot</output_motion_file>
 	</InverseKinematicsTool>
