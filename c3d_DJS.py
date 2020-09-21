@@ -13,13 +13,19 @@ from pathlib import PurePath
 import os
 from ezc3d import c3d
 from scipy.signal import argrelextrema
+#Libraries for regression task
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import make_pipeline
+from sklearn import linear_model
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 
 
 class process_C3D():
     def __init__(self, file, run=True, forces=True, ID='NN', mass=80, 
-                 age=30, gender='female', height=1.60):
+                 age=30, gender='female', height=1.60, printing=True):
         self.forces = forces
+        self.printing = printing
         self.C3D = c3d(file, extract_forceplat_data=self.forces)
         self.ID = ID
         self.mass = mass
@@ -30,6 +36,120 @@ class process_C3D():
             if self.forces:
                 self.data_points_platform()
     
+
+    def data_point_mk_multi(self, begin=0, finish=None, gc_idx=True):
+        """
+        Generates the concatenated dataframe for markers data, arranged in a Multi
+        Index
+
+        Parameters
+        ----------
+        begin : TYPE, optional
+            initial point to take in DF. The default is 0.
+        finish : TYPE, optional
+            final desired index. The default is None.
+        gc_idx : BOOL, optional
+            Generate the index in gait cycle percentage. The default is True.
+
+        Returns
+        -------
+        None.
+
+        """
+        if not hasattr(self, 'labels'):
+            self.main_info()
+        self.point_data_mk = self.C3D['data']['points']
+        self.idx = np.linspace(0, self.tot_time, self.frames)
+        iterables = [self.labels,['X','Y','Z']]
+        x_arr = self.point_data_mk[0,:,:].T
+        y_arr = self.point_data_mk[1,:,:].T
+        z_arr = self.point_data_mk[2,:,:].T
+        for it in range(x_arr.shape[1]):
+            if it == 0:
+                _arr = x_arr[:,it]
+            else:
+                _arr = np.vstack((_arr, x_arr[:,it]))
+            _arr = np.vstack((_arr, y_arr[:,it]))
+            _arr = np.vstack((_arr, z_arr[:,it]))
+        
+        _arr = _arr.T
+        
+        self.columns = pd.MultiIndex.from_product(iterables, 
+                                                   names=['Label', 'Coordinate'])
+        self.point_data_df = pd.DataFrame(_arr, index=self.idx, 
+                                          columns=self.columns)
+        self.point_data_df.index.name = 'Time [s]'
+        if begin != 0:
+            self.point_data_df = self.point_data_df.loc[begin:,:]
+        if finish is not None:
+            self.point_data_df = self.point_data_df.loc[:finish,:]
+        if gc_idx:
+            self.idx = np.linspace(0,1, self.point_data_df.shape[0])
+            self.point_data_df.index = self.idx
+            self.point_data_df.index.name = 'Gait Cycle [%]'
+        return
+    
+    def right_fit(self, var_x, var_y, var_to_pred, col, alpha=0.03):
+        '''
+        In order to give the same size for all trials, we need to adjust all 
+        to the same index
+
+        Parameters
+        ----------
+        var_x : Pandas series or array
+            Data in x axis
+        var_y :Pandas series or array
+            Data in y axis
+        var_to_pred:Pandas series or array
+            Data in x axis to predict
+
+        Returns
+        -------
+        R2_sim : float
+            Coefficient of Determination
+        pred_sim : float
+            array with the predicted data
+
+        '''
+        order = 0
+        #Making regression for simulated data
+        r2_ = 0.0
+        while order <= 12 and (bool(r2_ < 1.01) != bool(r2_ > 0.97)):
+            #A pipeline between a polynomial features and ridge regression was perform 
+            y_linear_lr = make_pipeline(PolynomialFeatures(order), linear_model.Ridge(alpha=alpha))
+            y_linear_lr.fit(var_x, var_y)
+            r2_ = y_linear_lr.score(var_x, var_y)
+            pred_sim = y_linear_lr.predict(var_to_pred)
+            if order == 0:
+                R2_init = np.array([r2_])
+                pred_vals = pred_sim
+            else:
+                R2_init = np.hstack((R2_init, r2_))
+                pred_vals = np.hstack((pred_vals, pred_sim))
+            order +=1
+        best_R2 = np.argmax(R2_init)
+        if self.printing:
+            print('for column {}, the best poly order was {}'.format(col, 12-best_R2))
+        
+        return R2_init[best_R2], pred_vals[:,best_R2]
+    
+    def data_points_gc(self, samples=100):
+        if not hasattr(self, 'point_data_df'):
+            print('Dataframe from gait cycle has not been generated',
+                  'please run data_point_mk_multi first')
+            return
+        time_gc = np.linspace(0,1,samples)
+        self.point_data_df_gc = pd.DataFrame(np.zeros((time_gc.shape[0], 
+                                                    self.point_data_df.shape[1])),
+                                             index = time_gc, 
+                                             columns = self.point_data_df.columns)
+        self.r2_ = pd.Series(np.zeros(self.point_data_df.shape[1]), 
+                       index=self.point_data_df.columns, name='R2 values')
+        for num, col in enumerate(self.point_data_df.columns):
+            self.r2_[num], self.point_data_df_gc[col] = self.right_fit(self.idx.reshape(-1,1), 
+                                         self.point_data_df[col].values.reshape(-1, 1),
+                                         time_gc.reshape(-1,1), col)
+            
     def data_points_markers(self, begin=0, finish=None):
         """
         Generates the dataframes to process easily the information in the three 
@@ -184,8 +304,8 @@ class process_C3D():
 # Charging the folders 
 # =============================================================================
 root_dir = PurePath(os.getcwd())
-# info_dir = '/home/nikorose/enprietop@unal.edu.co/Tesis de Doctorado/Gait Analysis Data/Downloaded/Horst et al./Nature_paper/Gait_rawdata_c3d'
-info_dir = os.path.join( root_dir, 'C3D/Gait_rawdata_c3d')
+info_dir = '/home/nikorose/enprietop@unal.edu.co/Tesis de Doctorado/Gait Analysis Data/Downloaded/Horst et al./Nature_paper/Gait_rawdata_c3d'
+# info_dir = os.path.join( root_dir, 'C3D/Gait_rawdata_c3d')
 amputee_dir = root_dir / "TRANSTIBIAL/Transtibial  Izquierda/Gerson Tafud/Opensim files"
 
 # =============================================================================
@@ -209,16 +329,32 @@ Gait_cycle_points = {'HS1r':[],'HS2r':[],'HSl':[],
 labels = []
 
 os.chdir(info_dir)
-for sub in range(1,2):
+for sub in range(36,58):
     subject = 'S{}'.format(str(sub).zfill(2))
     
-    for trial in range(2,22):
+    for trial in range(2,26):
         sub_plus_trial = '{}_{}_Gait.c3d'.format(subject, str(trial).zfill(4))
         try:
+
             S = process_C3D(sub_plus_trial, run=True, forces=True, 
-                              **anthro_info.iloc[0].to_dict()) # , extract_forceplat_data=True
+                              **anthro_info.iloc[0].to_dict(), printing=False) # , extract_forceplat_data=True
             S.markers_GaitCycle('R FOOT MED','R HEEL','SACRUM')
             S.markers_GaitCycle('L FOOT MED','L HEEL','SACRUM')
+            #Changing labels to be synchronized with Opensim
+            S.labels = [i.replace(' ', '_') for i in S.labels]
+            #Saving the multiindex dataframe from IC to IC from right foot
+            S.data_point_mk_multi(S.HSidx[0], S.HSidx[1])
+            #Fitting to 100 samples so that having the same size in all trials
+            try:
+                S.data_points_gc()
+            except ValueError:
+                print('Trial {} could not be fitted'.format(sub_plus_trial))
+            #Saving the data into the local dir
+            #Getting the local directory for the trial
+            os.chdir(sub_plus_trial[:-4])
+            S.point_data_df_gc.to_csv('{}_markers_gc.csv'.format(sub_plus_trial[:-4]))
+            S.r2_.to_csv('{}_markers_R2.csv'.format(sub_plus_trial[:-4]))
+            os.chdir('../')
             try:
                 concat_HS_TO = np.array([S.HSidx, S.TOidx]).reshape(1,6)
                 #Appending to the dict in order to transform in df
@@ -233,5 +369,5 @@ for sub in range(1,2):
         except OSError:
             print('Trial {} does not exist. Is it static?'.format(sub_plus_trial))
             continue
-
+        
 Gait_cp_df.to_csv('Gait_cycle_bounds.csv')
