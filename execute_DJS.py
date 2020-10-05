@@ -26,8 +26,7 @@ exclude_list = ['{}{}'.format(i,j) for i in ['S','M','L','Xs'] \
 
 Ferrarin_ = ankle_DJS('mmc3.xls', 
                       dir_loc = 'Ferrarin',
-                      exp_name = 'Ferrarin analysis',
-                      exclude_names=exclude_list)
+                      exp_name = 'Ferrarin analysis' )
 
 all_dfs = Ferrarin_.extract_DJS_data()
 df_turn = Ferrarin_.get_turning_points(turning_points= 6, 
@@ -88,8 +87,9 @@ zero_ro = Ferrarin_.energy_fun.min_max_power(Ferrarin_.power_ankle)
 # =============================================================================
 DJS = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False)
 fig4 = DJS.plot_DJS(Ferrarin_.all_dfs_ankle, 
-                    cols=np.r_[0,5], rows= np.r_[0,2],
+                    cols=np.r_[:5], rows= np.r_[0,2],
                     title="Ankle Dynamic Joint Stiffness at irregular gait intentions", 
                     legend=True, reg=df_turn,
-                    integration= True, rad = False)
+                    integration= True, rad = True)
+
 

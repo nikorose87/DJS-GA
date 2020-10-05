@@ -55,7 +55,7 @@ class plot_dynamic:
         self.save = save
         self.alpha = alpha
         plt.style.use(plt_style)
-        self.colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+        self.colors = plt.rcParams['axes.prop_cycle'].by_key()['color']*7
         self.root_path = PurePath(os.getcwd())
         if not os.path.exists(folder):
             os.makedirs(folder)

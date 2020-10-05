@@ -470,8 +470,21 @@ class extract_preprocess_data():
             current_dir = os.getcwd()
             os.chdir(dir_loc)
         self.exp_name = exp_name
-        self.overall_data = pd.ExcelFile(file_name)
-        self.sheet_names = pd.Series(self.overall_data.sheet_names[1:])
+        #Check if dataframe is inserted instead
+        if isinstance(file_name, pd.DataFrame):  
+            self.all_dfs = file_name
+            self.sheet_names = None
+        else:
+                
+            if file_name[-3:] == 'xls' or file_name[-3:] == 'lsx':
+                self.overall_data = pd.ExcelFile(file_name)
+                self.sheet_names = pd.Series(self.overall_data.sheet_names[1:])
+            
+            elif file_name[-3:] == 'csv':
+                self.all_dfs = pd.read_csv(file_name, index_col=[0,1], 
+                                           header=[0,1])
+                self.sheet_names = None
+        
         
         if dir_loc is not None: os.chdir(current_dir)
         
@@ -486,24 +499,28 @@ class extract_preprocess_data():
 
         """
         #Storing the angles object
-        self.angles = processing_sheet(self.sheet_names[0], 
-                                            self.overall_data)
-        self.angles_df = self.angles.get_dataset()
-        #Storing the moments object
-        self.moments = processing_sheet(self.sheet_names[2], 
+        if self.sheet_names is None:
+            self.all_dfs = processing_sheet(self.sheet_names, 
+                                         self.overall_data)
+        else:
+            self.angles = processing_sheet(self.sheet_names[0], 
+                                                self.overall_data)
+            self.angles_df = self.angles.get_dataset()
+            #Storing the moments object
+            self.moments = processing_sheet(self.sheet_names[2], 
+                                                 self.overall_data)
+            self.moments_df = self.moments.get_dataset()
+            #Storing the GRF object
+            self.GRF = processing_sheet(self.sheet_names[1], 
                                              self.overall_data)
-        self.moments_df = self.moments.get_dataset()
-        #Storing the GRF object
-        self.GRF = processing_sheet(self.sheet_names[1], 
-                                         self.overall_data)
-        self.GRF_df = self.GRF.get_dataset()
-        #Storing the power object
-        self.power = processing_sheet(self.sheet_names[3], 
-                                         self.overall_data)
-        self.power_df = self.power.get_dataset()
-        
-        self.all_dfs = pd.concat([self.angles_df, self.moments_df, self.GRF_df,
-                                  self.power_df], axis=0)
+            self.GRF_df = self.GRF.get_dataset()
+            #Storing the power object
+            self.power = processing_sheet(self.sheet_names[3], 
+                                             self.overall_data)
+            self.power_df = self.power.get_dataset()
+            
+            self.all_dfs = pd.concat([self.angles_df, self.moments_df, self.GRF_df,
+                                      self.power_df], axis=0)
         return self.all_dfs
 
     
@@ -649,6 +666,43 @@ class ankle_DJS(extract_preprocess_data):
         self.all_dfs_ankle.index = self.index_ankle
         
         return self.all_dfs_ankle
+    
+    def extract_df_DJS_data(self, idx = [0,1,2,3]):
+        """
+                As we like to read either preprocessed or raw data. It is needed to build
+        this object so as to define the objects from a dataframe
+
+        Parameters
+        ----------
+        idx : list index position containing the indexes of the level 0 in this order:
+            Angles (0), Moments (2), GRF (1), Power (3), optional
+            DESCRIPTION. The default is [0,1,2,3].
+
+        Returns
+        -------
+        The same dataframe already adapted to process DJS
+
+        """
+        
+        index = self.all_dfs.index.get_level_values(0).unique()
+        
+        self.angles_ankle =  self.all_dfs.loc[index[idx[0]]]
+        self.GRF_vertical =  self.all_dfs.loc[index[idx[1]]]
+        self.moment_ankle =  self.all_dfs.loc[index[idx[2]]]
+        self.power_ankle =   self.all_dfs.loc[index[idx[3]]]
+        self.all_dfs_ankle = pd.concat([self.angles_ankle, self.GRF_vertical, 
+                                  self.moment_ankle, self.power_ankle], axis=0)
+        
+        #Changing the features and adding units
+        for i in idx:
+            self.features[i] += ' '+self.units[i] #Ankle angle
+        self.index_ankle = pd.MultiIndex.from_product([self.features,
+                                                       self.angles_ankle.index], 
+                                        names=['Feature', 'Gait cycle %'])
+        self.all_dfs_ankle.index = self.index_ankle
+        
+        return self.all_dfs_ankle
+        
         
     
     def deg_to_rad(self):
