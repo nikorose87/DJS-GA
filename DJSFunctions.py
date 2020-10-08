@@ -465,7 +465,8 @@ class extract_preprocess_data():
     
     def __init__(self, file_name, 
                  exp_name = 'Gait Cycle analysis',
-                 dir_loc=None):
+                 dir_loc=None, 
+                 header=[0,1]):
         if dir_loc is not None:
             current_dir = os.getcwd()
             os.chdir(dir_loc)
@@ -482,7 +483,7 @@ class extract_preprocess_data():
             
             elif file_name[-3:] == 'csv':
                 self.all_dfs = pd.read_csv(file_name, index_col=[0,1], 
-                                           header=[0,1])
+                                           header=header)
                 self.sheet_names = None
         
         
@@ -624,7 +625,7 @@ class processing_sheet():
 
 
 class ankle_DJS(extract_preprocess_data):
-    def __init__(self, file_name, dir_loc=None, 
+    def __init__(self, file_name, dir_loc=None, header=[0,1],
                  features= ['Ankle Dorsi/Plantarflexion', 
                                   'Vertical',
                                   'Ankle Dorsi/Plantarflexion',
@@ -633,11 +634,12 @@ class ankle_DJS(extract_preprocess_data):
                  units = ['Deg [°]', 'Force [%BH]', '[Nm/kg]', '[W/kg]'],
                  exclude_names=None):
         
-        super().__init__(file_name, exp_name, dir_loc)
+        super().__init__(file_name, exp_name, dir_loc, header)
         self.features = features
         self.idx = pd.IndexSlice
         self.exclude_names= exclude_names
         self.units = units
+        self.header = header
         
     def extract_DJS_data(self):
         """
@@ -864,15 +866,28 @@ class ankle_DJS(extract_preprocess_data):
         if rows is not None:
             rows_labels = rows_labels[rows]
         #We will calculate turning points with the mean
-        df_turn = self.all_dfs_ankle.loc[self.idx[rows_labels,:], self.idx[cols_labels, 'mean']]
+        if len(self.header) != 1:
+            df_turn = self.all_dfs_ankle.loc[self.idx[rows_labels,:], self.idx[cols_labels, 'mean']]
+        else:
+            df_turn = self.all_dfs_ankle.loc[self.idx[rows_labels,:], :]
         # df_turn = df_turn.columns.droplevel(1)
-        TP = []
-        for col in df_turn.columns:
-            TP.append(self.turning_points(df_turn.loc[self.idx[rows_labels[0],:], 
-                                                      col[0]].values,
-                      df_turn.loc[self.idx[rows_labels[1], :], col[0]].values, 
-                      turning_points, smoothing_radius, cluster_radius))
-        self.TP_df = pd.DataFrame(np.atleast_2d(TP), index=cols_labels, 
+
+        for num, col in enumerate(df_turn.columns):
+            TP = self.turning_points(df_turn.loc[self.idx[rows_labels[0],:], 
+                                                      col].values,
+                      df_turn.loc[self.idx[rows_labels[1], :], col].values, 
+                      turning_points, smoothing_radius, cluster_radius)
+            if num == 0:
+                TP_df = np.array(TP)
+            else:
+                try:
+                    TP_df = np.vstack((TP_df, np.array(TP)))
+                except ValueError:
+                    cols_labels = cols_labels.drop(col[0])
+                    print("Turning points for trial {} could not be generated".format(col))
+                    #Getting rid of those uncalculated rows
+                    self.all_dfs_ankle = self.all_dfs_ankle.drop(col[0], axis=1)
+        self.TP_df = pd.DataFrame(np.atleast_2d(TP_df), index=cols_labels, 
                     columns=['point {}'.format(i) for i in range(turning_points-1)])
         return self.TP_df
     

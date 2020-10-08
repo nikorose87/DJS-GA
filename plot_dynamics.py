@@ -55,7 +55,7 @@ class plot_dynamic:
         self.save = save
         self.alpha = alpha
         plt.style.use(plt_style)
-        self.colors = plt.rcParams['axes.prop_cycle'].by_key()['color']*7
+        self.colors = plt.rcParams['axes.prop_cycle'].by_key()['color']*100
         self.root_path = PurePath(os.getcwd())
         if not os.path.exists(folder):
             os.makedirs(folder)
@@ -170,6 +170,11 @@ class plot_dynamic:
                     mean = df_[i,columns_1[1]][rows_0[count]].values
                     sd_max = df_[i,columns_1[2]][rows_0[count]].values
                     ax.fill_between(rows_1, sd_min, sd_max, alpha=0.2)
+                else:
+                    try:
+                        mean = df_[i,columns_1[1]][rows_0[count]].values
+                    except IndexError:
+                        mean = df_[i,columns_1[0]][rows_0[count]].values
                 ax.plot(rows_1, mean, '-')
                 ax.set_xlabel(cycle_title)
                 ax.set_ylabel('{} {}'.format(rows_0[count], y_label))
@@ -231,8 +236,8 @@ class plot_ankle_DJS(plot_dynamic):
     def separared(self, rows):
         areas = []
         for _ , self.ax in np.ndenumerate(self.axs):
-            self.ang_mean = self.extract_data([rows[0], self.count, 1])
-            self.mom_mean = self.extract_data([rows[1], self.count, 1])
+            self.ang_mean = self.extract_data([rows[0], self.count, self.sd])
+            self.mom_mean = self.extract_data([rows[1], self.count, self.sd])
             if self.sd:
                 self.sd_plot(rows)
             line_plot = self.ax.plot(self.ang_mean, self.mom_mean, 
@@ -256,8 +261,8 @@ class plot_ankle_DJS(plot_dynamic):
     def together(self, rows):
         areas = []
         for _ in enumerate(self.columns_first):
-            self.ang_mean = self.extract_data([rows[0], self.count, 1])
-            self.mom_mean = self.extract_data([rows[1], self.count, 1])
+            self.ang_mean = self.extract_data([rows[0], self.count, int(self.sd)])
+            self.mom_mean = self.extract_data([rows[1], self.count, int(self.sd)])
             if self.sd:
                 self.sd_plot(rows)
             line_plot = self.ax.plot(self.ang_mean, self.mom_mean, 
