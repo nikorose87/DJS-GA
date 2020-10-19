@@ -310,12 +310,11 @@ class plot_ankle_DJS(plot_dynamic):
         else:
             self.reg_info_df = reg_info_df
             
-                                            
         for reg in self.reg_data:
             self.ax.plot(reg[:,0], reg[:,1], 
                              color= self.colors[self.count], 
                              linestyle = 'dashed')
-                             # label= '{} QS'.format(self.columns_first[self.count]))
+                             
             
         
     
@@ -333,6 +332,24 @@ class plot_ankle_DJS(plot_dynamic):
                 'R2':[R2],
                 'pred_data': [np.hstack((var1, pred))]}
     
+    def linear_fun(self,a,b,x):
+        return a*x+b
+    
+    def add_reg_lines(self, pred_df, label='Predicted'):
+        pred_df_ind = pred_df.index.get_level_values(0)
+        for i, phase in enumerate(['ERP', 'LRP', 'DP']):
+            stiffness = pred_df.loc[self.idx[pred_df_ind[self.count], phase]][1]
+            intercept = pred_df.loc[self.idx[pred_df_ind[self.count], phase]][0]
+            ang_data = self.ang_mean[self.TP.iloc[self.count][i]: \
+                          self.TP.iloc[self.count][i+1]].values.reshape(-1,1)
+            pred_data = self.linear_fun(stiffness, 
+                                        intercept, 
+                                        ang_data)
+            self.ax.plot(ang_data, pred_data, 
+                             color= self.colors[self.count+1], 
+                             linestyle = 'dashdot', label=label)
+        return pred_data
+        
     
             
     def plot_DJS(self, df_, cols=None, rows= [0,2],

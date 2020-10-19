@@ -1,0 +1,7 @@
+,
+n_estimators,1338
+min_samples_split,3
+min_samples_leaf,2
+max_features,
+max_depth,82
+bootstrap,False

@@ -9,9 +9,17 @@ or any other target is feasible
 
 import pandas as pd 
 import numpy as np
+import csv
 from tpot import TPOTRegressor
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.decomposition import PCA
 
+build_df = False
+make_pred_TPOT =False
+make_RF =True
+pca = True
 # =============================================================================
 # Loading the data
 # =============================================================================
@@ -34,6 +42,8 @@ for row_base in input_horst.index:
         if row_base in row_amp:
             input_horst_amp.iloc[num] = input_horst.loc[row_base]
 
+
+
 for col in ['ERP', 'LRP', 'DP']: #,
     for var in ['intercept', 'stiffness']:
     
@@ -41,18 +51,93 @@ for col in ['ERP', 'LRP', 'DP']: #,
                                                             output_horst.loc[idx[:, col],:][var], 
                                                             test_size=.2, \
                                                             random_state=42)
+        if PCA:
+            pc = PCA(n_components=10)
+            X_train = pca.fit_transform(X_train)
+            X_test = pca.transform(X_test)
+            print("The variance with 10 components is {}".format(pca.explained_variance_ratio_),
+                  "for {} in {}".format(col, var))
+        if make_pred_TPOT:
           
-        pipeline_regressor = TPOTRegressor(generations=100, population_size=100, cv=3,
-                                            random_state=42, verbosity=2, n_jobs=-1,
-                                            early_stop=15, scoring='neg_mean_squared_error')
-        
-        pipeline_regressor.fit(X_train, y_train)
-        
-        print('The best score for the metamodel was {}'.format(pipeline_regressor.score(X_test, y_test)))
-        
-        predicted_regression = pd.Series(pipeline_regressor.predict(X_test), name='Predicted', \
-                              index=y_test.index)
+            pipeline_regressor = TPOTRegressor(generations=100, population_size=100, cv=3,
+                                                random_state=42, verbosity=2, n_jobs=-1,
+                                                early_stop=15, scoring='neg_mean_squared_error')
             
-        comp_table = pd.concat([y_test, predicted_regression], axis=1)
-        comp_table.to_csv('Horst/comp_table_{}_in_{}'.format(col, var))
-        pipeline_regressor.export('Horst/Regression_pipeline_for_{}_in_{}.py'.format(col, var))
+            pipeline_regressor.fit(X_train, y_train)
+            
+            print('The best score for the metamodel was {}'.format(pipeline_regressor.score(X_test, y_test)))
+            
+            predicted_regression = pd.Series(pipeline_regressor.predict(X_test), name='Predicted', \
+                                  index=y_test.index)
+                
+            comp_table = pd.concat([y_test, predicted_regression], axis=1)
+            comp_table.to_csv('Horst/comp_table_{}_in_{}'.format(col, var))
+            pipeline_regressor.export('Horst/Regression_pipeline_for_{}_in_{}.py'.format(col, var))
+            
+        elif make_RF:
+            # Number of trees in random forest
+            n_estimators = [int(x) for x in np.linspace(start = 50, stop = 2000, num = 60)]
+            # Number of features to consider at every split
+            max_features = ['auto', 'sqrt', None]
+            # Maximum number of levels in tree
+            max_depth = [int(x) for x in np.linspace(10, 200, num = 30)]
+            max_depth.append(None)
+            # Minimum number of samples required to split a node
+            min_samples_split = [2, 3, 4, 5, 10, 20]
+            # Minimum number of samples required at each leaf node
+            min_samples_leaf = [1, 2, 4, 8]
+            # Method of selecting samples for training each tree
+            bootstrap = [True, False]
+            
+            # Creating the random grid
+            random_grid = {'n_estimators': n_estimators,
+            'max_features': max_features,
+            'max_depth': max_depth,
+            'min_samples_split': min_samples_split,
+            'min_samples_leaf': min_samples_leaf,
+            'bootstrap': bootstrap}
+            
+            # Use the random grid to search for best hyperparameters
+            # First create the base model to tune
+            rf = RandomForestRegressor(random_state = 42)
+            # Random search of parameters, using 3 fold cross validation,
+            # search across 100 different combinations, and use all available cores
+            rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid,
+                                            n_iter = 50, scoring='neg_mean_absolute_error',
+                                            cv = 3, verbose=1, random_state=42, n_jobs=-1,
+                                            return_train_score=True)
+            rf_random.fit(X_train, y_train)
+            predicted_regression = pd.Series(rf_random.predict(X_test), name='Predicted', \
+                                  index=y_test.index)
+            #concatenating best params obtained with the accuracy
+            comp_table = pd.concat([y_test, predicted_regression], axis=1)
+            results = rf_random.best_params_
+            model = rf_random.best_estimator_
+            comp_table.to_csv('Horst/comp_table_RF_{}_in_{}'.format(col, var))
+            # Exporting to a csv file
+            a_file = open('Horst/Best_params_RF_for_{}_in_{}.csv'.format(col, var), "w")
+            writer = csv.writer(a_file)
+            for key, value in results.items():
+                writer.writerow([key, value])
+            
+            a_file.close()
+
+            
+
+
+    
+# =============================================================================
+# Consolidating the predicted results as one df
+# =============================================================================
+if build_df:
+    pred_output = pd.DataFrame(np.empty((output_horst.shape[0], 2)), 
+                               index=output_horst.index, columns=['intercept', 'stiffness'])
+    
+    for col in ['ERP', 'LRP', 'DP']: #,
+        for var in ['intercept', 'stiffness']:
+            df_ = pd.read_csv('Horst/comp_table_{}_in_{}'.format(col, var), index_col=[0,1])
+            df_.columns = ['intercept', 'stiffness']
+            pred_output.loc[idx[:, col], var] = df_.loc[:,var]
+    
+    pred_output = pred_output.dropna()
+    # pred_output.to_csv('Horst/predicted_data_raw.csv')
