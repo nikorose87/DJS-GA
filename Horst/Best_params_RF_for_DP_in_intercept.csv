@@ -1,7 +1,6 @@
-,
-n_estimators,1372
-min_samples_split,4
-min_samples_leaf,2
+n_estimators,314
+min_samples_split,5
+min_samples_leaf,1
 max_features,sqrt
 max_depth,193
 bootstrap,False

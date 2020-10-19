@@ -15,11 +15,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.decomposition import PCA
+from sklearn.metrics import mean_squared_error
 
 build_df = False
 make_pred_TPOT =False
 make_RF =True
-pca = True
+reducing = True
+writing = False
 # =============================================================================
 # Loading the data
 # =============================================================================
@@ -37,13 +39,69 @@ input_horst_amp = pd.DataFrame(np.empty((output_horst.shape[0],
                                input_horst.shape[1])), index=output_horst.index,
                                columns = input_horst.columns)
 
+# =============================================================================
+# functions
+# =============================================================================
+def RandomForest_pred(X_train, X_test, y_train, y_test, writing=False):
+    # Number of trees in random forest
+    n_estimators = [int(x) for x in np.linspace(start = 50, stop = 2000, num = 60)]
+    # Number of features to consider at every split
+    max_features = ['auto', 'sqrt', None]
+    # Maximum number of levels in tree
+    max_depth = [int(x) for x in np.linspace(10, 200, num = 30)]
+    max_depth.append(None)
+    # Minimum number of samples required to split a node
+    min_samples_split = [2, 3, 4, 5, 10, 20]
+    # Minimum number of samples required at each leaf node
+    min_samples_leaf = [1, 2, 4, 8]
+    # Method of selecting samples for training each tree
+    bootstrap = [True, False]
+    
+    # Creating the random grid
+    random_grid = {'n_estimators': n_estimators,
+    'max_features': max_features,
+    'max_depth': max_depth,
+    'min_samples_split': min_samples_split,
+    'min_samples_leaf': min_samples_leaf,
+    'bootstrap': bootstrap}
+    
+    # Use the random grid to search for best hyperparameters
+    # First create the base model to tune
+    rf = RandomForestRegressor(random_state = 42)
+    # Random search of parameters, using 3 fold cross validation,
+    # search across 100 different combinations, and use all available cores
+    rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid,
+                                    n_iter = 60, scoring='neg_mean_absolute_error',
+                                    cv = 3, verbose=1, random_state=42, n_jobs=-1,
+                                    return_train_score=True)
+    rf_random.fit(X_train, y_train)
+    predicted_regression = pd.Series(rf_random.predict(X_test), name='Predicted', \
+                          index=y_test.index)
+    #concatenating best params obtained with the accuracy
+    rmse= mean_squared_error(y_test, predicted_regression)
+    comp_table = pd.concat([y_test, predicted_regression], axis=1)
+    print('The score using RME in {} for {} is {}'.format(col, var,
+                                              rmse))
+    results = rf_random.best_params_
+    model = rf_random.best_estimator_
+
+    if writing:
+        comp_table.to_csv('Horst/comp_table_RF_{}_in_{}'.format(col, var))
+        # Exporting to a csv file
+        a_file = open('Horst/Best_params_RF_for_{}_in_{}.csv'.format(col, var), "w")
+        writer = csv.writer(a_file)
+        for key, value in results.items():
+            writer.writerow([key, value])
+        
+        a_file.close()
+    return model, results, rmse
 for row_base in input_horst.index:
     for num, row_amp in enumerate(input_horst_amp.index.get_level_values(0)):    
         if row_base in row_amp:
             input_horst_amp.iloc[num] = input_horst.loc[row_base]
 
 
-
+RFs = {}
 for col in ['ERP', 'LRP', 'DP']: #,
     for var in ['intercept', 'stiffness']:
     
@@ -51,12 +109,26 @@ for col in ['ERP', 'LRP', 'DP']: #,
                                                             output_horst.loc[idx[:, col],:][var], 
                                                             test_size=.2, \
                                                             random_state=42)
-        if PCA:
-            pc = PCA(n_components=10)
-            X_train = pca.fit_transform(X_train)
-            X_test = pca.transform(X_test)
-            print("The variance with 10 components is {}".format(pca.explained_variance_ratio_),
-                  "for {} in {}".format(col, var))
+        if reducing:
+            for n_comp in range(3,20):
+                pc = PCA(n_components=n_comp)
+                X_train = pc.fit_transform(X_train)
+                X_test = pc.transform(X_test)
+                print("The variance with {} components is {}".format(n_comp, 
+                                         sum(pc.explained_variance_ratio_)),
+                                         "for {} in {}".format(col, var))
+                model, result, rmse = RandomForest_pred(X_train, X_test, y_train, y_test)
+                if n_comp == 3:
+                    RFs['model_{}_{}'.format(col,var)] = [model]
+                    RFs['results_{}_{}'.format(col,var)] = [result]
+                    RFs['rmse_{}_{}'.format(col,var)] = [rmse]
+                else:
+                    RFs['model_{}_{}'.format(col,var)].extend(model)
+                    RFs['results_{}_{}'.format(col,var)].extend(result)
+                    RFs['rmse_{}_{}'.format(col,var)].extend(rmse)
+        else:
+            model, rmse = RandomForest_pred(X_train, X_test, y_train, y_test)
+            
         if make_pred_TPOT:
           
             pipeline_regressor = TPOTRegressor(generations=100, population_size=100, cv=3,
@@ -74,53 +146,6 @@ for col in ['ERP', 'LRP', 'DP']: #,
             comp_table.to_csv('Horst/comp_table_{}_in_{}'.format(col, var))
             pipeline_regressor.export('Horst/Regression_pipeline_for_{}_in_{}.py'.format(col, var))
             
-        elif make_RF:
-            # Number of trees in random forest
-            n_estimators = [int(x) for x in np.linspace(start = 50, stop = 2000, num = 60)]
-            # Number of features to consider at every split
-            max_features = ['auto', 'sqrt', None]
-            # Maximum number of levels in tree
-            max_depth = [int(x) for x in np.linspace(10, 200, num = 30)]
-            max_depth.append(None)
-            # Minimum number of samples required to split a node
-            min_samples_split = [2, 3, 4, 5, 10, 20]
-            # Minimum number of samples required at each leaf node
-            min_samples_leaf = [1, 2, 4, 8]
-            # Method of selecting samples for training each tree
-            bootstrap = [True, False]
-            
-            # Creating the random grid
-            random_grid = {'n_estimators': n_estimators,
-            'max_features': max_features,
-            'max_depth': max_depth,
-            'min_samples_split': min_samples_split,
-            'min_samples_leaf': min_samples_leaf,
-            'bootstrap': bootstrap}
-            
-            # Use the random grid to search for best hyperparameters
-            # First create the base model to tune
-            rf = RandomForestRegressor(random_state = 42)
-            # Random search of parameters, using 3 fold cross validation,
-            # search across 100 different combinations, and use all available cores
-            rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid,
-                                            n_iter = 50, scoring='neg_mean_absolute_error',
-                                            cv = 3, verbose=1, random_state=42, n_jobs=-1,
-                                            return_train_score=True)
-            rf_random.fit(X_train, y_train)
-            predicted_regression = pd.Series(rf_random.predict(X_test), name='Predicted', \
-                                  index=y_test.index)
-            #concatenating best params obtained with the accuracy
-            comp_table = pd.concat([y_test, predicted_regression], axis=1)
-            results = rf_random.best_params_
-            model = rf_random.best_estimator_
-            comp_table.to_csv('Horst/comp_table_RF_{}_in_{}'.format(col, var))
-            # Exporting to a csv file
-            a_file = open('Horst/Best_params_RF_for_{}_in_{}.csv'.format(col, var), "w")
-            writer = csv.writer(a_file)
-            for key, value in results.items():
-                writer.writerow([key, value])
-            
-            a_file.close()
 
             
 
