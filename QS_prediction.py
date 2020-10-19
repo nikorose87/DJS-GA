@@ -42,7 +42,7 @@ input_horst_amp = pd.DataFrame(np.empty((output_horst.shape[0],
 # =============================================================================
 # functions
 # =============================================================================
-def RandomForest_pred(X_train, X_test, y_train, y_test, writing=False):
+def RandomForest_pred(X_train, X_test, y_train, y_test, writing=False, n_iter=20):
     # Number of trees in random forest
     n_estimators = [int(x) for x in np.linspace(start = 50, stop = 2000, num = 60)]
     # Number of features to consider at every split
@@ -71,7 +71,7 @@ def RandomForest_pred(X_train, X_test, y_train, y_test, writing=False):
     # Random search of parameters, using 3 fold cross validation,
     # search across 100 different combinations, and use all available cores
     rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid,
-                                    n_iter = 60, scoring='neg_mean_absolute_error',
+                                    n_iter = n_iter, scoring='neg_mean_absolute_error',
                                     cv = 3, verbose=1, random_state=42, n_jobs=-1,
                                     return_train_score=True)
     rf_random.fit(X_train, y_train)
@@ -112,22 +112,22 @@ for col in ['ERP', 'LRP', 'DP']: #,
         if reducing:
             for n_comp in range(3,20):
                 pc = PCA(n_components=n_comp)
-                X_train = pc.fit_transform(X_train)
-                X_test = pc.transform(X_test)
+                X_train_red = pc.fit_transform(X_train)
+                X_test_red = pc.transform(X_test)
                 print("The variance with {} components is {}".format(n_comp, 
                                          sum(pc.explained_variance_ratio_)),
                                          "for {} in {}".format(col, var))
-                model, result, rmse = RandomForest_pred(X_train, X_test, y_train, y_test)
+                model, result, rmse = RandomForest_pred(X_train, X_test, y_train, y_test, n_iter=5)
                 if n_comp == 3:
                     RFs['model_{}_{}'.format(col,var)] = [model]
                     RFs['results_{}_{}'.format(col,var)] = [result]
                     RFs['rmse_{}_{}'.format(col,var)] = [rmse]
                 else:
-                    RFs['model_{}_{}'.format(col,var)].extend(model)
-                    RFs['results_{}_{}'.format(col,var)].extend(result)
-                    RFs['rmse_{}_{}'.format(col,var)].extend(rmse)
+                    RFs['model_{}_{}'.format(col,var)].append(model)
+                    RFs['results_{}_{}'.format(col,var)].append(result)
+                    RFs['rmse_{}_{}'.format(col,var)].append(rmse)
         else:
-            model, rmse = RandomForest_pred(X_train, X_test, y_train, y_test)
+            model, rmse = RandomForest_pred(X_train_red, X_test_red, y_train, y_test)
             
         if make_pred_TPOT:
           
