@@ -14,8 +14,11 @@ from tpot import TPOTRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, KernelPCA
 from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 build_df = False
 make_pred_TPOT =False
@@ -117,7 +120,8 @@ for col in ['ERP', 'LRP', 'DP']: #,
                 print("The variance with {} components is {}".format(n_comp, 
                                          sum(pc.explained_variance_ratio_)),
                                          "for {} in {}".format(col, var))
-                model, result, rmse = RandomForest_pred(X_train, X_test, y_train, y_test, n_iter=5)
+                model, result, rmse = RandomForest_pred(X_train_red, X_test_red, 
+                                                        y_train, y_test, n_iter=80)
                 if n_comp == 3:
                     RFs['model_{}_{}'.format(col,var)] = [model]
                     RFs['results_{}_{}'.format(col,var)] = [result]
@@ -127,7 +131,7 @@ for col in ['ERP', 'LRP', 'DP']: #,
                     RFs['results_{}_{}'.format(col,var)].append(result)
                     RFs['rmse_{}_{}'.format(col,var)].append(rmse)
         else:
-            model, rmse = RandomForest_pred(X_train_red, X_test_red, y_train, y_test)
+            model, rmse = RandomForest_pred(X_train, X_test, y_train, y_test)
             
         if make_pred_TPOT:
           
@@ -166,3 +170,22 @@ if build_df:
     
     pred_output = pred_output.dropna()
     # pred_output.to_csv('Horst/predicted_data_raw.csv')
+
+
+# =============================================================================
+# Plotting the RMSE vs PC
+# =============================================================================
+
+fig1, axs = plt.subplots(3,2, figsize=(10,10))
+ax = np.ravel(axs)
+count = 0
+for col in ['ERP', 'LRP', 'DP']: #,
+    for var in ['intercept', 'stiffness']:
+        key = 'rmse_{}_{}'.format(col,var)
+        series = pd.Series(RFs[key], index=range(3,20), 
+                  name=key)
+        axes = sns.lineplot(data=series, ax= ax[count])
+        axes.set(ylabel = key)
+        count +=1
+fig1.suptitle('Neg MSE in QS prediction for 20 components')
+fig1.savefig('Figures/RFscorewithPCA.eps')
