@@ -16,6 +16,8 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.decomposition import PCA, KernelPCA
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -23,7 +25,7 @@ import seaborn as sns
 build_df = False
 make_pred_TPOT =False
 make_RF =True
-reducing = True
+reducing = False
 writing = False
 # =============================================================================
 # Loading the data
@@ -59,22 +61,31 @@ def RandomForest_pred(X_train, X_test, y_train, y_test, writing=False, n_iter=20
     min_samples_leaf = [1, 2, 4, 8]
     # Method of selecting samples for training each tree
     bootstrap = [True, False]
+    #n_componenst
+    n_comp = range(2,35)
+    gamma = range(1,25)
+    kernel = ['rbf', 'poly', 'sigmoid']
     
     # Creating the random grid
-    random_grid = {'n_estimators': n_estimators,
-    'max_features': max_features,
-    'max_depth': max_depth,
-    'min_samples_split': min_samples_split,
-    'min_samples_leaf': min_samples_leaf,
-    'bootstrap': bootstrap}
+    random_grid = {'regressor__n_estimators': n_estimators,
+    'regressor__max_features': max_features,
+    'regressor__max_depth': max_depth,
+    'regressor__min_samples_split': min_samples_split,
+    'regressor__min_samples_leaf': min_samples_leaf,
+    'regressor__bootstrap': bootstrap,
+    'reducer__n_components': n_comp,
+    'reducer__gamma': gamma,
+    'reducer__kernel': kernel}
     
     # Use the random grid to search for best hyperparameters
     # First create the base model to tune
-    rf = RandomForestRegressor(random_state = 42)
+    pipeline = Pipeline([('scaler', StandardScaler()),
+                         ('reducer', KernelPCA()),
+                         ('regressor', RandomForestRegressor(random_state = 42))])
     # Random search of parameters, using 3 fold cross validation,
     # search across 100 different combinations, and use all available cores
-    rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid,
-                                    n_iter = n_iter, scoring='neg_mean_absolute_error',
+    rf_random = RandomizedSearchCV(estimator=pipeline, param_distributions=random_grid,
+                                    n_iter = n_iter, scoring='neg_mean_squared_error',
                                     cv = 3, verbose=1, random_state=42, n_jobs=-1,
                                     return_train_score=True)
     rf_random.fit(X_train, y_train)
@@ -121,7 +132,7 @@ for col in ['ERP', 'LRP', 'DP']: #,
                                          sum(pc.explained_variance_ratio_)),
                                          "for {} in {}".format(col, var))
                 model, result, rmse = RandomForest_pred(X_train_red, X_test_red, 
-                                                        y_train, y_test, n_iter=80)
+                                                        y_train, y_test, n_iter=3)
                 if n_comp == 3:
                     RFs['model_{}_{}'.format(col,var)] = [model]
                     RFs['results_{}_{}'.format(col,var)] = [result]
@@ -131,13 +142,17 @@ for col in ['ERP', 'LRP', 'DP']: #,
                     RFs['results_{}_{}'.format(col,var)].append(result)
                     RFs['rmse_{}_{}'.format(col,var)].append(rmse)
         else:
-            model, rmse = RandomForest_pred(X_train, X_test, y_train, y_test)
+            model, result, rmse = RandomForest_pred(X_train, X_test, y_train, 
+                                                    y_test, n_iter=100)
+            RFs['model_{}_{}'.format(col,var)] = [model]
+            RFs['results_{}_{}'.format(col,var)] = [result]
+            RFs['rmse_{}_{}'.format(col,var)] = [rmse]
             
         if make_pred_TPOT:
           
             pipeline_regressor = TPOTRegressor(generations=100, population_size=100, cv=3,
                                                 random_state=42, verbosity=2, n_jobs=-1,
-                                                early_stop=15, scoring='neg_mean_squared_error')
+                                                early_stop=15, scoring='neg_mean_absolute_error')
             
             pipeline_regressor.fit(X_train, y_train)
             
@@ -175,17 +190,17 @@ if build_df:
 # =============================================================================
 # Plotting the RMSE vs PC
 # =============================================================================
-
-fig1, axs = plt.subplots(3,2, figsize=(10,10))
-ax = np.ravel(axs)
-count = 0
-for col in ['ERP', 'LRP', 'DP']: #,
-    for var in ['intercept', 'stiffness']:
-        key = 'rmse_{}_{}'.format(col,var)
-        series = pd.Series(RFs[key], index=range(3,20), 
-                  name=key)
-        axes = sns.lineplot(data=series, ax= ax[count])
-        axes.set(ylabel = key)
-        count +=1
-fig1.suptitle('Neg MSE in QS prediction for 20 components')
-fig1.savefig('Figures/RFscorewithPCA.eps')
+if reducing:
+    fig1, axs = plt.subplots(3,2, figsize=(10,10))
+    ax = np.ravel(axs)
+    count = 0
+    for col in ['ERP', 'LRP', 'DP']: #,
+        for var in ['intercept', 'stiffness']:
+            key = 'rmse_{}_{}'.format(col,var)
+            series = pd.Series(RFs[key], index=range(3,20), 
+                      name=key)
+            axes = sns.lineplot(data=series, ax= ax[count])
+            axes.set(ylabel = key)
+            count +=1
+    fig1.suptitle('Neg MSE in QS prediction for 20 components')
+    fig1.savefig('Figures/RFscorewithPCA.eps')
