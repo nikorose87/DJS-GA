@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
-Horst_ = extract_preprocess_data('/home/nikorose/enprietop@unal.edu.co/'+
+Horst_ = extract_preprocess_data('/home/eprietop/enprietop@unal.edu.co/'+
                                  'Tesis de Doctorado/Gait Analysis Data/Downloaded/Horst et al./Nature_paper/Horst_Nature_paper.csv', 
                                     dir_loc=None,
                                     header=[0])
@@ -190,8 +190,8 @@ def RF_pred(label_to_pred):
     return pred_output
 
 
-pred_RF = RF_pred(pred_reg.index.get_level_values(0).unique())
-pred_data_RF = DJS.add_reg_lines(pred_RF, label='RF')
+# pred_RF = RF_pred(pred_reg.index.get_level_values(0).unique())
+# pred_data_RF = DJS.add_reg_lines(pred_RF, label='RF')
 
 
             

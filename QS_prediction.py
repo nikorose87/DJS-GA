@@ -22,9 +22,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-build_df = False
-make_pred_TPOT =False
-make_RF =True
+build_df = True
+make_pred_TPOT = True
+make_RF =False
 reducing = False
 writing = False
 # =============================================================================
@@ -141,18 +141,19 @@ for col in ['ERP', 'LRP', 'DP']: #,
                     RFs['model_{}_{}'.format(col,var)].append(model)
                     RFs['results_{}_{}'.format(col,var)].append(result)
                     RFs['rmse_{}_{}'.format(col,var)].append(rmse)
-        else:
+        elif make_RF:
             model, result, rmse = RandomForest_pred(X_train, X_test, y_train, 
                                                     y_test, n_iter=100)
             RFs['model_{}_{}'.format(col,var)] = [model]
             RFs['results_{}_{}'.format(col,var)] = [result]
             RFs['rmse_{}_{}'.format(col,var)] = [rmse]
             
-        if make_pred_TPOT:
+        elif make_pred_TPOT:
           
             pipeline_regressor = TPOTRegressor(generations=100, population_size=100, cv=3,
-                                                random_state=42, verbosity=2, n_jobs=-1,
-                                                early_stop=15, scoring='neg_mean_absolute_error')
+                                                random_state=42, verbosity=2, 
+                                                early_stop=30, n_jobs=-1, 
+                                                scoring='neg_mean_absolute_error')
             
             pipeline_regressor.fit(X_train, y_train)
             
@@ -184,7 +185,7 @@ if build_df:
             pred_output.loc[idx[:, col], var] = df_.loc[:,var]
     
     pred_output = pred_output.dropna()
-    # pred_output.to_csv('Horst/predicted_data_raw.csv')
+    pred_output.to_csv('Horst/predicted_data_raw.csv')
 
 
 # =============================================================================
