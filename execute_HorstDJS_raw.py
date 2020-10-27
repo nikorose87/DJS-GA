@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
-Horst_ = extract_preprocess_data('/home/eprietop/enprietop@unal.edu.co/'+
+Horst_ = extract_preprocess_data('/home/nikorose/enprietop@unal.edu.co/'+
                                  'Tesis de Doctorado/Gait Analysis Data/Downloaded/Horst et al./Nature_paper/Horst_Nature_paper.csv', 
                                     dir_loc=None,
                                     header=[0])
@@ -116,22 +116,33 @@ Horst_pred = Horst_.all_dfs_ankle.loc[:,idx[pred_reg.index.get_level_values(0)]]
 # =============================================================================
 # Plotting ankle Quasi-Stiffness
 # =============================================================================
-DJS = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=False)
-
-fig4 = DJS.plot_DJS(Horst_pred, 
-                    cols=[7], rows= np.r_[0,2],
-                    title="Ankle DJS subject 1", 
-                    legend=True, reg=df_turn,
-                    integration= True, rad = True)
-
-# =============================================================================
-# # Saving data to df
-# =============================================================================
-# DJS.reg_info_df.to_csv('Horst/Horst_reg_lines_raw.csv')
-# df_turn.to_csv('Horst/Horst_tp_raw.csv')
-
-pred_data = DJS.add_reg_lines(pred_reg, label='TPOT')
-
+# num = [0]
+for num in range(10):
+    DJS = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=False)
+    
+    fig4 = DJS.plot_DJS(Horst_pred, 
+                        cols=[num], rows= np.r_[0,2],
+                        title="Ankle DJS subject 1", 
+                        legend=True, reg=df_turn,
+                        integration= True, rad = True)
+    
+    
+    # =============================================================================
+    # # Saving data to df
+    # =============================================================================
+    # DJS.reg_info_df.to_csv('Horst/Horst_reg_lines_raw.csv')
+    # df_turn.to_csv('Horst/Horst_tp_raw.csv')
+    
+    #Replacing original intercept data over the predicted
+    indexes_pred = pred_reg.index.get_level_values(0).unique()
+    pred_reg.loc[indexes_pred[num],'intercept'] = DJS.reg_info_df.loc[indexes_pred[num],'intercept'].values
+    
+    pred_data = DJS.add_reg_lines(pred_reg, label='TPOT')
+    print(DJS.reg_info_df)
+    
+    #Saving figure
+    fig4.savefig('Figures/comp_regressor_sample_{}.pdf'.format(num))
+        
 
 # =============================================================================
 # Performing the RF prediction to compare with the Meta algorithm
