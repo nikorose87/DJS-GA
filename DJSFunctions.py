@@ -523,7 +523,7 @@ class extract_preprocess_data():
             self.all_dfs = pd.concat([self.angles_df, self.moments_df, self.GRF_df,
                                       self.power_df], axis=0)
         return self.all_dfs
-
+    
     
 class processing_sheet():
     def __init__(self, sheet, data):
@@ -671,7 +671,7 @@ class ankle_DJS(extract_preprocess_data):
     
     def extract_df_DJS_data(self, idx = [0,1,2,3]):
         """
-                As we like to read either preprocessed or raw data. It is needed to build
+        As we like to read either preprocessed or raw data. It is needed to build
         this object so as to define the objects from a dataframe
 
         Parameters
@@ -795,13 +795,11 @@ class ankle_DJS(extract_preprocess_data):
         y_2 = self.second_derivative(y)
         return np.abs(x_1 * y_2 - y_1 * x_2) / np.sqrt((x_1**2 + y_1**2)**3)
     
-    # =============================================================================
-    # You will probably want to smooth your curve out first, then calculate the curvature, 
-    # then identify the highest curvature points. The following function does just that:
-    # =============================================================================
+
     def turning_points(self, x, y, turning_points=10, smoothing_radius=False,
                             cluster_radius=10) :
-        """ =============================================================================
+        """ 
+        =============================================================================
         # Some explaining in the following order:
         # You will probably want to smooth your curve out first, then calculate the curvature, 
         # then identify the highest curvature points. The following function does just that:
@@ -810,8 +808,7 @@ class ankle_DJS(extract_preprocess_data):
               applied to your data before computing the curvature
         #     cluster_radius is the distance from a point of high curvature selected 
               as a turning point where no other point should be considered as a candidate.
-        #     You may have to play around with the parameters a little, but 
-              I got something like this:    
+        #     You may have to play around with the parameters a little  
         """ 
         if smoothing_radius:
             weights = np.ones(2 * smoothing_radius + 1)
@@ -819,7 +816,7 @@ class ankle_DJS(extract_preprocess_data):
             new_x = new_x[smoothing_radius:-smoothing_radius] / np.sum(weights)
             new_y = convolve1d(y, weights, mode='constant', cval=0.0)
             new_y = new_y[smoothing_radius:-smoothing_radius] / np.sum(weights)
-        else :
+        else:
             new_x, new_y = x, y
         k = np.atleast_1d(self.curvature(new_x, new_y))
         turn_point_idx = np.argsort(k, axis=0)[::-1]
@@ -841,7 +838,7 @@ class ankle_DJS(extract_preprocess_data):
     def get_turning_points(self, rows=[0,2], cols=None, turning_points= 6, 
                            smoothing_radius = 4, cluster_radius= 15):
         """
-        This piece of code will return the df with points where the loop breakes
+        This piece of code will return the df with points where the loop changes
         the most 
 
         Parameters

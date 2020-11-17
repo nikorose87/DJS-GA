@@ -26,7 +26,7 @@ import os
 class plot_dynamic:
     def __init__(self, SD = False, ext='png', 
                  dpi=500, save=False, plt_style='seaborn', alpha=1.5,
-                 folder='Figures'):
+                 folder='Figures', axs_size=None, fig_size=[5,7]):
         
         """
         Parameters
@@ -54,26 +54,42 @@ class plot_dynamic:
         self.dpi = dpi
         self.save = save
         self.alpha = alpha
+        self.axs_size = axs_size
+        self.fig_size = fig_size
         plt.style.use(plt_style)
-        self.colors = plt.rcParams['axes.prop_cycle'].by_key()['color']*100
+        self.colors = plt.rcParams['axes.prop_cycle'].by_key()['color']*5
         self.root_path = PurePath(os.getcwd())
         if not os.path.exists(folder):
             os.makedirs(folder)
         self.save_folder =  self.root_path / folder
         
     
-    def rc_params(self, proportion = 1):
-        # Adjusting plot parameters
-        mpl.rcParams['axes.titlesize'] = 5*proportion
-        mpl.rcParams['axes.labelsize'] = 4*proportion
-        mpl.rcParams['lines.linewidth'] = proportion
-        mpl.rcParams['lines.markersize'] = 4*proportion
-        mpl.rcParams['xtick.labelsize'] = 3*proportion
-        mpl.rcParams['ytick.labelsize'] = 3*proportion
-        mpl.rcParams['legend.fontsize'] = 3*proportion
-        mpl.rcParams['legend.handlelength'] = proportion
-        
- 
+    def rc_params(self, proportion = 1, nrows=5, ncols=7):
+        if proportion >= 4:
+            # Adjusting plot parameters for bigger figures
+            mpl.rcParams['axes.titlesize'] = 4*proportion
+            mpl.rcParams['axes.labelsize'] = 6*proportion
+            mpl.rcParams['lines.linewidth'] = proportion*0.3
+            mpl.rcParams['lines.markersize'] = 4*proportion
+            mpl.rcParams['xtick.labelsize'] = 5*proportion
+            mpl.rcParams['ytick.labelsize'] = 5*proportion
+            mpl.rcParams['legend.fontsize'] = 7*proportion
+            mpl.rcParams['legend.handlelength'] = proportion
+        else:
+            # Adjusting plot parameters for small figures
+            mpl.rcParams['axes.titlesize'] = 4*proportion
+            mpl.rcParams['axes.labelsize'] = 5*proportion
+            mpl.rcParams['lines.linewidth'] = proportion
+            mpl.rcParams['lines.markersize'] = 4*proportion
+            mpl.rcParams['xtick.labelsize'] = 4*proportion
+            mpl.rcParams['ytick.labelsize'] = 4*proportion
+            mpl.rcParams['legend.fontsize'] = 5*proportion
+            mpl.rcParams['legend.handlelength'] = proportion
+            
+        mpl.rcParams['figure.figsize'] = ncols, nrows
+        #backgroud color
+        mpl.rcParams['axes.facecolor'] = 'white'
+    
     def get_mult_num(self, integer):
       """
       Function to generate the best combination among a number of plots
@@ -154,14 +170,16 @@ class plot_dynamic:
         else:
             columns_0, columns_1, rows_0, rows_1, df_, y_label, cycle_title = \
                 self.if_object(df_object, cols, rows)
-
-        # Suitable distribution for plotting
-        nrows, ncols = self.get_mult_num(len(rows_0))[-1]
+        if self.axs_size is not None:
+            nrows, ncols = self.axs_size
+        else:
+            # Suitable distribution for plotting
+            nrows, ncols = self.get_mult_num(len(rows_0))[-1]
         # Adjusting the plot settings
-        self.rc_params(self.alpha/nrows)
-        fig, axs = plt.subplots(nrows=nrows, ncols=ncols, sharex=True, 
-                                squeeze=False) 
-        fig.tight_layout(pad=3*self.alpha/ncols)
+        self.rc_params(self.alpha, 8, 10) #Letter size
+        fig, axs = plt.subplots(nrows=nrows, ncols=ncols, 
+                                squeeze=False, figsize=self.fig_size) 
+        fig.tight_layout(pad=2*self.alpha/ncols)
         count = 0
         for k, ax in np.ndenumerate(axs):
             for i in columns_0:
@@ -182,6 +200,8 @@ class plot_dynamic:
         if legend:
             fig.legend(columns_0, bbox_to_anchor=[0.5, 0.5], loc='center',
                        ncol=int(len(columns_0)/2), fancybox=True)
+        #In case y label is not displyed vary this parameter
+        plt.subplots_adjust(left=0.05)
         if title:  plt.suptitle('{} {}'.format(title, y_label))
         if show: plt.show()
         if self.save:
@@ -211,7 +231,7 @@ class plot_dynamic:
 class plot_ankle_DJS(plot_dynamic):
     def __init__(self, SD = False, ext='png', 
                  dpi=500, save=False, plt_style='seaborn', 
-                 alpha=1.5, sep=True):
+                 alpha=1.5, sep=True, fig_size=[5,5], params=None):
         #Setting plot parameters
         # Cleaning the plots
         super().__init__(SD, ext, dpi, save, plt_style, alpha)
@@ -222,6 +242,13 @@ class plot_ankle_DJS(plot_dynamic):
         self.alpha = alpha
         self.sep = sep
         self.idx = pd.IndexSlice
+        self.fig_size = fig_size
+        self.params ={'sharex':True, 'sharey':True, 'arr_size':self.alpha*3, 
+                      'color_DJS': self.colors, 'color_symbols': self.colors,
+                      'color_reg': self.colors, 'left_margin': 0.15}
+        if params is not None:
+            self.params.update(params)
+            
         plt.style.use(plt_style)
     
     def deg2rad(self, row_name):
@@ -236,26 +263,31 @@ class plot_ankle_DJS(plot_dynamic):
     def separared(self, rows):
         areas = []
         for _ , self.ax in np.ndenumerate(self.axs):
-            self.ang_mean = self.extract_data([rows[0], self.count, self.sd])
-            self.mom_mean = self.extract_data([rows[1], self.count, self.sd])
-            if self.sd:
-                self.sd_plot(rows)
-            line_plot = self.ax.plot(self.ang_mean, self.mom_mean, 
-                         color= self.colors[self.count],
-                         label= self.columns_first[self.count])
-            if self.integrate:
-                areas.append(self.integration(self.ang_mean, self.mom_mean, 
-                                 self.colors[self.count]))
-            if isinstance(self.TP, pd.DataFrame):
-                self.reg_lines()
+            try:
+                #This exception is for unpaired plots in order to get rid of empty axes
+                self.ang_mean = self.extract_data([rows[0], self.count, int(self.sd)])
+                self.mom_mean = self.extract_data([rows[1], self.count, int(self.sd)])
+                if self.sd:
+                    self.sd_plot(rows)
+                line_plot = self.ax.plot(self.ang_mean, self.mom_mean, 
+                             color= self.params['color_DJS'][self.count],
+                             label= self.columns_first[self.count])
+                if self.integrate:
+                    areas.append(self.integration(self.ang_mean, self.mom_mean, 
+                                     self.params['color_DJS'][self.count]))
+                if isinstance(self.TP, pd.DataFrame):
+                    self.reg_lines()
+                    
+                self.add_arrow(line_plot)
+                self.ax.set_xlabel(self.x_label)
+                self.ax.set_ylabel(self.y_label)
+                if self.legend:
+                    self.ax.legend(ncol=int(len(self.columns_first)/2), fancybox=True,
+                                   loc = 'upper left')
+                self.count +=1
+            except IndexError:
+                continue
                 
-            self.add_arrow(line_plot)
-            self.ax.set_xlabel(self.x_label)
-            self.ax.set_ylabel(self.y_label)
-            if self.legend:
-                self.ax.legend(ncol=int(len(self.columns_first)/2), fancybox=True,
-                               loc = 'upper left')
-            self.count +=1
         self.areas = pd.DataFrame(areas, columns = ['work'], index=self.columns_first)
             
     def together(self, rows):
@@ -266,11 +298,11 @@ class plot_ankle_DJS(plot_dynamic):
             if self.sd:
                 self.sd_plot(rows)
             line_plot = self.ax.plot(self.ang_mean, self.mom_mean, 
-                         color= self.colors[self.count],
+                         color= self.params['color_DJS'][self.count],
                          label= self.columns_first[self.count])
             if self.integrate:
                 areas.append(self.integration(self.ang_mean, self.mom_mean, 
-                                 self.colors[self.count]))
+                                 self.params['color_DJS'][self.count]))
             if isinstance(self.TP, pd.DataFrame):
                 self.reg_lines()
             self.add_arrow(line_plot)
@@ -286,7 +318,7 @@ class plot_ankle_DJS(plot_dynamic):
     def reg_lines(self):
         self.ax.scatter(self.ang_mean[self.TP.iloc[self.count][:-1]],
                         self.mom_mean[self.TP.iloc[self.count][:-1]],
-                        color=self.colors[self.count])
+                        color=self.params['color_symbols'][self.count])
 
         for i in range(self.TP.shape[1]-2):
             ang_data = self.ang_mean[self.TP.iloc[self.count][i]: \
@@ -309,15 +341,12 @@ class plot_ankle_DJS(plot_dynamic):
             self.reg_info_df = pd.concat([self.reg_info_df, reg_info_df])
         else:
             self.reg_info_df = reg_info_df
-            
-        for reg in self.reg_data:
+        style= ['--', '-.', ':', 'dashdot']
+        for i, reg in enumerate(self.reg_data):
             self.ax.plot(reg[:,0], reg[:,1], 
-                             color= self.colors[self.count], 
-                             linestyle = 'dashed')
-                             
-            
-        
-    
+                             color= self.params['color_reg'][self.count], 
+                             linestyle = style[i], zorder=15)
+
     # Ridge regression
     def ridge(self, var1, var2, alpha = 0.001):
         """Function to do Ridge regression"""
@@ -346,14 +375,14 @@ class plot_ankle_DJS(plot_dynamic):
                                         intercept, 
                                         ang_data)
             self.ax.plot(ang_data, pred_data, 
-                             color= self.colors[self.count+1], 
+                             color= self.params['color_reg'][self.count+1], 
                              linestyle = 'dashdot', label=label)
         return pred_data
         
     
             
     def plot_DJS(self, df_, cols=None, rows= [0,2],
-                 title=False, legend=True, reg=False,
+                 title='No name given', legend=True, reg=False,
                  integration= True, rad= True, sup_static= True):
         self.clear_plot_mem()
         # Suitable distribution for plotting
@@ -371,6 +400,8 @@ class plot_ankle_DJS(plot_dynamic):
             self.df_ =  df_.loc[self.idx[:,:],self.idx[self.columns_first,:]]
         else:
             self.df_ =  df_.loc[self.idx[:,:],self.idx[self.columns_first[cols],:]]
+            #To keep the index column order
+            self.df_ = self.df_.reindex(self.columns_first[cols], level=0, axis=1)
         if rad:
             self.deg2rad(self.index_first[rows[0]])
             self.x_label = 'Angle [rad]'
@@ -381,31 +412,32 @@ class plot_ankle_DJS(plot_dynamic):
             rows = self.index_first
         
         self.columns_first = self.df_.columns.get_level_values(0).unique()
-        if self.sep:
-            nrows, ncols = self.get_mult_num(len(cols))[-1]
-        else: 
+        if self.sep == True:
+            nrows, ncols = self.get_mult_num(len(cols))[-1]            
+        elif self.sep == False: 
             nrows = 1
             ncols = 1
+        elif isinstance(self.sep , list):
+            nrows, ncols = self.sep
             
         # Adjusting the plot settings
-        self.rc_params(self.alpha/nrows)
-        
-        # Adjusting the plot settings
-        self.rc_params(self.alpha/nrows)
+        self.rc_params(self.alpha/nrows, self.fig_size[0], self.fig_size[1])
         self.count = 0
         if self.sep:
             self.fig, self.axs = plt.subplots(nrows=nrows, ncols=ncols, sharey=True, 
-                                          sharex=True, squeeze=False)
-            self.fig.tight_layout(pad=3*self.alpha/ncols)
+                                          sharex=False, squeeze=False)
+            self.fig.tight_layout()
             self.separared(rows) 
         else:
-            self.fig, self.ax = plt.subplots(nrows=nrows, ncols=ncols, sharey=True, 
-                                          sharex=True, squeeze=True)
+            self.fig, self.ax = plt.subplots(nrows=nrows, ncols=ncols, sharey=self.params['sharey'], 
+                                          sharex=self.params['sharex'], squeeze=True)
             self.together(rows)
-        if title: 
-            self.fig.suptitle(title)
+        #In case y label is not displyed vary this parameter
+        plt.subplots_adjust(left=self.params['left_margin'])
         if self.save:
             self.save_fig(self.fig, title)
+        
+        #Setting margins of figure
         return self.fig
 
     
@@ -431,11 +463,11 @@ class plot_ankle_DJS(plot_dynamic):
         self.err_mom = [self.mom_mean - self.mom_sd1, 
                            self.mom_sd2 - self.mom_mean]
         self.ax.errorbar(self.ang_mean, self.mom_mean, xerr=self.err_ang,
-                         color= self.colors[self.count],
-                         elinewidth = 0.1*self.alpha)
+                         color= self.params['color_DJS'][self.count],
+                         elinewidth = 0.3*self.alpha/self.fig_size[0])
         self.ax.errorbar(self.ang_mean, self.mom_mean, yerr=self.err_mom, 
-                         color= self.colors[self.count],
-                         elinewidth = 0.1*self.alpha)
+                         color= self.params['color_DJS'][self.count],
+                         elinewidth = 0.3*self.alpha/self.fig_size[0])
         
         return
         
@@ -448,12 +480,10 @@ class plot_ankle_DJS(plot_dynamic):
             The first specifies the first index position.
             The second specifies the first column position.
             The third specifies the second column position
-
         Returns
         -------
         data : TYPE
             DESCRIPTION.
-
         """
         data = self.df_.loc[self.idx[self.index_first[idx_[0]] , :], 
                                     self.idx[self.columns_first[idx_[1]], 
@@ -468,14 +498,13 @@ class plot_ankle_DJS(plot_dynamic):
         position:   x-position of the arrow. If None, mean of xdata is taken
         direction:  'left' or 'right'
         size:       size of the arrow in fontsize points
-        color:      if None, line color is taken.
         """
         axs = axs[0]
-        color = axs.get_color()
+        color = self.params['color_symbols'][self.count]
     
         xdata = axs.get_xdata()
         ydata = axs.get_ydata()
-
+        
         #Selecting the positions
         position = xdata[0:-1:arr_num]
         # find closest index
@@ -492,7 +521,7 @@ class plot_ankle_DJS(plot_dynamic):
                 xy=(self.ang_mean.loc[self.idx[:,end_ind[n]]], 
                     self.mom_mean.loc[self.idx[:,end_ind[n]]]),
                 arrowprops=dict(arrowstyle="-|>", color=color),
-                size=self.alpha*8)
+                size=self.params['arr_size'])
     
     def integration(self, var1, var2, color): #, dx= 0.5, Min = 0, Max = None):
         
