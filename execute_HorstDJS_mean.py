@@ -27,21 +27,42 @@ idx= pd.IndexSlice
 Horst_QS = Horst_df.loc[idx[['ankle_angle_r','ankle_angle_r_moment',
                              'ground_force_1_v_2'], :]]
 
+def multi_idx(name, df_, idx=True, level=0):
+    """
+    
+
+    Parameters
+    ----------
+    name : High level name to set. STR
+    df_ : Dataframe to create the multiindex.
+    idx : If true It will do over index, otherwise columns.
+    level : Either to set in the first level or the second level.
+
+    Returns
+    -------
+    df_ : Pandas dataframe.
+
+    """
+    if idx:
+        l_ = df_.index
+    else:
+        l_ = df_.columns
+    if level == 0:
+        l_1 = [name]
+        l_2 = l_
+    else:
+        l_1 = l_
+        l_2 = [name]
+    index_mi = pd.MultiIndex.from_product([l_1, l_2])
+    df_.index = index_mi
+    return df_
+
+
 #According to Winter https://ouhsc.edu/bserdac/dthompso/web/gait/epow/pow1.htm
 #in order to calculate the power plot we should do the following:
 #Obtain the derivative of the angle plot to obtain angular velocity
 #make the product between the moment and the ang vel, then P=Mw
 
-def multi_idx(name, df_, idx=True):
-    
-    if idx:
-        index_mi = pd.MultiIndex.from_product([[name],df_.index])
-        df_.index = index_mi
-    else:
-        index_mi = pd.MultiIndex.from_product([[name],df_.columns])
-        df_.columns = index_mi
-    return df_
-    
 
 ang_vel = Horst_QS.loc['ankle_angle_r',:].apply(lambda x: np.gradient(x), axis=0)
 ang_vel = multi_idx('Angular vel [deg / GC]', ang_vel)
@@ -128,7 +149,7 @@ Horst_ = ankle_DJS(Horst_QS, exp_name = 'Horst individuals analysis')
 all_dfs = Horst_.extract_df_DJS_data(idx=[0,2,1,3])
 df_turn = Horst_.get_turning_points(turning_points= 6, 
                             smoothing_radius = 4, cluster_radius= 15)
-# Horst_.deg_to_rad()
+
 Horst_.energy_calculation()
 #Sensitive results may vary when integrating degrees, the best is to do in radians
 Horst_.deg_to_rad()

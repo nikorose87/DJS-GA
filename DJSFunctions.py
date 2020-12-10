@@ -631,7 +631,7 @@ class ankle_DJS(extract_preprocess_data):
                                   'Ankle Dorsi/Plantarflexion',
                                   'Ankle'],
                  exp_name = 'Gait Cycle analysis',
-                 units = ['Deg [°]', 'Force [%BH]', '[Nm/kg]', '[W/kg]'],
+                 units = [' Deg [°]', ' Force [%BH]', ' [Nm/kg]', ' [W/kg]'],
                  exclude_names=None):
         
         super().__init__(file_name, exp_name, dir_loc, header)
@@ -669,7 +669,7 @@ class ankle_DJS(extract_preprocess_data):
         
         return self.all_dfs_ankle
     
-    def extract_df_DJS_data(self, idx = [0,1,2,3]):
+    def extract_df_DJS_data(self, idx = [0,1,2,3], units=True):
         """
         As we like to read either preprocessed or raw data. It is needed to build
         this object so as to define the objects from a dataframe
@@ -696,8 +696,10 @@ class ankle_DJS(extract_preprocess_data):
                                   self.moment_ankle, self.power_ankle], axis=0)
         
         #Changing the features and adding units
+        if not units: #If you do not eant to add units
+            self.units = ['','','','']
         for i in idx:
-            self.features[i] += ' '+self.units[i] #Ankle angle
+            self.features[i] += self.units[i] #Ankle angle
         self.index_ankle = pd.MultiIndex.from_product([self.features,
                                                        self.angles_ankle.index], 
                                         names=['Feature', 'Gait cycle %'])
@@ -705,7 +707,28 @@ class ankle_DJS(extract_preprocess_data):
         
         return self.all_dfs_ankle
         
+    def change_labels(self, new_labels):
+        """
         
+
+        Parameters
+        ----------
+        new_labels : List
+            Replace column labels in the df_ankle 
+
+        Returns
+        -------
+        all_dfs_ankle.
+
+        """
+        if not hasattr(self, 'all_dfs_ankle'):
+            self.extract_df_DJS_data
+        
+        idx_old = self.all_dfs_ankle.columns.get_level_values(0).unique()
+        for num, name in enumerate(new_labels):
+            self.all_dfs_ankle.columns = self.all_dfs_ankle.columns.set_levels(\
+                    self.all_dfs_ankle.columns.levels[0].str.replace(idx_old[num], name), level=0)
+        return self.all_dfs_ankle
     
     def deg_to_rad(self):
         """

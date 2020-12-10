@@ -85,32 +85,45 @@ zero_ro = Ferrarin_.energy_fun.min_max_power(Ferrarin_.power_ankle)
 # =============================================================================
 Color = [i[1] for i in mcolors.TABLEAU_COLORS.items()]*2
 
-DJS_all = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=[5,2],
-                      alpha=7.0, fig_size=[10,6])
-DJS_all.colors = Color
-fig4 = DJS_all.plot_DJS(Ferrarin_.all_dfs_ankle, 
-                    cols=np.r_[1, 10, 2, 11, 0, 9, 3, 12, 4, 13], rows= np.r_[0,2],
-                    title="Individual ankle DJS for regular speed comparing Youth and Adults", 
-                    legend=True, reg=df_turn,
-                    integration= True, rad = True)
+# DJS_all = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=[5,2],
+#                       alpha=7.0, fig_size=[10,6])
+# DJS_all.colors = Color
+# fig4 = DJS_all.plot_DJS(Ferrarin_.all_dfs_ankle, 
+#                     cols=np.r_[1, 10, 2, 11, 0, 9, 3, 12, 4, 13], rows= np.r_[0,2],
+#                     title="Individual ankle DJS for regular speed comparing Youth and Adults", 
+#                     legend=True, reg=df_turn,
+#                     integration= True, rad = True)
 
     
 # =============================================================================
 # Plotting QS one by one comparing youths and adults 
 # =============================================================================
-cols_to_joint ={'Very Slow': (1, 10), 'Slow':(2, 11), 'Free': (0, 9), 
-                'Medium': (3, 12), 'Fast': (4, 13), 'Toes':(5,14), 'Heels':(6,15),
-                'Ascending': (7,16), 'Descending': (8,17)}
+# cols_to_joint ={'Very Slow': (1, 10), 'Slow':(2, 11), 'Free': (0, 9), 
+#                 'Medium': (3, 12), 'Fast': (4, 13), 'Toes':(5,14), 'Heels':(6,15),
+#                 'Ascending': (7,16), 'Descending': (8,17)}
 
-for key in cols_to_joint.keys():
-    # Changing the tuning for the turning points in the last two
-    # if i > 2:
-    #     df_turn = Ferrarin_.get_turning_points(turning_points= 6, 
-    #                         smoothing_radius = 5, cluster_radius= 7)
-    DJS_comp = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
-                              alpha=1.5, fig_size=[2.5, 2.2])
-    fig5 = DJS_comp.plot_DJS(Ferrarin_.all_dfs_ankle, 
-                        cols=list(cols_to_joint[key]), rows= np.r_[0,2],
-                        title="Ankle DJS comparison at {} speed".format(key), 
-                        legend=True, reg=df_turn,
-                        integration= True, rad = True)
+# for key in cols_to_joint.keys():
+#     # Changing the tuning for the turning points in the last two
+#     # if i > 2:
+#     #     df_turn = Ferrarin_.get_turning_points(turning_points= 6, 
+#     #                         smoothing_radius = 5, cluster_radius= 7)
+#     DJS_comp = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
+#                               alpha=1.5, fig_size=[2.5, 2.2])
+#     fig5 = DJS_comp.plot_DJS(Ferrarin_.all_dfs_ankle, 
+#                         cols=list(cols_to_joint[key]), rows= np.r_[0,2],
+#                         title="Ankle DJS comparison at {} speed".format(key), 
+#                         legend=True, reg=df_turn,
+#                         integration= True, rad = True)
+
+
+# =============================================================================
+# trying to do the best fit as possible for Ferrarin
+# =============================================================================
+DJS_all = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=False,
+                      alpha=7.0)
+DJS_all.colors = Color
+fig4 = DJS_all.plot_DJS(Ferrarin_.all_dfs_ankle, 
+                    cols=np.r_[0,1,2,3,4], rows= np.r_[0,2],
+                    title="Individual ankle DJS for regular speed comparing Youth and Adults", 
+                    legend=True, reg=df_turn,
+                    integration= True, rad = True)

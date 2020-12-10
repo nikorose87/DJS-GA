@@ -65,6 +65,7 @@ class plot_dynamic:
         
     
     def rc_params(self, proportion = 1, nrows=5, ncols=7):
+        mpl.rcParams["text.usetex"] = True #To use latex
         if proportion >= 4:
             # Adjusting plot parameters for bigger figures
             mpl.rcParams['axes.titlesize'] = 4*proportion
@@ -402,6 +403,8 @@ class plot_ankle_DJS(plot_dynamic):
             self.df_ =  df_.loc[self.idx[:,:],self.idx[self.columns_first[cols],:]]
             #To keep the index column order
             self.df_ = self.df_.reindex(self.columns_first[cols], level=0, axis=1)
+            #To keep the order of the TP
+            self.TP = self.TP.reindex(self.columns_first[cols], axis=0)
         if rad:
             self.deg2rad(self.index_first[rows[0]])
             self.x_label = 'Angle [rad]'
