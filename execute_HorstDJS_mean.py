@@ -54,7 +54,8 @@ def multi_idx(name, df_, idx=True, level=0):
         l_1 = l_
         l_2 = [name]
     index_mi = pd.MultiIndex.from_product([l_1, l_2])
-    df_.index = index_mi
+    if idx: df_.index = index_mi
+    else: df_.columns = index_mi
     return df_
 
 
@@ -177,7 +178,7 @@ zero_ro = Horst_.energy_fun.min_max_power(Horst_.power_ankle)
 # =============================================================================
 # Plotting ankle Quasi-Stiffness
 # =============================================================================
-DJS = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=True)
+DJS = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[4,2])
 fig2 = DJS.plot_DJS(Horst_.all_dfs_ankle, 
                     cols=np.r_[:8], rows= np.r_[0,2],
                     title="Ankle DJS of Horst subjects", 
@@ -222,7 +223,7 @@ zero_ro_gen = Horst_gen.energy_fun.min_max_power(Horst_gen.power_ankle)
 # =============================================================================
 # Plotting ankle Quasi-Stiffness
 # =============================================================================
-DJS_gen = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=True)
+DJS_gen = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[1,2])
 fig4 = DJS_gen.plot_DJS(Horst_gen.all_dfs_ankle, 
                     cols=None, rows= np.r_[0,2],
                     title="Ankle DJS for gender in Horst data", 

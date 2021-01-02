@@ -23,6 +23,7 @@ from scipy.signal import argrelextrema
 from scipy.ndimage import convolve1d
 import matplotlib.pyplot as plt
 import os
+from scipy.interpolate import UnivariateSpline
 from matplotlib.patches import Polygon
 from plot_dynamics import plot_dynamic, plot_ankle_DJS
 
@@ -96,6 +97,7 @@ class EnergyFunctions():
         self.res_one = np.around(np.float64(simps(var1, dx=self.dx)), 
                                  decimals=self.decimals)
         return self.res_one
+
     
     def zero_detection(self, power, vertices =4):
         """
@@ -722,7 +724,7 @@ class ankle_DJS(extract_preprocess_data):
 
         """
         if not hasattr(self, 'all_dfs_ankle'):
-            self.extract_df_DJS_data
+            self.extract_df_DJS_data()
         
         idx_old = self.all_dfs_ankle.columns.get_level_values(0).unique()
         for num, name in enumerate(new_labels):
@@ -825,7 +827,7 @@ class ankle_DJS(extract_preprocess_data):
         =============================================================================
         # Some explaining in the following order:
         # You will probably want to smooth your curve out first, then calculate the curvature, 
-        # then identify the highest curvature points. The following function does just that:
+        # then identify the highest curvature points:
         #     turning_points is the number of points you want to identify
         #     smoothing_radius is the radius of a smoothing convolution to be 
               applied to your data before computing the curvature
@@ -841,7 +843,9 @@ class ankle_DJS(extract_preprocess_data):
             new_y = new_y[smoothing_radius:-smoothing_radius] / np.sum(weights)
         else:
             new_x, new_y = x, y
+        # Applying curvature after smoothing
         k = np.atleast_1d(self.curvature(new_x, new_y))
+        # sorting by the max argument from last position in array
         turn_point_idx = np.argsort(k, axis=0)[::-1]
         t_points = []
         while len(t_points) < turning_points and len(turn_point_idx) > 0:
@@ -849,7 +853,7 @@ class ankle_DJS(extract_preprocess_data):
             idx = np.abs(turn_point_idx - turn_point_idx[0]) > cluster_radius
             turn_point_idx = turn_point_idx[idx]
         t_points = np.array(t_points)
-        t_points += smoothing_radius + 1
+        t_points += smoothing_radius #+ 1
         
         #If there are no more points It should fill with zeros
         while t_points.shape[0] < turning_points -1:
@@ -858,8 +862,69 @@ class ankle_DJS(extract_preprocess_data):
         t_points = t_points[np.argsort(t_points, axis=0)].astype(np.int64)
         return t_points
     
-    def get_turning_points(self, rows=[0,2], cols=None, turning_points= 6, 
-                           smoothing_radius = 4, cluster_radius= 15):
+    def get_curvature_points(self, x, y, k=3, error=0.001, 
+                             turning_points=6, cluster_radius=10):
+        # Applying curvature after smoothing
+        k = self.curvature_splines(x, y, k, error)
+        # sorting by the max argument from last position in array
+        turn_point_idx = np.argsort(k, axis=0)[::-1]
+        t_points = []
+        while len(t_points) < turning_points and len(turn_point_idx) > 0:
+            t_points += [turn_point_idx[0]]
+            idx = np.abs(turn_point_idx - turn_point_idx[0]) > cluster_radius
+            turn_point_idx = turn_point_idx[idx]
+        t_points = np.array(t_points)
+        
+        #If there are no more points It should fill with zeros
+        while t_points.shape[0] < turning_points -1:
+            t_points = np.append(t_points, [0])
+        #Sorting by order
+        t_points = t_points[np.argsort(t_points, axis=0)].astype(np.int64)
+        return t_points
+    
+    def curvature_splines(self, x, y, k=2, error=0.001):
+        """Calculate the signed curvature of a 2D curve at each point
+        using interpolating splines.
+        Parameters
+        ----------
+        x,y: numpy.array(dtype=float) representing the DJS array
+        error : float
+            The admisible error when interpolating the splines
+        k: Degree of the fit function, default = 4
+        Returns
+        -------
+        curvature: numpy.array shape (n_points, )
+        Note: This is 2-3x slower (1.8 ms for 2000 points) than `curvature_gradient`
+        but more accurate, especially at the borders.
+        
+        Piece of code taken from 
+        https://gist.github.com/elyase/451cbc00152cb99feac6
+        
+        This is more accurate 
+        """
+    
+        # handle list of complex case
+        if y is None:
+            x, y = x.real, x.imag
+    
+        t = np.arange(x.shape[0])
+        std = error * np.ones_like(x)
+    
+        fx = UnivariateSpline(t, x, k=k, w=1 / np.sqrt(std))
+        fy = UnivariateSpline(t, y, k=k, w=1 / np.sqrt(std))
+    
+        xˈ = fx.derivative(1)(t)
+        xˈˈ = fx.derivative(2)(t)
+        yˈ = fy.derivative(1)(t)
+        yˈˈ = fy.derivative(2)(t)
+        curvature = (xˈ* yˈˈ - yˈ* xˈˈ) / np.power(xˈ** 2 + yˈ** 2, 3 / 2)
+        
+        return curvature
+    
+        
+    
+    def get_turning_points(self, rows=[0,2], cols=None, method = 'normal', turning_points= 6, 
+                           cluster_radius= 15, param_1 = 4, param_2=0.001):
         """
         This piece of code will return the df with points where the loop changes
         the most 
@@ -893,10 +958,17 @@ class ankle_DJS(extract_preprocess_data):
         # df_turn = df_turn.columns.droplevel(1)
 
         for num, col in enumerate(df_turn.columns):
-            TP = self.turning_points(df_turn.loc[self.idx[rows_labels[0],:], 
+            if method == 'splines':
+                #This method is not well configured yet
+                TP = self.get_curvature_points(df_turn.loc[self.idx[rows_labels[0],:], 
                                                       col].values,
-                      df_turn.loc[self.idx[rows_labels[1], :], col].values, 
-                      turning_points, smoothing_radius, cluster_radius)
+                      df_turn.loc[self.idx[rows_labels[1], :], col].values, param_1, param_2,
+                      turning_points, cluster_radius)
+            elif method == 'normal':
+                TP = self.turning_points(df_turn.loc[self.idx[rows_labels[0],:], 
+                                                          col].values,
+                          df_turn.loc[self.idx[rows_labels[1], :], col].values, 
+                          turning_points, param_1, cluster_radius)
             if num == 0:
                 TP_df = np.array(TP)
             else:
@@ -908,7 +980,7 @@ class ankle_DJS(extract_preprocess_data):
                     #Getting rid of those uncalculated rows
                     self.all_dfs_ankle = self.all_dfs_ankle.drop(col[0], axis=1)
         self.TP_df = pd.DataFrame(np.atleast_2d(TP_df), index=cols_labels, 
-                    columns=['point {}'.format(i) for i in range(turning_points-1)])
+                    columns=['point {}'.format(i) for i in range(turning_points-1)]) 
         return self.TP_df
     
     
