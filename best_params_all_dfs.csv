@@ -1,0 +1,46 @@
+Speed,Measure,point 0,point 1,point 2,point 3,point 4
+Free Y,-1sd,7,23,39,62,83
+Free Y,mean,6,22,40,62,84
+Free Y,+1sd,6,22,41,62,86
+Very Slow Y,-1sd,7,21,42,63,82
+Very Slow Y,mean,7,20,43,64,81
+Very Slow Y,+1sd,7,20,44,64,80
+Slow Y,-1sd,6,22,41,62,83
+Slow Y,mean,6,19,41,63,82
+Slow Y,+1sd,6,19,41,63,82
+Medium Y,-1sd,6,23,39,62,84
+Medium Y,mean,6,23,40,62,85
+Medium Y,+1sd,6,22,41,63,86
+Fast Y,-1sd,7,22,36,60,84
+Fast Y,mean,7,23,37,60,85
+Fast Y,+1sd,7,24,38,61,87
+Free A,-1sd,8,23,40,63,84
+Free A,mean,8,23,41,64,83
+Free A,+1sd,7,20,42,64,82
+Very Slow A,-1sd,6,22,43,66,84
+Very Slow A,mean,6,22,44,66,83
+Very Slow A,+1sd,6,22,44,66,83
+Slow A,-1sd,8,24,40,64,85
+Slow A,mean,7,23,41,64,84
+Slow A,+1sd,7,21,42,64,82
+Medium A,-1sd,8,24,37,62,85
+Medium A,mean,8,25,38,63,84
+Medium A,+1sd,8,27,40,63,84
+Fast A,-1sd,14,28,42,58,82
+Fast A,mean,13,27,41,59,81
+Fast A,+1sd,6,26,40,59,80
+Very Slow C,-1sd,7,32,47,70,85
+Very Slow C,mean,7,26,48,70,84
+Very Slow C,+1sd,7,26,50,70,83
+Slow C,-1sd,6,23,45,65,83
+Slow C,mean,6,21,46,66,82
+Slow C,+1sd,6,21,47,66,82
+Free C,-1sd,7,26,40,64,85
+Free C,mean,7,28,42,64,85
+Free C,+1sd,7,30,43,65,84
+Medium C,-1sd,6,24,37,62,84
+Medium C,mean,6,26,39,62,84
+Medium C,+1sd,6,28,41,63,84
+Fast C,-1sd,6,26,40,60,84
+Fast C,mean,6,29,43,60,83
+Fast C,+1sd,6,30,44,61,83

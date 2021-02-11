@@ -16,6 +16,64 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
+# =============================================================================
+# Performing the RF prediction to compare with the Meta algorithm
+# =============================================================================
+
+def RF_pred(label_to_pred):
+    idx = pd.IndexSlice
+    input_horst = pd.read_csv('Horst/Horst_marker_distances_anthropometry.csv',index_col=0)
+    output_horst = pd.read_csv('Horst/Horst_reg_lines_raw.csv', index_col=[0,1])
+
+    #Multiplying the features for each
+    input_horst_amp = pd.DataFrame(np.empty((output_horst.shape[0], 
+                               input_horst.shape[1])), index=output_horst.index,
+                               columns = input_horst.columns)
+    input_horst_amp[:] = np.nan
+    for row_base in input_horst.index:
+        for num, row_amp in enumerate(input_horst_amp.index.get_level_values(0)):    
+            if row_base in row_amp:
+                input_horst_amp.iloc[num] = input_horst.loc[row_base]
+    #Creating the df for the output
+    pred_output = pd.DataFrame(np.empty((output_horst.shape[0], 2)), 
+                               index=output_horst.index, columns=['intercept', 'stiffness'])
+    for col in ['ERP', 'LRP', 'DP']: 
+        for var in ['intercept', 'stiffness']:
+            X_train, X_test, y_train, y_test = train_test_split(input_horst_amp.loc[idx[:,col], :], 
+                                                                output_horst.loc[idx[:, col],:][var], 
+                                                                test_size=.2, \
+                                                                random_state=42)
+            df_params = pd.read_csv('Horst/Best_params_RF_for_{}_in_{}.csv'.format(col, var), 
+                                    index_col=[0])
+            df_params.columns = ['Values']
+            #to float 
+            for ind in df_params.index:
+                try:
+                    if pd.isnull(df_params.loc[ind]).values:
+                        df_params.loc[ind] = None
+                    df_params.loc[ind] = df_params.loc[ind].astype(int)
+                except (ValueError, TypeError) as e:
+                    continue
+            #to dict
+            df_dict = df_params.to_dict()
+            rf_ = RandomForestRegressor(random_state=42, **df_dict['Values'])
+            rf_.fit(X_train, y_train)
+            #Predicting the data
+            y_pred = rf_.predict(X_test)
+            print('The score using RME in {} for {} is {}'.format(col, var,
+                                                                  mean_squared_error(y_test, 
+                                                                  y_pred)))
+            #Taking the same variables to pred
+            input_pred = input_horst_amp.loc[idx[label_to_pred, col], :]
+            pred_output.loc[idx[label_to_pred, col], var] = rf_.predict(input_pred)
+    #Dropping nan
+    pred_output = pred_output.dropna()
+    #Removing non predicted categories
+    pred_output = pred_output.loc[idx[label_to_pred, :], :]
+    return pred_output
+
+
+
 Horst_ = extract_preprocess_data('/home/nikorose/enprietop@unal.edu.co/'+
                                  'Tesis de Doctorado/Gait Analysis Data/Downloaded/Horst et al./Nature_paper/Horst_Nature_paper.csv', 
                                     dir_loc=None,
@@ -80,7 +138,7 @@ Horst_ = ankle_DJS(Horst_QS, exp_name = 'Horst exp analysis')
 
 all_dfs = Horst_.extract_df_DJS_data(idx=[0,2,1,3])
 df_turn = Horst_.get_turning_points(turning_points= 6, 
-                            smoothing_radius = 4, cluster_radius= 15)
+                            param_1 = 4, cluster_radius= 15)
 # Horst_.deg_to_rad()
 Horst_.energy_calculation()
 #Sensitive results may vary when integrating degrees, the best is to do in radians
@@ -143,62 +201,6 @@ for num in range(10):
     #Saving figure
     fig4.savefig('Figures/comp_regressor_sample_{}.pdf'.format(num))
         
-
-# =============================================================================
-# Performing the RF prediction to compare with the Meta algorithm
-# =============================================================================
-
-def RF_pred(label_to_pred):
-    idx = pd.IndexSlice
-    input_horst = pd.read_csv('Horst/Horst_marker_distances_anthropometry.csv',index_col=0)
-    output_horst = pd.read_csv('Horst/Horst_reg_lines_raw.csv', index_col=[0,1])
-
-    #Multiplying the features for each
-    input_horst_amp = pd.DataFrame(np.empty((output_horst.shape[0], 
-                               input_horst.shape[1])), index=output_horst.index,
-                               columns = input_horst.columns)
-    input_horst_amp[:] = np.nan
-    for row_base in input_horst.index:
-        for num, row_amp in enumerate(input_horst_amp.index.get_level_values(0)):    
-            if row_base in row_amp:
-                input_horst_amp.iloc[num] = input_horst.loc[row_base]
-    #Creating the df for the output
-    pred_output = pd.DataFrame(np.empty((output_horst.shape[0], 2)), 
-                               index=output_horst.index, columns=['intercept', 'stiffness'])
-    for col in ['ERP', 'LRP', 'DP']: 
-        for var in ['intercept', 'stiffness']:
-            X_train, X_test, y_train, y_test = train_test_split(input_horst_amp.loc[idx[:,col], :], 
-                                                                output_horst.loc[idx[:, col],:][var], 
-                                                                test_size=.2, \
-                                                                random_state=42)
-            df_params = pd.read_csv('Horst/Best_params_RF_for_{}_in_{}.csv'.format(col, var), 
-                                    index_col=[0])
-            df_params.columns = ['Values']
-            #to float 
-            for ind in df_params.index:
-                try:
-                    if pd.isnull(df_params.loc[ind]).values:
-                        df_params.loc[ind] = None
-                    df_params.loc[ind] = df_params.loc[ind].astype(int)
-                except (ValueError, TypeError) as e:
-                    continue
-            #to dict
-            df_dict = df_params.to_dict()
-            rf_ = RandomForestRegressor(random_state=42, **df_dict['Values'])
-            rf_.fit(X_train, y_train)
-            #Predicting the data
-            y_pred = rf_.predict(X_test)
-            print('The score using RME in {} for {} is {}'.format(col, var,
-                                                                  mean_squared_error(y_test, 
-                                                                  y_pred)))
-            #Taking the same variables to pred
-            input_pred = input_horst_amp.loc[idx[label_to_pred, col], :]
-            pred_output.loc[idx[label_to_pred, col], var] = rf_.predict(input_pred)
-    #Dropping nan
-    pred_output = pred_output.dropna()
-    #Removing non predicted categories
-    pred_output = pred_output.loc[idx[label_to_pred, :], :]
-    return pred_output
 
 
 # pred_RF = RF_pred(pred_reg.index.get_level_values(0).unique())

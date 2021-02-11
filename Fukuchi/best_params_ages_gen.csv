@@ -1,0 +1,19 @@
+,,point 0,point 1,point 2,point 3,point 4,point 5
+Adult OC,-1sd,0,17,96,138,195,256
+Adult OC,mean,0,17,93,138,193,255
+Adult OC,+1sd,0,17,90,138,193,252
+Adult OF,-1sd,0,18,96,129,192,253
+Adult OF,mean,0,18,90,132,190,252
+Adult OF,+1sd,0,18,87,135,190,252
+Adult OS,-1sd,0,17,96,144,204,253
+Adult OS,mean,0,17,93,146,201,252
+Adult OS,+1sd,0,17,93,147,199,249
+Elderly OC,-1sd,0,17,90,138,195,256
+Elderly OC,mean,0,17,90,138,195,255
+Elderly OC,+1sd,0,17,93,141,195,252
+Elderly OF,-1sd,0,18,78,132,189,256
+Elderly OF,mean,0,18,84,132,190,255
+Elderly OF,+1sd,0,20,90,135,190,253
+Elderly OS,-1sd,0,15,96,144,198,252
+Elderly OS,mean,0,15,96,146,198,250
+Elderly OS,+1sd,0,15,90,147,198,250

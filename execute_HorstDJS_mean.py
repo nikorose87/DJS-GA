@@ -12,6 +12,7 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from utilities_QS import multi_idx
 
 Horst_ = extract_preprocess_data('Horst_mean.csv', 
                                     dir_loc='Horst')
@@ -26,37 +27,6 @@ idx= pd.IndexSlice
 
 Horst_QS = Horst_df.loc[idx[['ankle_angle_r','ankle_angle_r_moment',
                              'ground_force_1_v_2'], :]]
-
-def multi_idx(name, df_, idx=True, level=0):
-    """
-    
-
-    Parameters
-    ----------
-    name : High level name to set. STR
-    df_ : Dataframe to create the multiindex.
-    idx : If true It will do over index, otherwise columns.
-    level : Either to set in the first level or the second level.
-
-    Returns
-    -------
-    df_ : Pandas dataframe.
-
-    """
-    if idx:
-        l_ = df_.index
-    else:
-        l_ = df_.columns
-    if level == 0:
-        l_1 = [name]
-        l_2 = l_
-    else:
-        l_1 = l_
-        l_2 = [name]
-    index_mi = pd.MultiIndex.from_product([l_1, l_2])
-    if idx: df_.index = index_mi
-    else: df_.columns = index_mi
-    return df_
 
 
 #According to Winter https://ouhsc.edu/bserdac/dthompso/web/gait/epow/pow1.htm
@@ -73,7 +43,7 @@ Horst_QS = pd.concat([Horst_QS, ang_vel], axis=0)
 Horst_QS.loc['ankle_angle_r_moment'] = Horst_QS.loc['ankle_angle_r_moment',:].apply(lambda x: -x).values
 
 def power(col):
-    return col['ankle_angle_r_moment']*col['Angular vel [deg / GC]']
+    return col['ankle_angle_r']*col['ankle_angle_r_moment']
 
 power = Horst_QS.apply(power, axis=0)
 power = multi_idx('Power [W]', power)
@@ -149,7 +119,7 @@ Horst_ = ankle_DJS(Horst_QS, exp_name = 'Horst individuals analysis')
 
 all_dfs = Horst_.extract_df_DJS_data(idx=[0,2,1,3])
 df_turn = Horst_.get_turning_points(turning_points= 6, 
-                            smoothing_radius = 4, cluster_radius= 15)
+                            param_1 = 4, cluster_radius= 15)
 
 Horst_.energy_calculation()
 #Sensitive results may vary when integrating degrees, the best is to do in radians
@@ -182,7 +152,7 @@ DJS = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[4,2])
 fig2 = DJS.plot_DJS(Horst_.all_dfs_ankle, 
                     cols=np.r_[:8], rows= np.r_[0,2],
                     title="Ankle DJS of Horst subjects", 
-                    legend=True, reg=df_turn,
+                    legend=True, reg=df_turn.loc[idx[:,'mean'],:],
                     integration= True, rad = True)
 
 # =============================================================================
@@ -194,7 +164,7 @@ Horst_gen = ankle_DJS(Horst_QS_gen, exp_name = 'Horst gender analysis')
 
 all_dfs_gen = Horst_gen.extract_df_DJS_data(idx=[0,2,1,3])
 df_turn_gen = Horst_gen.get_turning_points(turning_points= 6, 
-                            smoothing_radius = 4, cluster_radius= 15)
+                            param_1 = 4, cluster_radius= 15)
 # Horst_.deg_to_rad()
 Horst_gen.energy_calculation()
 #Sensitive results may vary when integrating degrees, the best is to do in radians
@@ -227,5 +197,5 @@ DJS_gen = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[1,2])
 fig4 = DJS_gen.plot_DJS(Horst_gen.all_dfs_ankle, 
                     cols=None, rows= np.r_[0,2],
                     title="Ankle DJS for gender in Horst data", 
-                    legend=True, reg=df_turn,
+                    legend=True, reg=df_turn.loc[idx[:,'mean'],:],
                     integration= True, rad = True)

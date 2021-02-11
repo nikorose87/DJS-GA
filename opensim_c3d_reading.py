@@ -203,7 +203,7 @@ anthro_info.columns = ['ID','gender','age','mass','height']
 # =============================================================================
 
 
-for sub in range(34,58): #Because there are 57 subjects
+for sub in range(1,2): #Because there are 57 subjects
     # fig, ax = plt.subplots()
     subject = 'S{}'.format(str(sub).zfill(2))
     #Defining the Osim files dir
@@ -216,7 +216,7 @@ for sub in range(34,58): #Because there are 57 subjects
         for file in list_files:
             shutil.copy2(osim_custom_dir+file, osim_files_dir)
         
-    trials = range(1,26)
+    trials = range(1,3)
     for trial in trials:
         sub_plus_trial = '{}_{}'.format(subject, str(trial).zfill(4))
         try:
@@ -225,7 +225,7 @@ for sub in range(34,58): #Because there are 57 subjects
                 S_static_osim = opensim_handling('{}_Static.c3d'.format(sub_plus_trial), 
                                                  info_dir, TRC=True, rotate={'y':-90, 'z':-90})
                 S01_scaling = XML_scaling(time = S_static_osim.finish_time,
-                                          mass= anthro_info.iloc[sub-1,3],
+                                        mass= anthro_info.iloc[sub-1,3],
                                         height = anthro_info.iloc[sub-1,4],
                                         age = anthro_info.iloc[sub-1,2],
                                         static_marker_data= os.path.join( subject_static_dir, 

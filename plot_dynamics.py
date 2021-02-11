@@ -22,6 +22,7 @@ from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 from pathlib import PurePath
 import os
+import pylab
 
 class plot_dynamic:
     def __init__(self, SD = False, ext='png', 
@@ -70,22 +71,22 @@ class plot_dynamic:
             # Adjusting plot parameters for bigger figures
             mpl.rcParams['axes.titlesize'] = 4*proportion
             mpl.rcParams['axes.labelsize'] = 6*proportion
-            mpl.rcParams['lines.linewidth'] = proportion*0.3
-            mpl.rcParams['lines.markersize'] = 4*proportion
+            # mpl.rcParams['lines.linewidth'] = proportion*0.3
+            # mpl.rcParams['lines.markersize'] = 4*proportion
             mpl.rcParams['xtick.labelsize'] = 5*proportion
             mpl.rcParams['ytick.labelsize'] = 5*proportion
             mpl.rcParams['legend.fontsize'] = 7*proportion
-            mpl.rcParams['legend.handlelength'] = proportion
+            mpl.rcParams['legend.handlelength'] = proportion*3
         else:
             # Adjusting plot parameters for small figures
             mpl.rcParams['axes.titlesize'] = 4*proportion
             mpl.rcParams['axes.labelsize'] = 5*proportion
-            mpl.rcParams['lines.linewidth'] = proportion
+            # mpl.rcParams['lines.linewidth'] = proportion
             mpl.rcParams['lines.markersize'] = 4*proportion
             mpl.rcParams['xtick.labelsize'] = 4*proportion
             mpl.rcParams['ytick.labelsize'] = 4*proportion
             mpl.rcParams['legend.fontsize'] = 5*proportion
-            mpl.rcParams['legend.handlelength'] = proportion
+            mpl.rcParams['legend.handlelength'] = proportion / 2
             
         mpl.rcParams['figure.figsize'] = ncols, nrows
         #backgroud color
@@ -244,15 +245,23 @@ class plot_ankle_DJS(plot_dynamic):
         self.sep = sep
         self.idx = pd.IndexSlice
         self.fig_size = fig_size
-        self.params ={'sharex':True, 'sharey':True, 'arr_size':self.alpha*3, 
+        self.params ={'sharex':True, 'sharey':True, 'arr_size': int(self.alpha*3), 
                       'color_DJS': self.colors, 'color_symbols': self.colors,
                       'color_reg': self.colors, 'left_margin': 0.15,
                       'yticks': None,
                       'xticks': None,
-                      'hide_labels':(False, False)}
+                      'hide_labels':(False, False),
+                      'alpha_prod': 0.3,
+                      'alpha_absorb': 0.1,
+                      'DJS_linewidth': 0.4,
+                      'reg_linewidth': 0.8,
+                      'sd_linewidth': 0.3*self.alpha/self.fig_size[0],
+                      'grid':True,
+                      'text': False}
+        
         if params is not None:
             self.params.update(params)
-            
+             
         plt.style.use(plt_style)
     
     def deg2rad(self, row_name):
@@ -267,6 +276,7 @@ class plot_ankle_DJS(plot_dynamic):
     def separared(self, rows):
         areas_prod = []  
         areas_abs = []
+        direction = []
         for _ , self.ax in np.ndenumerate(self.axs):
             try:
                 #This exception is for unpaired plots in order to get rid of empty axes
@@ -274,17 +284,28 @@ class plot_ankle_DJS(plot_dynamic):
                 self.mom_mean = self.extract_data([rows[1], self.count, int(self.sd)])
                 if self.sd:
                     self.sd_plot(rows)
+                if not self.params['grid']:
+                    self.ax.grid(False)
+                    self.ax.spines['right'].set_visible(False)
+                    self.ax.spines['top'].set_visible(False)
                 line_plot = self.ax.plot(self.ang_mean, self.mom_mean, 
                              color= self.params['color_DJS'][self.count],
-                             label= self.columns_first[self.count])
+                             label= self.columns_first[self.count],
+                             linewidth=self.params['DJS_linewidth'])
                 if self.integrate:
-                    _prod, _abs = self.areas()
+                    _prod, _abs, _dir = self.areas()
                     areas_abs.append(_abs)
                     areas_prod.append(_prod)
+                    direction.append(_dir)
                 if isinstance(self.TP, pd.DataFrame):
                     self.reg_lines()
-                    
-                self.add_arrow(line_plot)
+                if self.ang_mean.shape[0] <= 300:
+                    arr_space = 2
+                else:
+                    arr_space = 20
+                self.add_arrow(line_plot, step=arr_space)
+                if self.params['text']:
+                    self.labels_inside()
                 if not self.params['hide_labels'][1]:
                     #showing only 1 column y labels and last row x labels
                     if self.count % self.sep[1] == 0:
@@ -294,67 +315,162 @@ class plot_ankle_DJS(plot_dynamic):
                         self.ax.set_xlabel(self.x_label)
                 if self.legend:
                     self.ax.legend(ncol=int(len(self.columns_first)/2), fancybox=True,
-                                   loc = 'upper left')
+                                   loc = 'upper left')                       
                 self.count +=1
             except IndexError:
+                #Because plots does not match
                 continue
-                
-        self.areas = pd.DataFrame(np.array([areas_abs, areas_prod]).T, 
-                                  columns = ['work abs', 'work prod'], index=self.columns_first)
-            
+        if self.integrate:
+            if self.integrate: self.df_areas(areas_abs, areas_prod, direction)
+
     def together(self, rows):
         areas_prod = []  
         areas_abs = []
+        direction = []
         for _ in enumerate(self.columns_first):
             self.ang_mean = self.extract_data([rows[0], self.count, int(self.sd)])
             self.mom_mean = self.extract_data([rows[1], self.count, int(self.sd)])
             if self.sd:
                 self.sd_plot(rows)
+            if not self.params['grid']:
+                self.ax.grid(False)
+                self.ax.spines['right'].set_visible(False)
+                self.ax.spines['top'].set_visible(False)
             line_plot = self.ax.plot(self.ang_mean, self.mom_mean, 
                          color= self.params['color_DJS'][self.count],
-                         label= self.columns_first[self.count])
+                         label= self.columns_first[self.count],
+                         linewidth=self.params['DJS_linewidth'])
             if self.integrate:
-                _prod, _abs = self.areas()
+                _prod, _abs, _dir = self.areas()
                 areas_abs.append(_abs)
                 areas_prod.append(_prod)
+                direction.append(_dir)
             if isinstance(self.TP, pd.DataFrame):
                 self.reg_lines()
-            self.add_arrow(line_plot)
+            if self.ang_mean.shape[0] <= 400:
+                arr_space = 2
+            else:
+                arr_space = 20
+            self.add_arrow(line_plot, step=arr_space)
+            if self.params['text']:
+                self.labels_inside()
             if not self.params['hide_labels'][0]:
                 self.ax.set_xlabel(self.x_label)
             if not self.params['hide_labels'][1]:
                 self.ax.set_ylabel(self.y_label)
-            if self.legend:
-                self.ax.legend(ncol=int(len(self.columns_first)/2), fancybox=True,
-                           loc = 'upper left')
-        
+            if self.legend == True:
+                try:
+                    self.ax.legend(ncol=int(len(self.columns_first)/2), fancybox=True, 
+                               loc = 'upper left')
+                except ZeroDivisionError:
+                    self.ax.legend(ncol=1, fancybox=True, 
+                               loc = 'upper left', fontsize=self.alpha*3)
+                        
+            elif self.legend == 'sep':
+                figLegend = pylab.figure(figsize = self.fig_size)
+                pylab.figlegend(*self.ax.get_legend_handles_labels(), 
+                                loc = 'upper left')
+                
+                self.save_fig(figLegend, "legend_{}".format(self.title))
+            else:
+                pass
+
             self.count +=1
-        self.areas = pd.DataFrame(np.array([areas_abs, areas_prod]).T, 
-                                 columns = ['work abs', 'work prod'], index=self.columns_first)
-    
+        if self.integrate: self.df_areas(areas_abs, areas_prod, direction)
+
+    def labels_inside(self):
+        #Printing point labels
+        tp_labels = {'I.C.':(3,3),'ERP':(2.5,2.5),
+                     'LRP':(1.2,1.0),'DP':(1,1.1),'S':(1.2,1.1), 
+                     'TS':(1,1)}
+        for n_, (tp_lab, val) in enumerate(tp_labels.items()):
+            self.ax.text(self.ang_mean[self.TP.iloc[self.count, n_]]*val[0],
+                         self.mom_mean[self.TP.iloc[self.count, n_]]*val[1],
+                         tp_lab,
+                         color=self.params['color_reg'][self.count])
+            self.ax.text(0.5, 0.3, r'$W_{net}$', horizontalalignment='center',
+                         verticalalignment='center', 
+                         color=self.params['color_reg'][self.count],
+                         transform=self.ax.transAxes)   
+            self.ax.text(0.85, 0.2, r'$W_{abs}$', horizontalalignment='center',
+                         verticalalignment='center', transform=self.ax.transAxes,
+                         color=self.params['color_reg'][self.count]) 
+
+
+    def df_areas(self, areas_abs, areas_prod, direction):
+        
+        """
+        Returns areas in a df way
+
+        Returns
+        -------
+        None.
+
+        """
+        ind_ = self.columns_first
+        self.areas = pd.DataFrame(np.array([areas_abs, areas_prod, direction]).T, 
+                                  columns = ['work abs', 'work prod', 'direction'], index=ind_)
+    def is_positive(self):
+        signedarea = 0
+        for len_arr in range(self.ang_mean.shape[0]-1):
+           signedarea += self.ang_mean[len_arr]*self.mom_mean[len_arr+1] - \
+               self.ang_mean[len_arr+1]*self.mom_mean[len_arr]
+        if signedarea < 0:
+            return 'cw'
+        else:
+            return 'ccw'
+                
     def areas(self):
         #We are making the integration of the closed loop
-        prod = self.integration(self.ang_mean, self.mom_mean, 
-                         self.params['color_DJS'][self.count])
-        #Select the greatest TP in terms of angle
-        if self.ang_mean[self.TP.iloc[self.count][2]] > self.ang_mean[self.TP.iloc[self.count][1]]:
-            num = 2
-        else:
-            num = 1
-        #We pretend to integer the area under the loop
-        X = self.ang_mean[self.TP.iloc[self.count][0]:self.TP.iloc[self.count][num]].values
-        Y = self.mom_mean[self.TP.iloc[self.count][0]:self.TP.iloc[self.count][num]].values
-        #closing the loop with another point in zero
-        # going to 0 in Y axis and Adding another point in (0,0)
-        X = np.append(X,[X[-1],0])
-        Y = np.append(Y,[0,0])
-        absorb = self.integration(X,Y, self.params['color_DJS'][self.count], alpha=0.1)
-        return prod, absorb
+        try: 
+            prod = self.integration(self.ang_mean, self.mom_mean, 
+                             self.params['color_DJS'][self.count],
+                             alpha = self.params['alpha_prod'])
+            #To discover which direction the DJS is turning
+            # If angle at 40% of the gait is bigger than angle in 65% of the gait
+            # and if the moment at 55 % is bigger than 40%, so It is counter clockwise
+            # otherwise clockwise
+            len_vars = self.ang_mean.shape[0]
+            try:
+                #Taking the 10 highest values
+                max_vals = self.ang_mean.argsort()[-15:].values
+                # Proving that higher moments are generated in max values >0.25 Nm/kg
+                max_ang = max_vals[self.mom_mean[max_vals].values > 0.25][-1]
+            except IndexError:
+                #In few cases no max ang is found, setting and average
+                max_ang = int(len_vars*0.5)
+            
+            
+            direction = self.is_positive()
+            #We pretend to integer the area under the loop
+            if direction == 'ccw':
+                X = self.ang_mean[0:max_ang].values
+                Y = self.mom_mean[0:max_ang].values
+                pos_init = [-1,0,0,0]
+            else:
+                X = self.ang_mean[max_ang:].values
+                Y = self.mom_mean[max_ang:].values
+                pos_init = [0,-1,0,0]
+            #closing the loop with another point in zero
+            # going to 0 in Y axis and Adding another point in (0,0)
+            X = np.append(X,[X[pos_init[0]],X[pos_init[2]]])
+            Y = np.append(Y,[Y[pos_init[1]],Y[pos_init[3]]])
+            absorb = self.integration(X,Y, 
+                                      self.params['color_DJS'][self.count], 
+                                      alpha=self.params['alpha_absorb'])
+        except ValueError:
+            #Integration cannot be done
+            prod = 0
+            absorb = 0
+            
+                
+        return prod, absorb, direction
         
     
     def reg_lines(self):
-        self.ax.scatter(self.ang_mean[self.TP.iloc[self.count][:-1]],
-                        self.mom_mean[self.TP.iloc[self.count][:-1]],
+        # Plotting TP
+        self.ax.scatter(self.ang_mean[self.TP.iloc[self.count]],
+                        self.mom_mean[self.TP.iloc[self.count]],
                         color=self.params['color_symbols'][self.count])
 
         for i in range(self.TP.shape[1]-2):
@@ -362,7 +478,9 @@ class plot_ankle_DJS(plot_dynamic):
                           self.TP.iloc[self.count][i+1]].values.reshape(-1,1)
             mom_data = self.mom_mean[self.TP.iloc[self.count][i]: \
                           self.TP.iloc[self.count][i+1]].values.reshape(-1,1)
+            # print(ang_data, mom_data, self.TP.iloc[self.count])
             info = self.ridge(ang_data, mom_data)
+            
             if i == 0:
                 info2 = info
             else:
@@ -370,19 +488,37 @@ class plot_ankle_DJS(plot_dynamic):
                     info2[key].extend(item)
         reg_info = info2
         self.reg_data = reg_info.pop('pred_data')
-        reg_idx= pd.MultiIndex.from_product([[self.columns_first[self.count]], 
-                                             ['ERP', 'LRP', 'DP']], 
-                                                  names=['Speed', 'QS phase'])
-        reg_info_df = pd.DataFrame(reg_info, index = reg_idx)
+        #We are placing the second level, so if there is only one item we need to take the 0 item 
+        #otherwise the first
+        if self.columns_second.shape[0] == 3:
+            num = 1
+        else:
+            num = 0
+
+        reg_info_df = pd.DataFrame(reg_info)
+        instance = ['CP','ERP', 'LRP', 'DP', 'S']
+        instance = instance[:reg_info_df.shape[0]]
+        reg_idx= pd.MultiIndex.from_product([[self.columns_first[self.count]], [self.columns_second[num]],
+                             instance], names=['Speed', 'instance','QS phase'])
+        reg_info_df.index = reg_idx
+
         if hasattr(self, 'reg_info_df'):
             self.reg_info_df = pd.concat([self.reg_info_df, reg_info_df])
         else:
             self.reg_info_df = reg_info_df
-        style= ['--', '-.', ':', 'dashdot']
+        style= ['--', '-.', ':', '--', '-.', ':']
         for i, reg in enumerate(self.reg_data):
-            self.ax.plot(reg[:,0], reg[:,1], 
-                             color= self.params['color_reg'][self.count], 
-                             linestyle = style[i], zorder=15)
+            if self.params['text']:
+                self.ax.plot(reg[:,0], reg[:,1], 
+                                 color = self.params['color_reg'][self.count], 
+                                 linestyle = style[i], zorder=15, 
+                                 linewidth = self.params['reg_linewidth'],
+                                 label=instance[i])
+            else:
+                self.ax.plot(reg[:,0], reg[:,1], 
+                                color = self.params['color_reg'][self.count], 
+                                linestyle = style[i], zorder=15, #style[i] -> for plot in paper
+                                linewidth = self.params['reg_linewidth'])
 
     # Ridge regression
     def ridge(self, var1, var2, alpha = 0.001):
@@ -404,8 +540,12 @@ class plot_ankle_DJS(plot_dynamic):
             
         y_linear_lr = linear_model.Ridge(alpha= alpha)
         y_linear_lr.fit(X, Y)
-        R2 = y_linear_lr.score(X, Y)
         pred = y_linear_lr.predict(X)
+        # R2 = y_linear_lr.score(X, Y)
+        SS_Residual = np.sum((Y-pred)**2)       
+        SS_Total = np.sum((Y-np.mean(Y))**2)     
+        R2 = 1 - (float(SS_Residual))/SS_Total
+        
         if inverted == False:
             pred_mod = (X, pred)
         else:
@@ -423,7 +563,7 @@ class plot_ankle_DJS(plot_dynamic):
     
     def add_reg_lines(self, pred_df, label='Predicted'):
         pred_df_ind = pred_df.index.get_level_values(0)
-        for i, phase in enumerate(['ERP', 'LRP', 'DP']):
+        for i, phase in enumerate(['CP','ERP', 'LRP', 'DP']):
             stiffness = pred_df.loc[self.idx[pred_df_ind[self.count], phase]][1]
             intercept = pred_df.loc[self.idx[pred_df_ind[self.count], phase]][0]
             ang_data = self.ang_mean[self.TP.iloc[self.count][i]: \
@@ -439,7 +579,7 @@ class plot_ankle_DJS(plot_dynamic):
     
             
     def plot_DJS(self, df_, cols=None, rows= [0,2],
-                 title='No name given', legend=True, reg=False,
+                 title='No name given', legend=True, reg=None,
                  integration= True, rad= True, sup_static= True, header=None):
         self.clear_plot_mem()
         # Suitable distribution for plotting
@@ -451,17 +591,21 @@ class plot_ankle_DJS(plot_dynamic):
         self.index_second = df_.index.get_level_values(1).unique()
         self.columns_first = df_.columns.get_level_values(0).unique()
         self.columns_second = df_.columns.get_level_values(1).unique()
-        self.y_label = 'Moment '+r'$[\frac{Nm}{kg}]$'
+        self.y_label = 'Moment '+ r'$[\frac{Nm}{kg}]$'
         self.x_label = 'Angle [deg]'
+        self.title = title
         if cols is None:
             cols = self.columns_first
-            self.df_ =  df_.loc[self.idx[:,:],self.idx[self.columns_first,:]]
+            self.df_ =  df_.loc[:,self.idx[self.columns_first,:]]
         else:
-            self.df_ =  df_.loc[self.idx[:,:],self.idx[self.columns_first[cols],:]]
+            self.df_ =  df_.loc[:,self.idx[self.columns_first[cols],:]]
             #To keep the index column order
             self.df_ = self.df_.reindex(self.columns_first[cols], level=0, axis=1)
             #To keep the order of the TP
-            self.TP = self.TP.reindex(self.columns_first[cols], axis=0)
+            if self.TP is not None:
+                #check if always you will have at least two levels
+                #If so this is ok
+                self.TP = self.TP.reindex(self.columns_first[cols], axis=0, level=-2)
         if rad:
             self.deg2rad(self.index_first[rows[0]])
             self.x_label = 'Angle [rad]'
@@ -504,7 +648,7 @@ class plot_ankle_DJS(plot_dynamic):
             plt.xticks(self.params['xticks'])
             plt.xlim((self.params['xticks'][0], self.params['xticks'][-1]))
         if self.save:
-            self.save_fig(self.fig, title)
+            self.save_fig(self.fig, self.title)
         
         #Setting margins of figure
         return self.fig
@@ -533,10 +677,10 @@ class plot_ankle_DJS(plot_dynamic):
                            self.mom_sd2 - self.mom_mean]
         self.ax.errorbar(self.ang_mean, self.mom_mean, xerr=self.err_ang,
                          color= self.params['color_DJS'][self.count],
-                         elinewidth = 0.3*self.alpha/self.fig_size[0])
+                         elinewidth = self.params['sd_linewidth'])
         self.ax.errorbar(self.ang_mean, self.mom_mean, yerr=self.err_mom, 
                          color= self.params['color_DJS'][self.count],
-                         elinewidth = 0.3*self.alpha/self.fig_size[0])
+                         elinewidth = self.params['sd_linewidth'])
         
         return
         
@@ -554,12 +698,13 @@ class plot_ankle_DJS(plot_dynamic):
         data : TYPE
             DESCRIPTION.
         """
+        
         data = self.df_.loc[self.idx[self.index_first[idx_[0]] , :], 
                                     self.idx[self.columns_first[idx_[1]], 
                                         self.columns_second[idx_[2]]]]
         return data
     
-    def add_arrow(self, axs, arr_num=8, direction='right'):
+    def add_arrow(self, axs, direction='right', step=2):
         """
         Add an arrow to a line.
     
@@ -568,6 +713,8 @@ class plot_ankle_DJS(plot_dynamic):
         direction:  'left' or 'right'
         size:       size of the arrow in fontsize points
         """
+        #How often will be repeated
+        arr_num = self.params['arr_size']*step
         axs = axs[0]
         color = self.params['color_symbols'][self.count]
     
@@ -575,7 +722,7 @@ class plot_ankle_DJS(plot_dynamic):
         ydata = axs.get_ydata()
         
         #Selecting the positions
-        position = xdata[0:-1:arr_num]
+        position = xdata[0:-20:arr_num]
         # find closest index
         start_ind = self.ang_mean[5:-1:arr_num].index.get_level_values(1)
         if direction == 'right':

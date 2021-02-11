@@ -21,6 +21,7 @@ from bokeh.models.glyphs import Text
 from scipy.constants import golden
 from scipy.signal import argrelextrema
 from scipy.ndimage import convolve1d
+from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 import os
 from scipy.interpolate import UnivariateSpline
@@ -290,19 +291,7 @@ class Plotting():
                   'figure.figsize': (6.0, 6.0 / golden),
                   }
         plt.rcParams.update(self.params)
-    
-    def QuasiLine(x_label, y_label, grid_space, title, name1, name2, minN, maxN, size, leyend= 'top_left'):
-        """Bokeh plot of Quasi-stiffness plus the area beneath the curve"""
-        f = figure(x_axis_label=x_label, y_axis_label=y_label, plot_width=grid_space, plot_height=grid_space, title = title)
-        color = 0
-        area = []
-        for diff in name1.columns[minN:maxN]:
-            f.circle(x = name1[diff],y=name2[diff], color = Spectral6[color], fill_color = Spectral6[color], size = size, legend = diff)
-            color += 1
-            area.append(EF.integration(name1, name2, diff, 0.5))
-        f.legend.location = leyend
-        return f, np.array(area, dtype= np.float64)
-    
+       
     def QuasiRectiLine(self, name1, name2, compiled, regression, labels, minN = None, maxN = None, grid_space= 250, 
                        leyend= "top_left", x_label= 'Angle (Deg)', 
                        y_label= 'Moment (Nm/kg)', size=5, 
@@ -392,59 +381,49 @@ class Plotting():
                 return f
     
 
-    def plot_power_and_QS(self, Powers, Angles, Moments, cycle, label):
+    def plot_power_and_work(self, df_, label, sd = False):
         
         font = 15
-        
+        idx =pd.IndexSlice
         a, b = 5, 65 # integral limits
-        x = cycle.values
-        y = Powers[0][label].values
-        errorPower = [y - Powers[1][label].values, Powers[2][label].values -y]
-        
-        fig, (ax1,ax2) = plt.subplots(1,2, figsize=(16, 8))
+        x = df_.index.get_level_values(1).unique().values
+        y = df_.loc[idx['Ankle  [W/kg]',:],idx[label, 'mean']]
+
+        fig, ax1 = plt.subplots(1,1, figsize=(8, 8))
         line = ax1.plot(x, y, 'r', linewidth=2, label='Ankle Joint Power')
-        error = ax1.errorbar(x, y, yerr=errorPower, fmt='+', label='SD')
+        if sd:
+            y_1 = df_.loc[idx['Ankle  [W/kg]',:],idx[label, '-1sd']]
+            y_2 = df_.loc[idx['Ankle  [W/kg]',:],idx[label, '+1sd']]
+            errorPower = [y-y_1, y_2-y]
+            error = ax1.errorbar(x, y, yerr=errorPower, fmt='+', label='SD', 
+                                 linewidth=0.2)
         
         # Make the shaded region
-        ix = np.linspace(a, b, b-a)
-        iy = Powers[0][label][a:b]
-        verts = [(a, 0)] + list(zip(ix, iy)) + [(b, 0)]
+        ix = np.linspace(a/100, b/100, (b-a)*3)
+        iy = y[a*3:b*3]
+        verts = [(a/100, 0)] + list(zip(ix, iy)) + [(b/100, 0)]
         poly = Polygon(verts, facecolor='0.9', edgecolor='0.5', label='Integrated Area')
         ax1.add_patch(poly)
         
-        plt.figtext(0.40, 0.75, r"$\int_a^b f(x)\mathrm{d}x$", fontsize=font)
+        plt.figtext(0.25, 0.75, r"$\int_a^b f(x)\mathrm{d}x$", fontsize=font)
         
         plt.figtext(0.46, 0.1, '$x$', fontsize=font)
         plt.figtext(0.1, 0.9, '$y$', fontsize=font)
-        plt.figtext(0.08, 0.36, 'Heel Strike', fontsize=font)
-        plt.figtext(0.20, 0.25, 'Rollover', fontsize=font)
-        plt.figtext(0.28, 0.50, 'Push Off', fontsize=font)
-        plt.figtext(0.35, 0.36, 'Swing', fontsize=font)
+        plt.figtext(0.15, 0.36, 'Heel Strike', fontsize=font)
+        plt.figtext(0.35, 0.25, 'Rollover', fontsize=font)
+        plt.figtext(0.45, 0.50, 'Push Off', fontsize=font)
+        plt.figtext(0.65, 0.36, 'Swing', fontsize=font)
         
         ax1.spines['right'].set_visible(False)
         ax1.spines['top'].set_visible(False)
         ax1.xaxis.set_ticks_position('bottom')
         
-        ax1.set_xticks((a, b))
+        ax1.set_xticks((a/100, b/100))
         ax1.set_xticklabels(('$a$', '$b$'), fontsize=font)
         ax1.set_yticks([])
-        ax1.legend(loc = 0)
-        
-        ## In this piece of code try to show the Standard deviation of the quasi-stiffness slope
-        
-        x1 = Angles[0][label].values
-        y1 = Moments[0][label].values
-        errorAngles = [x1 - Angles[1][label].values, Angles[2][label].values - x1]
-        errorMoments = [y1 - Moments[1][label].values, Moments[2][label].values - y1]
-        
-        plt.plot(x1, y1, 'b', linewidth=2)
-        plt.errorbar(x1, y1, xerr=errorAngles, fmt="green", mec="green")
-        plt.errorbar(x1, y1, yerr=errorMoments, fmt=".")
-        plt.figtext(0.80, 0.36, 'Rollover', fontsize=font)
-        plt.figtext(0.65, 0.15, 'Swing', fontsize=font)
-        plt.figtext(0.7, 0.60, 'Push Off', fontsize=font)
-        ax2.set_title('Angle and Moment error in ankle quasi-stiffness')
-        
+        ax1.legend(loc = 0, fontsize=font)
+        ax1.set_ylabel(r'Ankle  $[\frac{W}{kg}]$')
+        fig.savefig('Power plot work.png')
         plt.show()
         
 class normalization():
@@ -697,8 +676,7 @@ class ankle_DJS(extract_preprocess_data):
         self.all_dfs_ankle = pd.concat([self.angles_ankle, self.GRF_vertical, 
                                   self.moment_ankle, self.power_ankle], axis=0)
         
-        #Changing the features and adding units
-        if not units: #If you do not eant to add units
+        if not units: #If you do not need to add units
             self.units = ['','','','']
         for i in idx:
             self.features[i] += self.units[i] #Ankle angle
@@ -706,10 +684,90 @@ class ankle_DJS(extract_preprocess_data):
                                                        self.angles_ankle.index], 
                                         names=['Feature', 'Gait cycle %'])
         self.all_dfs_ankle.index = self.index_ankle
-        
+        first_lev = self.all_dfs_ankle.index.get_level_values(0).unique()
+        self.all_dfs_QS = self.all_dfs_ankle.loc[self.idx[[first_lev[0],first_lev[2]],:]]
+        self.get_levels(self.all_dfs_ankle)
         return self.all_dfs_ankle
+    
+    def get_levels(self, df_):
+        self.first_lev_index = df_.index.get_level_values(0).unique()
+        self.second_lev_index = df_.index.get_level_values(1).unique()
+        self.first_lev_columns = df_.columns.get_level_values(0).unique()
+        self.second_lev_columns = df_.columns.get_level_values(1).unique()
         
-    def change_labels(self, new_labels):
+        
+    def extract_df_QS_data(self, idx = [0,1], units=True):
+        """
+        As we like to read either preprocessed or raw data. It is needed to build
+        this object so as to define the objects from a dataframe only for the Quasi-stiffness
+
+        Parameters
+        ----------
+        idx : list index position containing the indexes of the level 0 in this order:
+            Angles (0), Moments (1)
+            DESCRIPTION. The default is [0,1].
+
+        Returns
+        -------
+        The same dataframe already adapted to process DJS in the QS
+
+        """
+        
+        index = self.all_dfs.index.get_level_values(0).unique()
+        index_1 = self.all_dfs.index.get_level_values(1).unique()
+        
+        self.angles_ankle =  self.all_dfs.loc[index[idx[0]]]
+        self.moment_ankle =  self.all_dfs.loc[index[idx[1]]]
+        self.all_dfs_QS = pd.concat([self.angles_ankle, self.moment_ankle], axis=0)
+        if units:
+            self.features[0] += self.units[0] #Ankle angle
+            self.features[2] += self.units[2] #Ankle moment
+        self.index_ankle = pd.MultiIndex.from_product([[self.features[0],self.features[2]],
+                                                       list(np.round(index_1,3))], 
+                                        names=['Feature', 'Gait cycle %'])
+        self.all_dfs_QS.index = self.index_ankle
+        self.get_levels(self.all_dfs_QS)
+        self.all_dfs_ankle = self.all_dfs_QS
+        return self.all_dfs_QS
+    
+    def invert_sign(self, idx):
+        if hasattr(self, 'all_dfs_QS'):
+            self.all_dfs_QS.loc[self.idx[self.first_lev_index[idx],:],:] = \
+                self.all_dfs_QS.loc[self.idx[self.first_lev_index[idx],:],:].apply(lambda x: -x)
+            return self.all_dfs_QS
+        if hasattr(self, 'all_dfs_ankle'):
+            self.all_dfs_ankle.loc[self.idx[self.first_lev_index[idx][idx],:],:] = \
+                self.all_dfs_ankle.loc[self.idx[self.first_lev_index[idx][idx],:],:].apply(lambda x: -x)
+            return self.all_dfs_ankle
+    
+    def interpolate_ankledf(self, times=3, replace=False):
+        
+        if not hasattr(self, 'all_dfs_ankle'):
+            self.extract_df_DJS_data()
+        
+        idx_old = self.all_dfs_ankle.index.get_level_values(0).unique()
+        idx_old_1 = self.all_dfs_ankle.index.get_level_values(1).unique()
+        bounds = [idx_old_1[0], idx_old_1[-1]]
+        new_shape = times*len(idx_old_1)
+        mat = np.empty((new_shape*len(idx_old), self.all_dfs_ankle.shape[1]))
+        mat[:] = np.nan
+        new_idx = pd.MultiIndex.from_product([list(idx_old), 
+                                              np.linspace(bounds[0], bounds[1], new_shape).round(3)])
+        new_dfs_ankle = pd.DataFrame(mat, index=new_idx, 
+                                     columns=self.all_dfs_ankle.columns)
+        #Interpolating values
+        for index_ in idx_old:
+            for colname, col in self.all_dfs_ankle.iteritems():
+                new_dfs_ankle.loc[self.idx[index_,:], 
+                                  colname] = interp1d(idx_old_1, 
+                                col[index_])(np.linspace(bounds[0], bounds[1],new_shape).round(3))
+                                                      
+        if replace:
+            self.all_dfs_ankle = new_dfs_ankle
+        
+        return new_dfs_ankle
+        
+    def change_labels(self, new_labels, level=0):
         """
         
 
@@ -726,10 +784,10 @@ class ankle_DJS(extract_preprocess_data):
         if not hasattr(self, 'all_dfs_ankle'):
             self.extract_df_DJS_data()
         
-        idx_old = self.all_dfs_ankle.columns.get_level_values(0).unique()
+        idx_old = self.all_dfs_ankle.columns.get_level_values(level).unique()
         for num, name in enumerate(new_labels):
             self.all_dfs_ankle.columns = self.all_dfs_ankle.columns.set_levels(\
-                    self.all_dfs_ankle.columns.levels[0].str.replace(idx_old[num], name), level=0)
+                    self.all_dfs_ankle.columns.levels[level].str.replace(idx_old[num], name), level=level)
         return self.all_dfs_ankle
     
     def deg_to_rad(self):
@@ -833,7 +891,6 @@ class ankle_DJS(extract_preprocess_data):
               applied to your data before computing the curvature
         #     cluster_radius is the distance from a point of high curvature selected 
               as a turning point where no other point should be considered as a candidate.
-        #     You may have to play around with the parameters a little  
         """ 
         if smoothing_radius:
             weights = np.ones(2 * smoothing_radius + 1)
@@ -844,7 +901,9 @@ class ankle_DJS(extract_preprocess_data):
         else:
             new_x, new_y = x, y
         # Applying curvature after smoothing
-        k = np.atleast_1d(self.curvature(new_x, new_y))
+        shape = new_x.shape[0]
+        k = np.atleast_1d(self.curvature(new_x[:int(0.95*shape)], new_y[:int(0.95*shape)]))
+        # We are removing the last 5 % due to there's another curvature
         # sorting by the max argument from last position in array
         turn_point_idx = np.argsort(k, axis=0)[::-1]
         t_points = []
@@ -944,15 +1003,16 @@ class ankle_DJS(extract_preprocess_data):
         None.
 
         """
-        cols_labels = self.all_dfs_ankle.columns.get_level_values(0).unique()
-        rows_labels = self.all_dfs_ankle.index.get_level_values(0).unique()
+        cols_labels = self.all_dfs_ankle.columns
+        rows_labels = self.first_lev_index
         if cols is not None:
-            cols_labels = cols_labels[cols]
+            cols_labels = self.first_lev_columns[cols]
         if rows is not None:
-            rows_labels = rows_labels[rows]
+            rows_labels = self.first_lev_index[rows]
         #We will calculate turning points with the mean
         if len(self.header) != 1:
-            df_turn = self.all_dfs_ankle.loc[self.idx[rows_labels,:], self.idx[cols_labels, 'mean']]
+            df_turn = self.all_dfs_ankle.loc[self.idx[rows_labels,:], 
+                                             cols_labels]
         else:
             df_turn = self.all_dfs_ankle.loc[self.idx[rows_labels,:], :]
         # df_turn = df_turn.columns.droplevel(1)
@@ -975,12 +1035,13 @@ class ankle_DJS(extract_preprocess_data):
                 try:
                     TP_df = np.vstack((TP_df, np.array(TP)))
                 except ValueError:
-                    cols_labels = cols_labels.drop(col[0])
+                    cols_labels = cols_labels.drop(col)
                     print("Turning points for trial {} could not be generated".format(col))
-                    #Getting rid of those uncalculated rows
-                    self.all_dfs_ankle = self.all_dfs_ankle.drop(col[0], axis=1)
-        self.TP_df = pd.DataFrame(np.atleast_2d(TP_df), index=cols_labels, 
-                    columns=['point {}'.format(i) for i in range(turning_points-1)]) 
+        TP_arr = np.atleast_2d(TP_df)
+        #Adding the point (0,0) to point the init Controlled Plantar Flexion
+        TP_arr = np.hstack((np.zeros((TP_arr.shape[0],1)),TP_arr))
+        self.TP_df = pd.DataFrame(TP_arr, index=cols_labels, 
+                    columns=['point {}'.format(i) for i in range(TP_arr.shape[1])]) 
+        self.TP_df = self.TP_df.astype(np.int64)
         return self.TP_df
-    
     

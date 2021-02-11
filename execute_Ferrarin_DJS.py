@@ -10,7 +10,9 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.colors as mcolors
-from utilities_QS import ttest
+from utilities_QS import ttest, best_hyper
+
+
 
 
 
@@ -28,15 +30,23 @@ Ferrarin_ = ankle_DJS('mmc3.xls',
 
 all_dfs = Ferrarin_.extract_DJS_data()
 
-df_turn = Ferrarin_.get_turning_points(turning_points= 6, 
-                           param_1 = 4, cluster_radius= 17)
+times = 3
+all_dfs = Ferrarin_.interpolate_ankledf(times=times, replace=True)
 
-#Tuning according to best hyperparams
-df_turn.iloc[3,:] = np.array([3,10,21,32,42])*2 # -> sr_2,cr_6 Y medium
-df_turn.iloc[12,:] = np.array([2,11,19,31,42])*2 # -> sr_2,cr_7 A medium 
-df_turn.iloc[4,:] = np.array([3,11,19,31,43])*2 # -> sr_2,cr_7 Y V fast
-df_turn.iloc[13,:] = np.array([3,14,22,30,41])*2 # -> sr_2,cr_7 A Fast
-# Ferrarin_.deg_to_rad()
+
+
+# =============================================================================
+# Best params
+# =============================================================================
+optimize_params = False
+if optimize_params:
+    df_turn = best_hyper(all_dfs, save='Ferrarin/best_params_ferra.csv',
+                         smooth_radius=range(3*times,8*times,2),
+                         cluster_radius=range(13*times,16*times), verbose=False)
+else:
+    df_turn = pd.read_csv('Ferrarin/best_params_ferra.csv', index_col=[0,1])
+
+df_turnGC = df_turn.apply(lambda x: np.int64(x/times))
 Ferrarin_.energy_calculation()
 #Sensitive results may vary when integrating degrees, the best is to do in radians
 Ferrarin_.deg_to_rad()
@@ -128,9 +138,9 @@ Color = [i[1] for i in mcolors.TABLEAU_COLORS.items()]*2
 # =============================================================================
 
 Color = [i[1] for i in mcolors.TABLEAU_COLORS.items()]*3
-params = {'sharex':False, 'sharey':True, 'left_margin': 0.2, 'arr_size':12,
-          'hide_labels':(False, True), 'yticks': np.arange(-0.25, 2.25, 0.25), 
-          'xticks':None}
+params = {'sharex':False, 'sharey':True, 'left_margin': 0.2, 'arr_size':5,
+          'hide_labels':(False, False), 'yticks': np.arange(-0.25, 2.25, 0.25), 
+          'xticks':None, 'alpha_prod':0.4, 'alpha_absorb':0.1}
 
 # =============================================================================
 # Plotting QS one by one comparing adults and youths
@@ -139,7 +149,7 @@ params = {'sharex':False, 'sharey':True, 'left_margin': 0.2, 'arr_size':12,
 cols_to_joint ={r'$0.363 < v* < 0.500$': (0,9, True),
                 r'$v/h < 0.6$': (1,10, False),
                 r'$0.6 < v/h < 0.8$': (2,11, True),
-                r'$0.8 < v/h < 1$': (3,12, True),
+                r'$0.8 < v/h < 1$': (3,12, False),
                 r'$v/h > 1.0$': (4,13, True),
                 'Toes': (5,14, False),
                 'Heels': (6,15, True),
@@ -148,8 +158,8 @@ cols_to_joint ={r'$0.363 < v* < 0.500$': (0,9, True),
 
 for num, key in enumerate(cols_to_joint.keys()):
     params.update({'hide_labels': (False, cols_to_joint[key][-1])})
-    DJS_all = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
-                              alpha=1.5, fig_size=[3.0,2.5], params=params)
+    DJS_all = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[1,2],
+                              alpha=1.0, fig_size=[3.0,5], params=params)
     fig6 = DJS_all.plot_DJS(Ferrarin_.all_dfs_ankle, 
                         cols=list(cols_to_joint[key][:2]), rows= np.r_[0,2],
                         title="Ankle DJS age group comparison {}".format(num), 
@@ -162,6 +172,7 @@ for num, key in enumerate(cols_to_joint.keys()):
         reg_info = pd.concat([reg_info, DJS_all.reg_info_df])
         work_ = pd.concat([work_, DJS_all.areas])
 reg_info = reg_info.round(3)
+reg_info = reg_info.droplevel(1, axis=0)
 work_ = work_.round(3)
 
 
@@ -171,15 +182,15 @@ work_ = work_.round(3)
 n_ferra_y = [34, 76, 111, 71, 100, 83, 51, 75, 67] #XS S Natural M L T H A D
 n_ferra_a = [140, 110, 124, 68, 52, 124, 85, 73, 72] #XS S Natural M L T H A D
 
-cols_ = df_turn.index
+cols_ = df_turn.index.get_level_values(0).unique()
 cols_ = cols_[np.r_[1,2,0,3:9,10,11,9,12:18]]
 etiquete = ['VS','S','C','F','VF','T','H', 'A', 'D']
 #Dropping GRF and powers, we are interested in QS only
 df_QS = Ferrarin_.all_dfs_ankle
 df_QS = df_QS.drop(['Vertical  Force [%BH]', 'Ankle  [W/kg]'], axis=0, level=0)
 
-tt_age = pd.concat([ttest(df_QS[cols_[i]],
-                         df_QS[cols_[i+9]], 
+tt_age = pd.concat([ttest(df_QS.loc[:,cols_[i]],
+                         df_QS.loc[:,cols_[i+9]], 
                          samples=[n_ferra_y[i], n_ferra_a[i]], 
                          name='Ttest_{}'.format(etiquete[i]), method='scipy') for i in range(9)], axis=1)
 
@@ -198,8 +209,8 @@ tt_pvalues_age.columns = ['ang P values', 'mom P values']
 # Obtaining the ttest comparing speeds and see where the statistical difference starts from 
 # =============================================================================
 
-tt_speed = pd.concat([ttest(df_QS[cols_[i]],
-                         df_QS[cols_[j]], 
+tt_speed = pd.concat([ttest(df_QS.loc[:,cols_[i]],
+                         df_QS.loc[:,cols_[j]], 
                          samples=[n_ferra_a[num_i], n_ferra_a[num_j]], 
                          name='{}_Ttest_{}'.format(etiquete[i-9], etiquete[j-9]), #substract 9 for Y
                          method='scipy') for num_i, i in enumerate(range(9,14)) for num_j, j in enumerate(range(9,14)) if i != j], axis=1) #replace with range(5) for Y
@@ -218,4 +229,4 @@ tt_comp_speed = pd.concat([tt_angles_sp.loc[idx[:,'p_value']],
                            tt_moments_sp.loc[idx[:,'p_value']]], axis=1)
 tt_comp_speed.columns = ['ang P value','mom P value']
 
- 
+
