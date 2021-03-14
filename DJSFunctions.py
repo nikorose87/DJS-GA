@@ -383,7 +383,7 @@ class Plotting():
 
     def plot_power_and_work(self, df_, label, sd = False):
         
-        font = 15
+        font = 30
         idx =pd.IndexSlice
         a, b = 5, 65 # integral limits
         x = df_.index.get_level_values(1).unique().values
@@ -405,7 +405,7 @@ class Plotting():
         poly = Polygon(verts, facecolor='0.9', edgecolor='0.5', label='Integrated Area')
         ax1.add_patch(poly)
         
-        plt.figtext(0.25, 0.75, r"$\int_a^b f(x)\mathrm{d}x$", fontsize=font)
+        plt.figtext(0.25, 0.6, r"$\int_a^b f(x)\mathrm{d}x$", fontsize=font)
         
         plt.figtext(0.46, 0.1, '$x$', fontsize=font)
         plt.figtext(0.1, 0.9, '$y$', fontsize=font)
@@ -421,9 +421,39 @@ class Plotting():
         ax1.set_xticks((a/100, b/100))
         ax1.set_xticklabels(('$a$', '$b$'), fontsize=font)
         ax1.set_yticks([])
-        ax1.legend(loc = 0, fontsize=font)
-        ax1.set_ylabel(r'Ankle  $[\frac{W}{kg}]$')
+        ax1.legend(loc = 1, fontsize=font)
+        ax1.set_ylabel(r'Ankle  $[\frac{W}{kg}]$', fontsize=font)
         fig.savefig('Power plot work.png')
+        plt.show()
+        
+    def regular_plot(self, df_, var, label, name, sd = False):
+        
+        font = 30
+        idx =pd.IndexSlice
+        a, b = 5, 65 # integral limits
+        x = df_.index.get_level_values(1).unique().values
+        y = df_.loc[idx[var,:],idx[label, 'mean']]
+
+        fig, ax1 = plt.subplots(1,1, figsize=(8, 8))
+        ax1.plot(x, y, 'r', linewidth=2, label=name)
+        if sd:
+            y_1 = df_.loc[idx[var,:],idx[label, '-1sd']]
+            y_2 = df_.loc[idx[var,:],idx[label, '+1sd']]
+            errorPower = [y-y_1, y_2-y]
+            ax1.errorbar(x, y, yerr=errorPower, fmt='+', label='SD', 
+                                 linewidth=0.2)
+                
+        ax1.spines['right'].set_visible(False)
+        ax1.spines['top'].set_visible(False)
+        ax1.xaxis.set_ticks_position('bottom')
+        
+        ax1.set_yticks([])
+        ax1.set_xticks((a/100, b/100))
+        ax1.set_xticklabels(('$a$', '$b$'), fontsize=font)
+        ax1.legend(loc = 1, fontsize=font)
+        ax1.set_ylabel(var, fontsize=font)
+        ax1.set_xlabel(r'Gait Cycle [\%]', fontsize=font)
+        fig.savefig('{}.png'.format(name))
         plt.show()
         
 class normalization():

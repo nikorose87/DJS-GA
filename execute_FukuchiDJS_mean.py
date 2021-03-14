@@ -39,7 +39,7 @@ Gender = False
 individuals = True
 statistics = True
 
-sns.set_context('paper')
+sns.set_context('paper', font_scale=1.5)
 sns.set_style("whitegrid")
 
 
@@ -892,7 +892,7 @@ if individuals:
             sns.boxplot(x='Gender', y=deps_gen[num], data=meta_info_anova, ax=ax)
             ax.set_ylabel(labels_gen[num])
     
-        fig6.suptitle('Variables with statistical differences in gender', fontsize = 18)
+        # fig6.suptitle('Variables with statistical differences in gender', fontsize = 18)
         fig6.savefig('Fukuchi/stats_diff_gender.png')
     
           
@@ -961,7 +961,7 @@ if individuals:
         #     Plot statistics for age groups
         # =============================================================================
         
-        #Seeing statistical differences between gender and the significan
+        #Seeing statistical differences between gender and the significant
         fig7, axes = plt.subplots(2,2, figsize = (8,8))
         deps_age = dep_vars[np.r_[5:8,9]]
         labels_age = np.array(labels)[np.r_[5:8,9]]
@@ -969,7 +969,7 @@ if individuals:
             sns.boxplot(x='AgeGroup', y=deps_gen[num], data=meta_info_anova, ax=ax)
             ax.set_ylabel(labels_age[num])
     
-        fig7.suptitle('Variables with statistical differences in Age groups', fontsize = 18)
+        # fig7.suptitle('Variables with statistical differences in Age groups', fontsize = 18)
         fig7.savefig('Fukuchi/stats_diff_ages.png')
     
         # =============================================================================
@@ -1117,7 +1117,7 @@ if individuals:
         for num, ax in enumerate(np.ravel(axes)):
             sns.boxplot(x='mode', y=deps_mode[num], data=mode_df, ax=ax)
             ax.set_ylabel(labels_mode[num])
-        fig8.suptitle('Variables with statistical differences in Overground vs Treadmill', fontsize = 18)
+        # fig8.suptitle('Variables with statistical differences in Overground vs Treadmill', fontsize = 18)
         fig8.savefig('Fukuchi/stats_diff_mode.png')
         
         # =============================================================================
@@ -1185,7 +1185,9 @@ if individuals:
         
         
         legend_ = [1,1,0]*3
-        fig9, axes = plt.subplots(3,3, figsize = (15,15))
+        fig9, axes = plt.subplots(3,3, figsize = (12,12))
+        fig9.tight_layout()
+        fig9.subplots_adjust(wspace=.3, left=0.1)
         deps_mod_ = dep_vars[np.r_[0:4,5:10]]
         labels_mod_ = np.array(labels)[np.r_[0:4,5:10]]
         for num,  ax in enumerate(np.ravel(axes)):
@@ -1196,7 +1198,8 @@ if individuals:
                 ax.get_legend().remove()
             else:
                 ax.legend(loc='upper right')
-        fig9.suptitle('Variables with statistical differences in OvsT and speed', fontsize = 18)
+            ax.set_xlabel('Environment')
+        # fig9.suptitle('Variables with statistical differences in OvsT and speed', fontsize = 18)
         fig9.savefig('Fukuchi/stats_diff_mode_speed.png')
         
         
@@ -1238,7 +1241,26 @@ if individuals:
                                 r' three different gait speeds: Slow ({})'.format(vel_labels[-3])+\
                                 r', Free ({}) and Fast({})'.format(vel_labels[-2], vel_labels[-1]),
                                 label='tab:table2')
-            
+        
+        summary_N = summary_concat.iloc[0,:]
+        summary_N.name = ('Group', 'Speed')
+        summary_N.columns = ['Number N']
+        mult_idx_N = pd.MultiIndex.from_product([['Young adult (A) (age $< 31$ years old)',
+                                                  'Elder adult (E) (age $\ge 54$ years old',
+                                                  'Female (F)',
+                                                  'Male (M)',
+                                                  'Overground (O)',
+                                                  'Treadmill (T)'],
+                                                 ['Slow (S) ($v^*\le 0.34$)',
+                                                  'Free (C) ($0.37 < v^* \le 0.48$)',
+                                                  'Fast (F) ($v^*>0.48$)']])
+        summary_N.index = mult_idx_N
+        with open("Fukuchi/tableN.tex", "w+") as pt:
+            summary_N.to_latex(buf=pt, col_space=10, longtable=False, multirow=True, 
+                        caption='caption',
+                        label='tab:tableN')
+        #To csv
+        summary_concat.to_csv('Fukuchi/summary_concat.csv')
         #outputs are not normal distributed
         
         M_slow = mode_df.query("speed == 'Slow' & Gender == 'M'")
@@ -1330,8 +1352,10 @@ if individuals:
         dunn_Mbool = dunn_M.apply(lambda x: x < 0.05)
             
     
-        legend_ = [1,1,0]*3
-        fig11, axes = plt.subplots(3,3, figsize = (15,15))
+        legend_ = [1,0,1]*3
+        fig11, axes = plt.subplots(3,3, figsize = (12,12))
+        fig11.tight_layout()
+        fig11.subplots_adjust(wspace=.3, left=0.1)
         for num,  ax in enumerate(np.ravel(axes)):
             sns.boxplot(x='Gender', y=deps_mod_[num], hue='speed', 
                         data=mode_df, ax=ax, hue_order = ['Slow', 'Free', 'Fast'])
@@ -1340,7 +1364,7 @@ if individuals:
                 ax.get_legend().remove()
             else:
                 ax.legend(loc='upper right')
-        fig11.suptitle('Variables with statistical differences in Gender and speed', fontsize = 18)
+        # fig11.suptitle('Variables with statistical differences in Gender and speed', fontsize = 18)
         fig11.savefig('Fukuchi/stats_diff_gender_speed.png')
         
         # Format: diagonal, non-significant, p<0.001, p<0.01, p<0.05

@@ -1,532 +1,533 @@
 ,,,,point 0,point 1,point 2,point 3,point 4,point 5
-TF01,ipsilateral,0.6 m/s,-1sd,0,70,506,738,924,
-TF01,ipsilateral,0.6 m/s,mean,0,69,499,675,918,
-TF01,ipsilateral,0.6 m/s,+1sd,0,68,503,735,914,
-TF01,ipsilateral,0.8 m/s,-1sd,0,78,485,801,936,
-TF01,ipsilateral,0.8 m/s,mean,0,78,487,751,937,
-TF01,ipsilateral,0.8 m/s,+1sd,0,78,660,808,939,
-TF01,ipsilateral,1.0 m/s,-1sd,0,74,482,750,924,
-TF01,ipsilateral,1.0 m/s,mean,0,75,484,754,927,
-TF01,ipsilateral,1.0 m/s,+1sd,0,76,486,759,929,
-TF01,ipsilateral,1.2 m/s,-1sd,0,78,641,756,930,
-TF01,ipsilateral,1.2 m/s,mean,0,78,643,759,931,
-TF01,ipsilateral,1.2 m/s,+1sd,0,78,644,763,933,
-TF01,ipsilateral,1.4 m/s,-1sd,0,469,629,763,929,
-TF01,ipsilateral,1.4 m/s,mean,0,81,468,635,833,
-TF01,ipsilateral,1.4 m/s,+1sd,0,83,468,638,831,
-TF01,contralateral,0.6 m/s,-1sd,0,60,334,596,745,879.0
-TF01,contralateral,0.6 m/s,mean,0,60,331,596,742,938.0
-TF01,contralateral,0.6 m/s,+1sd,0,60,328,597,738,935.0
-TF01,contralateral,0.8 m/s,-1sd,0,67,347,575,723,877.0
-TF01,contralateral,0.8 m/s,mean,0,68,355,576,722,861.0
-TF01,contralateral,0.8 m/s,+1sd,0,70,385,579,721,852.0
-TF01,contralateral,1.0 m/s,-1sd,0,69,334,539,694,862.0
-TF01,contralateral,1.0 m/s,mean,0,70,334,540,692,861.0
-TF01,contralateral,1.0 m/s,+1sd,0,71,334,542,689,861.0
-TF01,contralateral,1.2 m/s,-1sd,0,72,316,500,676,865.0
-TF01,contralateral,1.2 m/s,mean,0,72,316,506,682,861.0
-TF01,contralateral,1.2 m/s,+1sd,0,72,325,509,685,861.0
-TF01,contralateral,1.4 m/s,-1sd,0,72,372,484,669,861.0
-TF01,contralateral,1.4 m/s,mean,0,72,380,486,672,861.0
-TF01,contralateral,1.4 m/s,+1sd,0,72,386,488,674,861.0
-TF02,ipsilateral,0.4 m/s,-1sd,0,134,494,776,939,
-TF02,ipsilateral,0.4 m/s,mean,0,146,492,782,939,
-TF02,ipsilateral,0.4 m/s,+1sd,0,152,490,788,939,
-TF02,ipsilateral,0.5 m/s,-1sd,0,165,496,695,852,
-TF02,ipsilateral,0.5 m/s,mean,0,163,494,690,841,
-TF02,ipsilateral,0.5 m/s,+1sd,0,161,491,690,834,
-TF02,ipsilateral,0.6 m/s,-1sd,0,105,500,766,835,
-TF02,ipsilateral,0.6 m/s,mean,0,103,499,771,835,
-TF02,ipsilateral,0.6 m/s,+1sd,0,101,497,701,832,
-TF02,ipsilateral,0.7 m/s,-1sd,0,132,485,782,850,
-TF02,ipsilateral,0.7 m/s,mean,0,128,486,781,850,
-TF02,ipsilateral,0.7 m/s,+1sd,0,124,486,779,850,
-TF02,contralateral,0.4 m/s,-1sd,0,44,304,564,700,846.0
-TF02,contralateral,0.4 m/s,mean,0,46,306,566,700,845.0
-TF02,contralateral,0.4 m/s,+1sd,0,48,306,570,700,843.0
-TF02,contralateral,0.5 m/s,-1sd,0,52,179,550,714,939.0
-TF02,contralateral,0.5 m/s,mean,0,54,180,551,706,832.0
-TF02,contralateral,0.5 m/s,+1sd,0,56,182,553,706,832.0
-TF02,contralateral,0.6 m/s,-1sd,0,55,197,522,694,828.0
-TF02,contralateral,0.6 m/s,mean,0,54,277,525,693,827.0
-TF02,contralateral,0.6 m/s,+1sd,0,54,277,527,693,826.0
-TF02,contralateral,0.7 m/s,-1sd,0,57,249,517,685,836.0
-TF02,contralateral,0.7 m/s,mean,0,59,252,517,684,835.0
-TF02,contralateral,0.7 m/s,+1sd,0,62,252,518,683,834.0
-TF05,ipsilateral,0.4 m/s,-1sd,0,77,441,701,943,
-TF05,ipsilateral,0.4 m/s,mean,0,78,439,705,943,
-TF05,ipsilateral,0.4 m/s,+1sd,0,78,436,706,943,
-TF05,ipsilateral,0.5 m/s,-1sd,0,76,428,697,941,
-TF05,ipsilateral,0.5 m/s,mean,0,76,428,702,941,
-TF05,ipsilateral,0.5 m/s,+1sd,0,76,428,706,941,
-TF05,ipsilateral,0.6 m/s,-1sd,0,77,438,681,938,
-TF05,ipsilateral,0.6 m/s,mean,0,77,436,683,938,
-TF05,ipsilateral,0.6 m/s,+1sd,0,77,434,685,938,
-TF05,ipsilateral,0.7 m/s,-1sd,0,75,440,667,934,
-TF05,ipsilateral,0.7 m/s,mean,0,75,439,668,934,
-TF05,ipsilateral,0.7 m/s,+1sd,0,75,437,669,934,
-TF05,ipsilateral,0.8 m/s,-1sd,0,70,446,651,933,
-TF05,ipsilateral,0.8 m/s,mean,0,71,446,666,933,
-TF05,ipsilateral,0.8 m/s,+1sd,0,72,447,682,934,
-TF05,contralateral,0.4 m/s,-1sd,0,38,328,655,794,920.0
-TF05,contralateral,0.4 m/s,mean,0,36,332,656,795,920.0
-TF05,contralateral,0.4 m/s,+1sd,0,33,333,657,797,920.0
-TF05,contralateral,0.5 m/s,-1sd,0,44,380,629,780,917.0
-TF05,contralateral,0.5 m/s,mean,0,42,184,631,781,916.0
-TF05,contralateral,0.5 m/s,+1sd,0,40,184,330,634,781.0
-TF05,contralateral,0.6 m/s,-1sd,0,49,267,606,764,913.0
-TF05,contralateral,0.6 m/s,mean,0,47,322,605,763,909.0
-TF05,contralateral,0.6 m/s,+1sd,0,45,170,318,603,763.0
-TF05,contralateral,0.7 m/s,-1sd,0,53,155,583,747,910.0
-TF05,contralateral,0.7 m/s,mean,0,52,308,583,746,910.0
-TF05,contralateral,0.7 m/s,+1sd,0,52,317,583,746,910.0
-TF05,contralateral,0.8 m/s,-1sd,0,57,424,560,731,910.0
-TF05,contralateral,0.8 m/s,mean,0,56,411,560,730,910.0
-TF05,contralateral,0.8 m/s,+1sd,0,55,336,561,730,910.0
-TF06,ipsilateral,0.4 m/s,-1sd,0,99,450,801,0,
-TF06,ipsilateral,0.5 m/s,-1sd,0,96,438,615,791,
-TF06,ipsilateral,0.5 m/s,mean,0,96,442,633,886,
-TF06,ipsilateral,0.5 m/s,+1sd,0,96,446,622,798,
-TF06,ipsilateral,0.6 m/s,-1sd,0,84,437,618,797,
-TF06,ipsilateral,0.6 m/s,mean,0,84,438,626,889,
-TF06,ipsilateral,0.6 m/s,+1sd,0,83,438,632,887,
-TF06,ipsilateral,0.7 m/s,-1sd,0,68,417,649,878,
-TF06,ipsilateral,0.7 m/s,mean,0,68,419,649,873,
-TF06,ipsilateral,0.7 m/s,+1sd,0,67,421,649,870,
-TF06,ipsilateral,0.8 m/s,-1sd,0,68,442,650,917,
-TF06,ipsilateral,0.8 m/s,mean,0,68,443,652,911,
-TF06,ipsilateral,0.8 m/s,+1sd,0,68,446,654,906,
-TF06,contralateral,0.4 m/s,-1sd,0,53,241,535,741,943.0
-TF06,contralateral,0.4 m/s,mean,0,50,355,547,747,943.0
-TF06,contralateral,0.4 m/s,+1sd,0,46,222,563,748,943.0
-TF06,contralateral,0.5 m/s,-1sd,0,51,265,534,730,887.0
-TF06,contralateral,0.5 m/s,mean,0,52,252,540,729,889.0
-TF06,contralateral,0.5 m/s,+1sd,0,53,160,546,728,890.0
-TF06,contralateral,0.6 m/s,-1sd,0,55,233,515,709,889.0
-TF06,contralateral,0.6 m/s,mean,0,54,263,522,711,888.0
-TF06,contralateral,0.6 m/s,+1sd,0,53,263,531,712,888.0
-TF06,contralateral,0.7 m/s,-1sd,0,49,220,490,710,889.0
-TF06,contralateral,0.7 m/s,mean,0,49,213,496,710,892.0
-TF06,contralateral,0.7 m/s,+1sd,0,48,213,501,710,897.0
-TF06,contralateral,0.8 m/s,-1sd,0,51,228,485,695,899.0
-TF06,contralateral,0.8 m/s,mean,0,51,228,491,694,899.0
-TF06,contralateral,0.8 m/s,+1sd,0,51,228,497,693,903.0
-TF07,ipsilateral,0.6 m/s,-1sd,0,152,485,726,899,
-TF07,ipsilateral,0.6 m/s,mean,0,153,485,726,903,
-TF07,ipsilateral,0.6 m/s,+1sd,0,154,484,726,907,
-TF07,ipsilateral,0.8 m/s,-1sd,0,484,637,822,936,
-TF07,ipsilateral,0.8 m/s,mean,0,131,486,641,908,
-TF07,ipsilateral,0.8 m/s,+1sd,0,133,487,644,841,
-TF07,ipsilateral,1.0 m/s,-1sd,0,112,478,696,931,
-TF07,ipsilateral,1.0 m/s,mean,0,120,452,628,826,
-TF07,ipsilateral,1.0 m/s,+1sd,0,128,479,671,928,
-TF07,ipsilateral,1.2 m/s,-1sd,0,99,474,618,804,
-TF07,ipsilateral,1.2 m/s,mean,0,84,475,618,804,
-TF07,ipsilateral,1.2 m/s,+1sd,0,76,619,805,931,
-TF07,ipsilateral,1.4 m/s,-1sd,0,72,430,607,812,
-TF07,ipsilateral,1.4 m/s,mean,0,66,433,609,809,
-TF07,ipsilateral,1.4 m/s,+1sd,0,62,434,610,806,
-TF07,contralateral,0.6 m/s,-1sd,0,71,244,623,872,930.0
-TF07,contralateral,0.6 m/s,mean,0,72,242,624,870,930.0
-TF07,contralateral,0.6 m/s,+1sd,0,72,243,626,867,930.0
-TF07,contralateral,0.8 m/s,-1sd,0,70,335,563,714,871.0
-TF07,contralateral,0.8 m/s,mean,0,72,335,560,711,870.0
-TF07,contralateral,0.8 m/s,+1sd,0,74,335,557,708,868.0
-TF07,contralateral,1.0 m/s,-1sd,0,76,322,548,697,875.0
-TF07,contralateral,1.0 m/s,mean,0,78,317,549,695,940.0
-TF07,contralateral,1.0 m/s,+1sd,0,79,339,550,692,874.0
-TF07,contralateral,1.2 m/s,-1sd,0,73,351,521,680,895.0
-TF07,contralateral,1.2 m/s,mean,0,75,350,520,678,896.0
-TF07,contralateral,1.2 m/s,+1sd,0,75,349,520,676,897.0
-TF07,contralateral,1.4 m/s,-1sd,0,69,218,344,493,661.0
-TF07,contralateral,1.4 m/s,mean,0,71,342,493,660,900.0
-TF07,contralateral,1.4 m/s,+1sd,0,73,340,492,658,900.0
-TF08,ipsilateral,0.6 m/s,-1sd,0,89,508,815,941,
-TF08,ipsilateral,0.6 m/s,mean,0,90,512,781,941,
-TF08,ipsilateral,0.6 m/s,+1sd,0,90,517,779,941,
-TF08,ipsilateral,0.8 m/s,-1sd,0,80,486,766,939,
-TF08,ipsilateral,0.8 m/s,mean,0,81,490,768,939,
-TF08,ipsilateral,0.8 m/s,+1sd,0,82,496,772,939,
-TF08,ipsilateral,1.0 m/s,-1sd,0,79,486,731,942,
-TF08,ipsilateral,1.0 m/s,mean,0,81,490,734,941,
-TF08,ipsilateral,1.0 m/s,+1sd,0,82,494,738,941,
-TF08,ipsilateral,1.2 m/s,-1sd,0,85,484,722,938,
-TF08,ipsilateral,1.2 m/s,mean,0,86,486,723,937,
-TF08,ipsilateral,1.2 m/s,+1sd,0,87,283,488,793,
-TF08,ipsilateral,1.4 m/s,-1sd,0,85,484,730,939,
-TF08,ipsilateral,1.4 m/s,mean,0,87,485,731,940,
-TF08,ipsilateral,1.4 m/s,+1sd,0,89,265,486,803,
-TF08,contralateral,0.6 m/s,-1sd,0,73,360,536,755,938.0
-TF08,contralateral,0.6 m/s,mean,0,74,360,537,751,944.0
-TF08,contralateral,0.6 m/s,+1sd,0,75,357,539,746,947.0
-TF08,contralateral,0.8 m/s,-1sd,0,68,347,523,724,947.0
-TF08,contralateral,0.8 m/s,mean,0,69,348,525,719,947.0
-TF08,contralateral,0.8 m/s,+1sd,0,71,348,527,714,947.0
-TF08,contralateral,1.0 m/s,-1sd,0,73,368,498,704,941.0
-TF08,contralateral,1.0 m/s,mean,0,74,364,502,699,941.0
-TF08,contralateral,1.0 m/s,+1sd,0,75,360,506,693,941.0
-TF08,contralateral,1.2 m/s,-1sd,0,75,378,480,685,940.0
-TF08,contralateral,1.2 m/s,mean,0,77,382,483,681,944.0
-TF08,contralateral,1.2 m/s,+1sd,0,78,382,483,677,944.0
-TF08,contralateral,1.4 m/s,-1sd,0,80,358,484,668,944.0
-TF08,contralateral,1.4 m/s,mean,0,81,361,487,666,944.0
-TF08,contralateral,1.4 m/s,+1sd,0,82,361,487,665,944.0
-TF09,ipsilateral,0.4 m/s,-1sd,0,65,456,734,910,
-TF09,ipsilateral,0.4 m/s,mean,0,64,460,727,903,
-TF09,ipsilateral,0.4 m/s,+1sd,0,64,468,745,921,
-TF09,ipsilateral,0.5 m/s,-1sd,0,68,452,732,908,
-TF09,ipsilateral,0.5 m/s,mean,0,69,453,731,908,
-TF09,ipsilateral,0.5 m/s,+1sd,0,69,455,729,907,
-TF09,ipsilateral,0.6 m/s,-1sd,0,66,441,724,825,
-TF09,ipsilateral,0.6 m/s,mean,0,67,443,728,895,
-TF09,ipsilateral,0.6 m/s,+1sd,0,68,447,729,892,
-TF09,ipsilateral,0.7 m/s,-1sd,0,60,419,738,941,
-TF09,ipsilateral,0.7 m/s,mean,0,60,424,734,941,
-TF09,ipsilateral,0.7 m/s,+1sd,0,60,435,628,843,
-TF09,ipsilateral,0.8 m/s,-1sd,0,58,437,737,947,
-TF09,ipsilateral,0.8 m/s,mean,0,59,437,735,947,
-TF09,ipsilateral,0.8 m/s,+1sd,0,59,438,621,827,
-TF09,contralateral,0.4 m/s,-1sd,0,42,242,573,810,930.0
-TF09,contralateral,0.4 m/s,mean,0,42,233,572,806,930.0
-TF09,contralateral,0.4 m/s,+1sd,0,43,166,572,804,930.0
-TF09,contralateral,0.5 m/s,-1sd,0,44,216,579,785,930.0
-TF09,contralateral,0.5 m/s,mean,0,43,210,582,785,930.0
-TF09,contralateral,0.5 m/s,+1sd,0,42,170,585,785,930.0
-TF09,contralateral,0.6 m/s,-1sd,0,44,225,569,767,930.0
-TF09,contralateral,0.6 m/s,mean,0,44,215,573,765,930.0
-TF09,contralateral,0.6 m/s,+1sd,0,44,212,576,764,930.0
-TF09,contralateral,0.7 m/s,-1sd,0,49,217,565,752,930.0
-TF09,contralateral,0.7 m/s,mean,0,50,217,567,752,930.0
-TF09,contralateral,0.7 m/s,+1sd,0,51,216,569,751,930.0
-TF09,contralateral,0.8 m/s,-1sd,0,55,215,522,732,930.0
-TF09,contralateral,0.8 m/s,mean,0,56,219,536,732,930.0
-TF09,contralateral,0.8 m/s,+1sd,0,57,219,543,732,930.0
-TF10,ipsilateral,0.4 m/s,-1sd,0,148,325,503,801,
-TF10,ipsilateral,0.4 m/s,mean,0,128,504,713,900,
-TF10,ipsilateral,0.4 m/s,+1sd,0,123,504,715,906,
-TF10,ipsilateral,0.5 m/s,-1sd,0,173,500,719,922,
-TF10,ipsilateral,0.5 m/s,mean,0,168,496,751,933,
-TF10,ipsilateral,0.5 m/s,+1sd,0,164,491,744,925,
-TF10,ipsilateral,0.6 m/s,-1sd,0,172,486,744,920,
-TF10,ipsilateral,0.6 m/s,mean,0,166,490,700,919,
-TF10,ipsilateral,0.6 m/s,+1sd,0,162,493,704,918,
-TF10,ipsilateral,0.7 m/s,-1sd,0,475,657,760,880,
-TF10,ipsilateral,0.7 m/s,mean,0,133,476,717,881,
-TF10,ipsilateral,0.7 m/s,+1sd,0,131,477,720,882,
-TF10,ipsilateral,0.8 m/s,-1sd,0,120,296,474,777,
-TF10,ipsilateral,0.8 m/s,mean,0,133,476,717,881,
-TF10,contralateral,0.4 m/s,-1sd,0,52,242,563,739,925.0
-TF10,contralateral,0.4 m/s,mean,0,50,263,564,740,924.0
-TF10,contralateral,0.4 m/s,+1sd,0,46,273,505,742,925.0
-TF10,contralateral,0.5 m/s,-1sd,0,52,247,552,728,904.0
-TF10,contralateral,0.5 m/s,mean,0,50,243,551,727,903.0
-TF10,contralateral,0.5 m/s,+1sd,0,49,272,549,725,902.0
-TF10,contralateral,0.6 m/s,-1sd,0,62,167,562,709,879.0
-TF10,contralateral,0.6 m/s,mean,0,60,167,564,708,880.0
-TF10,contralateral,0.6 m/s,+1sd,0,59,167,566,708,880.0
-TF10,contralateral,0.7 m/s,-1sd,0,63,166,549,700,880.0
-TF10,contralateral,0.7 m/s,mean,0,63,167,548,697,880.0
-TF10,contralateral,0.7 m/s,+1sd,0,64,170,547,695,880.0
-TF10,contralateral,0.8 m/s,-1sd,0,69,289,527,703,947.0
-TF10,contralateral,0.8 m/s,mean,0,70,289,526,702,947.0
-TF10,contralateral,0.8 m/s,+1sd,0,71,291,526,728,947.0
-TF11,ipsilateral,0.6 m/s,-1sd,0,105,664,765,932,
-TF11,ipsilateral,0.6 m/s,mean,0,107,465,764,921,
-TF11,ipsilateral,0.6 m/s,+1sd,0,108,465,667,815,
-TF11,ipsilateral,0.8 m/s,-1sd,0,107,654,768,936,
-TF11,ipsilateral,0.8 m/s,mean,0,107,659,825,935,
-TF11,ipsilateral,0.8 m/s,+1sd,0,107,662,826,933,
-TF11,ipsilateral,1.0 m/s,-1sd,0,98,634,748,930,
-TF11,ipsilateral,1.0 m/s,mean,0,98,636,750,930,
-TF11,ipsilateral,1.0 m/s,+1sd,0,98,637,754,931,
-TF11,ipsilateral,1.2 m/s,-1sd,0,88,625,757,922,
-TF11,ipsilateral,1.2 m/s,mean,0,89,626,756,923,
-TF11,ipsilateral,1.2 m/s,+1sd,0,90,626,754,924,
-TF11,ipsilateral,1.4 m/s,-1sd,0,79,614,729,924,
-TF11,ipsilateral,1.4 m/s,mean,0,80,614,728,925,
-TF11,ipsilateral,1.4 m/s,+1sd,0,81,614,726,925,
-TF11,contralateral,0.6 m/s,-1sd,0,78,253,574,728,900.0
-TF11,contralateral,0.6 m/s,mean,0,80,261,574,725,900.0
-TF11,contralateral,0.6 m/s,+1sd,0,82,317,573,723,900.0
-TF11,contralateral,0.8 m/s,-1sd,0,80,272,533,702,882.0
-TF11,contralateral,0.8 m/s,mean,0,82,276,535,699,881.0
-TF11,contralateral,0.8 m/s,+1sd,0,84,276,536,695,884.0
-TF11,contralateral,1.0 m/s,-1sd,0,78,270,510,686,882.0
-TF11,contralateral,1.0 m/s,mean,0,80,269,500,676,886.0
-TF11,contralateral,1.0 m/s,+1sd,0,82,269,514,690,889.0
-TF11,contralateral,1.2 m/s,-1sd,0,74,280,481,654,883.0
-TF11,contralateral,1.2 m/s,mean,0,76,225,481,654,883.0
-TF11,contralateral,1.2 m/s,+1sd,0,77,226,481,654,883.0
-TF11,contralateral,1.4 m/s,-1sd,0,71,200,458,649,900.0
-TF11,contralateral,1.4 m/s,mean,0,73,202,460,647,900.0
-TF11,contralateral,1.4 m/s,+1sd,0,75,205,462,646,900.0
-TF12,ipsilateral,0.4 m/s,-1sd,0,93,464,717,839,
-TF12,ipsilateral,0.4 m/s,mean,0,91,465,717,928,
-TF12,ipsilateral,0.4 m/s,+1sd,0,89,466,717,931,
-TF12,ipsilateral,0.5 m/s,-1sd,0,74,449,827,936,
-TF12,ipsilateral,0.5 m/s,mean,0,74,449,717,928,
-TF12,ipsilateral,0.5 m/s,+1sd,0,74,449,717,914,
-TF12,ipsilateral,0.6 m/s,-1sd,0,441,694,818,933,
-TF12,ipsilateral,0.6 m/s,mean,0,441,690,825,940,
-TF12,ipsilateral,0.6 m/s,+1sd,0,69,440,728,943,
-TF12,ipsilateral,0.7 m/s,-1sd,0,428,669,823,936,
-TF12,ipsilateral,0.7 m/s,mean,0,75,430,736,939,
-TF12,ipsilateral,0.7 m/s,+1sd,0,75,432,740,939,
-TF12,ipsilateral,0.8 m/s,-1sd,0,445,679,815,932,
-TF12,ipsilateral,0.8 m/s,mean,0,445,679,817,936,
-TF12,ipsilateral,0.8 m/s,+1sd,0,445,679,819,939,
-TF12,contralateral,0.4 m/s,-1sd,0,89,295,622,816,930.0
-TF12,contralateral,0.4 m/s,mean,0,90,298,627,816,930.0
-TF12,contralateral,0.4 m/s,+1sd,0,93,302,632,817,930.0
-TF12,contralateral,0.5 m/s,-1sd,0,89,286,531,794,930.0
-TF12,contralateral,0.5 m/s,mean,0,90,294,529,795,930.0
-TF12,contralateral,0.5 m/s,+1sd,0,92,297,457,796,930.0
-TF12,contralateral,0.6 m/s,-1sd,0,88,425,624,777,945.0
-TF12,contralateral,0.6 m/s,mean,0,90,350,622,777,945.0
-TF12,contralateral,0.6 m/s,+1sd,0,92,350,619,778,942.0
-TF12,contralateral,0.7 m/s,-1sd,0,99,391,612,769,937.0
-TF12,contralateral,0.7 m/s,mean,0,103,343,609,768,934.0
-TF12,contralateral,0.7 m/s,+1sd,0,106,342,605,768,934.0
-TF12,contralateral,0.8 m/s,-1sd,0,98,235,593,751,930.0
-TF12,contralateral,0.8 m/s,mean,0,101,241,590,751,930.0
-TF12,contralateral,0.8 m/s,+1sd,0,103,249,587,752,930.0
-TF13,ipsilateral,0.6 m/s,-1sd,0,74,689,799,911,
-TF13,ipsilateral,0.6 m/s,mean,0,75,499,686,922,
-TF13,ipsilateral,0.6 m/s,+1sd,0,75,503,683,927,
-TF13,ipsilateral,0.8 m/s,-1sd,0,66,482,658,943,
-TF13,ipsilateral,0.8 m/s,mean,0,68,481,657,940,
-TF13,ipsilateral,0.8 m/s,+1sd,0,69,488,733,924,
-TF13,ipsilateral,1.0 m/s,-1sd,0,474,645,760,940,
-TF13,ipsilateral,1.0 m/s,mean,0,67,477,647,758,
-TF13,ipsilateral,1.0 m/s,+1sd,0,67,649,755,935,
-TF13,ipsilateral,1.2 m/s,-1sd,0,65,470,768,944,
-TF13,ipsilateral,1.2 m/s,mean,0,64,472,731,939,
-TF13,ipsilateral,1.2 m/s,+1sd,0,64,474,732,938,
-TF13,ipsilateral,1.4 m/s,-1sd,0,64,638,772,939,
-TF13,ipsilateral,1.4 m/s,mean,0,64,467,638,768,
-TF13,ipsilateral,1.4 m/s,+1sd,0,64,467,765,938,
-TF13,contralateral,0.6 m/s,-1sd,0,51,283,584,734,900.0
-TF13,contralateral,0.6 m/s,mean,0,51,283,586,732,900.0
-TF13,contralateral,0.6 m/s,+1sd,0,50,283,590,730,900.0
-TF13,contralateral,0.8 m/s,-1sd,0,53,219,567,703,877.0
-TF13,contralateral,0.8 m/s,mean,0,53,212,566,703,881.0
-TF13,contralateral,0.8 m/s,+1sd,0,54,208,552,703,881.0
-TF13,contralateral,1.0 m/s,-1sd,0,51,227,547,723,941.0
-TF13,contralateral,1.0 m/s,mean,0,51,227,547,723,941.0
-TF13,contralateral,1.0 m/s,+1sd,0,52,229,547,735,941.0
-TF13,contralateral,1.2 m/s,-1sd,0,49,202,522,678,939.0
-TF13,contralateral,1.2 m/s,mean,0,49,207,521,676,939.0
-TF13,contralateral,1.2 m/s,+1sd,0,49,207,520,675,939.0
-TF13,contralateral,1.4 m/s,-1sd,0,53,236,487,658,932.0
-TF13,contralateral,1.4 m/s,mean,0,53,236,487,657,932.0
-TF13,contralateral,1.4 m/s,+1sd,0,52,236,486,657,932.0
-TF14,ipsilateral,0.4 m/s,-1sd,0,87,731,834,937,
-TF14,ipsilateral,0.4 m/s,mean,0,84,500,782,943,
-TF14,ipsilateral,0.4 m/s,+1sd,0,81,738,841,945,
-TF14,ipsilateral,0.5 m/s,-1sd,0,75,228,712,932,
-TF14,ipsilateral,0.5 m/s,mean,0,75,500,771,934,
-TF14,ipsilateral,0.5 m/s,+1sd,0,75,226,772,936,
-TF14,ipsilateral,0.6 m/s,-1sd,0,65,505,720,929,
-TF14,ipsilateral,0.6 m/s,mean,0,63,505,717,927,
-TF14,ipsilateral,0.6 m/s,+1sd,0,62,506,714,926,
-TF14,ipsilateral,0.7 m/s,-1sd,0,56,499,690,920,
-TF14,ipsilateral,0.7 m/s,mean,0,56,500,776,920,
-TF14,ipsilateral,0.7 m/s,+1sd,0,55,242,501,771,
-TF14,ipsilateral,0.8 m/s,-1sd,0,63,682,790,927,
-TF14,ipsilateral,0.8 m/s,mean,0,63,488,759,927,
-TF14,ipsilateral,0.8 m/s,+1sd,0,62,488,756,863,
-TF14,contralateral,0.4 m/s,-1sd,0,59,175,647,797,945.0
-TF14,contralateral,0.4 m/s,mean,0,60,172,652,796,945.0
-TF14,contralateral,0.4 m/s,+1sd,0,60,171,657,795,945.0
-TF14,contralateral,0.5 m/s,-1sd,0,61,221,629,783,945.0
-TF14,contralateral,0.5 m/s,mean,0,61,216,633,783,945.0
-TF14,contralateral,0.5 m/s,+1sd,0,60,210,637,784,945.0
-TF14,contralateral,0.6 m/s,-1sd,0,64,276,582,750,931.0
-TF14,contralateral,0.6 m/s,mean,0,63,284,587,751,947.0
-TF14,contralateral,0.6 m/s,+1sd,0,61,291,591,752,947.0
-TF14,contralateral,0.7 m/s,-1sd,0,69,250,571,740,907.0
-TF14,contralateral,0.7 m/s,mean,0,68,171,575,740,945.0
-TF14,contralateral,0.7 m/s,+1sd,0,67,177,579,739,945.0
-TF14,contralateral,0.8 m/s,-1sd,0,75,254,566,744,906.0
-TF14,contralateral,0.8 m/s,mean,0,75,254,569,744,907.0
-TF14,contralateral,0.8 m/s,+1sd,0,75,258,572,745,907.0
-TF15,ipsilateral,0.6 m/s,-1sd,0,84,492,697,918,
-TF15,ipsilateral,0.6 m/s,mean,0,83,496,690,919,
-TF15,ipsilateral,0.6 m/s,+1sd,0,82,502,691,919,
-TF15,ipsilateral,0.8 m/s,-1sd,0,82,480,657,913,
-TF15,ipsilateral,0.8 m/s,mean,0,83,482,658,943,
-TF15,ipsilateral,0.8 m/s,+1sd,0,84,486,662,912,
-TF15,ipsilateral,1.0 m/s,-1sd,0,82,471,740,932,
-TF15,ipsilateral,1.0 m/s,mean,0,84,474,650,931,
-TF15,ipsilateral,1.0 m/s,+1sd,0,85,481,657,931,
-TF15,ipsilateral,1.2 m/s,-1sd,0,70,458,703,922,
-TF15,ipsilateral,1.2 m/s,mean,0,71,460,766,922,
-TF15,ipsilateral,1.2 m/s,+1sd,0,72,463,740,916,
-TF15,ipsilateral,1.4 m/s,-1sd,0,70,615,770,913,
-TF15,ipsilateral,1.4 m/s,mean,0,70,464,768,915,
-TF15,ipsilateral,1.4 m/s,+1sd,0,70,464,768,916,
-TF15,contralateral,0.6 m/s,-1sd,0,55,285,567,720,846.0
-TF15,contralateral,0.6 m/s,mean,0,55,286,565,721,847.0
-TF15,contralateral,0.6 m/s,+1sd,0,54,283,563,723,932.0
-TF15,contralateral,0.8 m/s,-1sd,0,59,296,550,701,882.0
-TF15,contralateral,0.8 m/s,mean,0,59,292,554,699,878.0
-TF15,contralateral,0.8 m/s,+1sd,0,58,284,560,697,873.0
-TF15,contralateral,1.0 m/s,-1sd,0,59,300,519,676,837.0
-TF15,contralateral,1.0 m/s,mean,0,59,300,522,673,844.0
-TF15,contralateral,1.0 m/s,+1sd,0,59,300,525,670,910.0
-TF15,contralateral,1.2 m/s,-1sd,0,61,272,490,666,880.0
-TF15,contralateral,1.2 m/s,mean,0,61,272,488,664,884.0
-TF15,contralateral,1.2 m/s,+1sd,0,61,270,485,661,891.0
-TF15,contralateral,1.4 m/s,-1sd,0,59,263,474,628,853.0
-TF15,contralateral,1.4 m/s,mean,0,60,265,476,629,900.0
-TF15,contralateral,1.4 m/s,+1sd,0,61,267,476,630,854.0
-TF16,ipsilateral,0.6 m/s,-1sd,0,59,500,727,830,
-TF16,ipsilateral,0.6 m/s,mean,0,58,503,736,837,
-TF16,ipsilateral,0.6 m/s,+1sd,0,57,506,774,941,
-TF16,ipsilateral,0.8 m/s,-1sd,0,59,489,687,813,
-TF16,ipsilateral,0.8 m/s,mean,0,58,491,765,939,
-TF16,ipsilateral,0.8 m/s,+1sd,0,57,494,716,939,
-TF16,ipsilateral,1.0 m/s,-1sd,0,61,700,813,944,
-TF16,ipsilateral,1.0 m/s,mean,0,60,489,802,943,
-TF16,ipsilateral,1.0 m/s,+1sd,0,59,493,750,943,
-TF16,ipsilateral,1.2 m/s,-1sd,0,64,688,805,942,
-TF16,ipsilateral,1.2 m/s,mean,0,63,687,802,941,
-TF16,ipsilateral,1.2 m/s,+1sd,0,62,686,800,940,
-TF16,ipsilateral,1.4 m/s,-1sd,0,57,664,811,935,
-TF16,ipsilateral,1.4 m/s,mean,0,58,664,808,934,
-TF16,ipsilateral,1.4 m/s,+1sd,0,58,664,807,934,
-TF16,contralateral,0.6 m/s,-1sd,0,75,182,580,768,945.0
-TF16,contralateral,0.6 m/s,mean,0,77,198,584,767,945.0
-TF16,contralateral,0.6 m/s,+1sd,0,79,202,587,767,945.0
-TF16,contralateral,0.8 m/s,-1sd,0,73,356,536,735,947.0
-TF16,contralateral,0.8 m/s,mean,0,73,288,538,734,947.0
-TF16,contralateral,0.8 m/s,+1sd,0,73,287,539,732,947.0
-TF16,contralateral,1.0 m/s,-1sd,0,72,173,512,708,946.0
-TF16,contralateral,1.0 m/s,mean,0,73,176,514,706,946.0
-TF16,contralateral,1.0 m/s,+1sd,0,74,176,516,705,946.0
-TF16,contralateral,1.2 m/s,-1sd,0,69,170,463,689,945.0
-TF16,contralateral,1.2 m/s,mean,0,70,172,470,687,945.0
-TF16,contralateral,1.2 m/s,+1sd,0,71,172,476,686,945.0
-TF16,contralateral,1.4 m/s,-1sd,0,70,171,327,428,669.0
-TF16,contralateral,1.4 m/s,mean,0,71,173,434,668,941.0
-TF16,contralateral,1.4 m/s,+1sd,0,72,173,440,667,941.0
-TF17,ipsilateral,0.6 m/s,-1sd,0,41,446,685,886,
-TF17,ipsilateral,0.6 m/s,mean,0,40,447,694,886,
-TF17,ipsilateral,0.6 m/s,+1sd,0,40,449,759,941,
-TF17,ipsilateral,0.8 m/s,-1sd,0,38,238,446,768,
-TF17,ipsilateral,0.8 m/s,mean,0,39,446,677,932,
-TF17,ipsilateral,0.8 m/s,+1sd,0,39,447,680,935,
-TF17,ipsilateral,1.0 m/s,-1sd,0,38,449,754,930,
-TF17,ipsilateral,1.0 m/s,mean,0,39,449,664,912,
-TF17,ipsilateral,1.0 m/s,+1sd,0,39,450,661,837,
-TF17,ipsilateral,1.2 m/s,-1sd,0,39,445,647,925,
-TF17,ipsilateral,1.2 m/s,mean,0,39,446,749,927,
-TF17,ipsilateral,1.2 m/s,+1sd,0,39,447,646,837,
-TF17,ipsilateral,1.4 m/s,-1sd,0,39,449,641,846,
-TF17,ipsilateral,1.4 m/s,mean,0,39,450,643,846,
-TF17,ipsilateral,1.4 m/s,+1sd,0,39,451,758,934,
-TF17,contralateral,0.6 m/s,-1sd,0,57,280,577,753,933.0
-TF17,contralateral,0.6 m/s,mean,0,58,282,581,753,930.0
-TF17,contralateral,0.6 m/s,+1sd,0,59,282,585,752,923.0
-TF17,contralateral,0.8 m/s,-1sd,0,56,386,540,719,931.0
-TF17,contralateral,0.8 m/s,mean,0,57,390,542,718,943.0
-TF17,contralateral,0.8 m/s,+1sd,0,57,394,544,717,943.0
-TF17,contralateral,1.0 m/s,-1sd,0,53,327,528,696,943.0
-TF17,contralateral,1.0 m/s,mean,0,54,357,528,695,943.0
-TF17,contralateral,1.0 m/s,+1sd,0,54,357,528,694,943.0
-TF17,contralateral,1.2 m/s,-1sd,0,51,285,505,675,933.0
-TF17,contralateral,1.2 m/s,mean,0,52,292,507,674,933.0
-TF17,contralateral,1.2 m/s,+1sd,0,53,299,509,673,933.0
-TF17,contralateral,1.4 m/s,-1sd,0,50,258,496,657,933.0
-TF17,contralateral,1.4 m/s,mean,0,51,262,496,656,933.0
-TF17,contralateral,1.4 m/s,+1sd,0,51,266,496,655,933.0
-TF18,ipsilateral,0.4 m/s,-1sd,0,96,520,706,896,
-TF18,ipsilateral,0.4 m/s,mean,0,98,521,706,897,
-TF18,ipsilateral,0.4 m/s,+1sd,0,98,523,718,898,
-TF18,ipsilateral,0.5 m/s,-1sd,0,96,331,518,861,
-TF18,ipsilateral,0.5 m/s,mean,0,94,520,715,913,
-TF18,ipsilateral,0.5 m/s,+1sd,0,92,319,520,862,
-TF18,ipsilateral,0.6 m/s,-1sd,0,78,320,501,836,
-TF18,ipsilateral,0.6 m/s,mean,0,76,502,680,941,
-TF18,ipsilateral,0.6 m/s,+1sd,0,73,321,503,833,
-TF18,ipsilateral,0.7 m/s,-1sd,0,69,706,826,935,
-TF18,ipsilateral,0.7 m/s,mean,0,70,492,703,938,
-TF18,ipsilateral,0.7 m/s,+1sd,0,72,492,734,940,
-TF18,ipsilateral,0.8 m/s,-1sd,0,65,485,737,923,
-TF18,ipsilateral,0.8 m/s,mean,0,65,485,735,925,
-TF18,ipsilateral,0.8 m/s,+1sd,0,65,485,732,927,
-TF18,contralateral,0.4 m/s,-1sd,0,73,231,603,751,874.0
-TF18,contralateral,0.4 m/s,mean,0,72,231,602,753,878.0
-TF18,contralateral,0.4 m/s,+1sd,0,72,234,601,754,882.0
-TF18,contralateral,0.5 m/s,-1sd,0,85,213,603,757,943.0
-TF18,contralateral,0.5 m/s,mean,0,86,213,606,755,881.0
-TF18,contralateral,0.5 m/s,+1sd,0,86,212,609,753,880.0
-TF18,contralateral,0.6 m/s,-1sd,0,99,354,603,778,929.0
-TF18,contralateral,0.6 m/s,mean,0,99,272,456,607,775.0
-TF18,contralateral,0.6 m/s,+1sd,0,98,272,463,614,909.0
-TF18,contralateral,0.7 m/s,-1sd,0,110,271,573,757,897.0
-TF18,contralateral,0.7 m/s,mean,0,109,268,576,757,896.0
-TF18,contralateral,0.7 m/s,+1sd,0,108,268,580,756,894.0
-TF18,contralateral,0.8 m/s,-1sd,0,106,262,548,732,899.0
-TF18,contralateral,0.8 m/s,mean,0,108,260,549,735,897.0
-TF18,contralateral,0.8 m/s,+1sd,0,109,260,552,736,891.0
-TF19,ipsilateral,0.6 m/s,-1sd,0,103,518,795,940,
-TF19,ipsilateral,0.6 m/s,mean,0,103,517,795,940,
-TF19,ipsilateral,0.6 m/s,+1sd,0,104,516,797,940,
-TF19,ipsilateral,0.8 m/s,-1sd,0,102,498,777,940,
-TF19,ipsilateral,0.8 m/s,mean,0,101,499,780,940,
-TF19,ipsilateral,0.8 m/s,+1sd,0,100,661,780,937,
-TF19,ipsilateral,1.0 m/s,-1sd,0,103,655,798,921,
-TF19,ipsilateral,1.0 m/s,mean,0,104,495,798,899,
-TF19,ipsilateral,1.0 m/s,+1sd,0,105,495,657,860,
-TF19,ipsilateral,1.2 m/s,-1sd,0,100,483,714,944,
-TF19,ipsilateral,1.2 m/s,mean,0,100,484,647,937,
-TF19,ipsilateral,1.2 m/s,+1sd,0,485,648,810,930,
-TF19,ipsilateral,1.4 m/s,-1sd,0,74,635,744,913,
-TF19,ipsilateral,1.4 m/s,mean,0,77,481,635,815,
-TF19,ipsilateral,1.4 m/s,+1sd,0,80,483,734,897,
-TF19,contralateral,0.6 m/s,-1sd,0,56,268,578,751,882.0
-TF19,contralateral,0.6 m/s,mean,0,56,237,583,751,882.0
-TF19,contralateral,0.6 m/s,+1sd,0,55,230,587,751,881.0
-TF19,contralateral,0.8 m/s,-1sd,0,54,225,534,714,877.0
-TF19,contralateral,0.8 m/s,mean,0,55,225,541,712,933.0
-TF19,contralateral,0.8 m/s,+1sd,0,56,229,547,711,870.0
-TF19,contralateral,1.0 m/s,-1sd,0,58,237,496,688,898.0
-TF19,contralateral,1.0 m/s,mean,0,59,229,498,685,892.0
-TF19,contralateral,1.0 m/s,+1sd,0,59,176,498,681,887.0
-TF19,contralateral,1.2 m/s,-1sd,0,58,266,474,665,884.0
-TF19,contralateral,1.2 m/s,mean,0,59,262,476,663,893.0
-TF19,contralateral,1.2 m/s,+1sd,0,60,262,476,660,897.0
-TF19,contralateral,1.4 m/s,-1sd,0,63,274,464,652,945.0
-TF19,contralateral,1.4 m/s,mean,0,63,269,466,650,940.0
-TF19,contralateral,1.4 m/s,+1sd,0,63,269,468,648,933.0
-TF20,ipsilateral,0.4 m/s,-1sd,0,160,351,527,813,
-TF20,ipsilateral,0.4 m/s,mean,0,157,527,716,892,
-TF20,ipsilateral,0.4 m/s,+1sd,0,155,349,527,806,
-TF20,ipsilateral,0.5 m/s,-1sd,0,148,520,773,900,
-TF20,ipsilateral,0.5 m/s,mean,0,149,519,787,900,
-TF20,ipsilateral,0.5 m/s,+1sd,0,150,519,799,900,
-TF20,ipsilateral,0.6 m/s,-1sd,0,117,497,813,900,
-TF20,ipsilateral,0.6 m/s,mean,0,121,499,807,900,
-TF20,ipsilateral,0.6 m/s,+1sd,0,124,499,803,900,
-TF20,ipsilateral,0.7 m/s,-1sd,0,87,487,824,900,
-TF20,ipsilateral,0.7 m/s,mean,0,92,485,684,906,
-TF20,ipsilateral,0.7 m/s,+1sd,0,95,482,679,912,
-TF20,ipsilateral,0.8 m/s,-1sd,0,86,640,800,900,
-TF20,ipsilateral,0.8 m/s,mean,0,91,486,812,900,
-TF20,ipsilateral,0.8 m/s,+1sd,0,97,486,808,900,
-TF20,contralateral,0.4 m/s,-1sd,0,82,463,601,813,930.0
-TF20,contralateral,0.4 m/s,mean,0,87,387,603,806,930.0
-TF20,contralateral,0.4 m/s,+1sd,0,93,387,606,794,930.0
-TF20,contralateral,0.5 m/s,-1sd,0,96,311,602,788,930.0
-TF20,contralateral,0.5 m/s,mean,0,99,319,603,780,930.0
-TF20,contralateral,0.5 m/s,+1sd,0,101,325,605,772,930.0
-TF20,contralateral,0.6 m/s,-1sd,0,102,324,617,772,930.0
-TF20,contralateral,0.6 m/s,mean,0,105,425,619,771,930.0
-TF20,contralateral,0.6 m/s,+1sd,0,107,432,622,771,930.0
-TF20,contralateral,0.7 m/s,-1sd,0,99,318,593,747,930.0
-TF20,contralateral,0.7 m/s,mean,0,100,376,592,742,930.0
-TF20,contralateral,0.7 m/s,+1sd,0,101,383,590,735,930.0
-TF20,contralateral,0.8 m/s,-1sd,0,105,297,581,732,924.0
-TF20,contralateral,0.8 m/s,mean,0,108,297,572,723,932.0
-TF20,contralateral,0.8 m/s,+1sd,0,110,297,571,722,940.0
+TF01,ipsilateral,0.18899999999999997,-1sd,0,70,506,738,924,
+TF01,ipsilateral,0.18899999999999997,mean,0,69,499,675,918,
+TF01,ipsilateral,0.18899999999999997,+1sd,0,68,503,735,914,
+TF01,ipsilateral,0.252,-1sd,0,78,485,801,936,
+TF01,ipsilateral,0.252,mean,0,78,487,751,937,
+TF01,ipsilateral,0.252,+1sd,0,78,660,808,939,
+TF01,ipsilateral,0.315,-1sd,0,74,482,750,924,
+TF01,ipsilateral,0.315,mean,0,75,484,754,927,
+TF01,ipsilateral,0.315,+1sd,0,76,486,759,929,
+TF01,ipsilateral,0.37799999999999995,-1sd,0,78,641,756,930,
+TF01,ipsilateral,0.37799999999999995,mean,0,78,643,759,931,
+TF01,ipsilateral,0.37799999999999995,+1sd,0,78,644,763,933,
+TF01,ipsilateral,0.441,-1sd,0,469,629,763,929,
+TF01,ipsilateral,0.441,mean,0,81,468,635,833,
+TF01,ipsilateral,0.441,+1sd,0,83,468,638,831,
+TF01,contralateral,0.18899999999999997,-1sd,0,60,334,596,745,879.0
+TF01,contralateral,0.18899999999999997,mean,0,60,331,596,742,938.0
+TF01,contralateral,0.18899999999999997,+1sd,0,60,328,597,738,935.0
+TF01,contralateral,0.252,-1sd,0,67,347,575,723,877.0
+TF01,contralateral,0.252,mean,0,68,355,576,722,861.0
+TF01,contralateral,0.252,+1sd,0,70,385,579,721,852.0
+TF01,contralateral,0.315,-1sd,0,69,334,539,694,862.0
+TF01,contralateral,0.315,mean,0,70,334,540,692,861.0
+TF01,contralateral,0.315,+1sd,0,71,334,542,689,861.0
+TF01,contralateral,0.37799999999999995,-1sd,0,72,316,500,676,865.0
+TF01,contralateral,0.37799999999999995,mean,0,72,316,506,682,861.0
+TF01,contralateral,0.37799999999999995,+1sd,0,72,325,509,685,861.0
+TF01,contralateral,0.441,-1sd,0,72,271,372,484,669.0
+TF01,contralateral,0.441,mean,0,72,380,486,672,860.0
+TF01,contralateral,0.441,+1sd,0,72,275,386,488,674.0
+TF02,ipsilateral,0.127,-1sd,0,134,494,776,939,
+TF02,ipsilateral,0.127,mean,0,146,492,782,939,
+TF02,ipsilateral,0.127,+1sd,0,152,490,788,939,
+TF02,ipsilateral,0.159,-1sd,0,165,496,695,852,
+TF02,ipsilateral,0.159,mean,0,163,494,690,841,
+TF02,ipsilateral,0.159,+1sd,0,4,161,491,834,
+TF02,ipsilateral,0.19,-1sd,0,1,105,500,766,
+TF02,ipsilateral,0.19,mean,0,101,497,701,832,
+TF02,ipsilateral,0.19,+1sd,0,101,497,701,832,
+TF02,ipsilateral,0.222,-1sd,0,132,308,485,782,
+TF02,ipsilateral,0.222,mean,0,128,304,486,781,
+TF02,ipsilateral,0.222,+1sd,0,124,300,486,779,
+TF02,contralateral,0.127,-1sd,0,44,170,304,564,846.0
+TF02,contralateral,0.127,mean,0,46,172,566,845,940.0
+TF02,contralateral,0.127,+1sd,0,48,176,306,570,843.0
+TF02,contralateral,0.159,-1sd,0,52,179,550,714,939.0
+TF02,contralateral,0.159,mean,0,54,180,551,706,832.0
+TF02,contralateral,0.159,+1sd,0,56,182,553,706,832.0
+TF02,contralateral,0.19,-1sd,0,55,197,522,694,828.0
+TF02,contralateral,0.19,mean,0,54,277,525,693,827.0
+TF02,contralateral,0.19,+1sd,0,54,277,527,693,826.0
+TF02,contralateral,0.222,-1sd,0,57,249,517,685,836.0
+TF02,contralateral,0.222,mean,0,59,252,517,684,835.0
+TF02,contralateral,0.222,+1sd,0,62,252,518,683,834.0
+TF05,ipsilateral,0.131,-1sd,0,77,441,701,943,
+TF05,ipsilateral,0.131,mean,0,78,439,705,943,
+TF05,ipsilateral,0.131,+1sd,0,78,436,706,943,
+TF05,ipsilateral,0.163,-1sd,0,76,428,697,941,
+TF05,ipsilateral,0.163,mean,0,76,428,702,941,
+TF05,ipsilateral,0.163,+1sd,0,76,428,706,941,
+TF05,ipsilateral,0.196,-1sd,0,77,438,681,938,
+TF05,ipsilateral,0.196,mean,0,77,436,683,938,
+TF05,ipsilateral,0.196,+1sd,0,77,434,685,938,
+TF05,ipsilateral,0.22899999999999998,-1sd,0,75,440,667,934,
+TF05,ipsilateral,0.22899999999999998,mean,0,75,439,668,934,
+TF05,ipsilateral,0.22899999999999998,+1sd,0,75,437,669,934,
+TF05,ipsilateral,0.262,-1sd,0,70,446,651,933,
+TF05,ipsilateral,0.262,mean,0,71,446,666,933,
+TF05,ipsilateral,0.262,+1sd,0,72,447,682,934,
+TF05,contralateral,0.131,-1sd,0,38,181,328,655,794.0
+TF05,contralateral,0.131,mean,0,36,188,656,795,930.0
+TF05,contralateral,0.131,+1sd,0,33,187,333,657,797.0
+TF05,contralateral,0.163,-1sd,0,44,380,629,780,917.0
+TF05,contralateral,0.163,mean,0,42,184,631,781,916.0
+TF05,contralateral,0.163,+1sd,0,40,184,330,634,781.0
+TF05,contralateral,0.196,-1sd,0,49,267,606,764,913.0
+TF05,contralateral,0.196,mean,0,47,322,605,763,909.0
+TF05,contralateral,0.196,+1sd,0,45,170,318,603,763.0
+TF05,contralateral,0.22899999999999998,-1sd,0,53,155,583,747,910.0
+TF05,contralateral,0.22899999999999998,mean,0,52,308,583,746,910.0
+TF05,contralateral,0.22899999999999998,+1sd,0,52,317,478,583,746.0
+TF05,contralateral,0.262,-1sd,0,57,176,424,560,731.0
+TF05,contralateral,0.262,mean,0,56,176,560,730,916.0
+TF05,contralateral,0.262,+1sd,0,55,172,336,561,730.0
+TF06,ipsilateral,0.129,-1sd,0,99,450,801,0,
+TF06,ipsilateral,0.161,-1sd,0,96,438,615,791,
+TF06,ipsilateral,0.161,mean,0,96,442,633,886,
+TF06,ipsilateral,0.161,+1sd,0,96,446,622,798,
+TF06,ipsilateral,0.193,-1sd,0,84,437,618,797,
+TF06,ipsilateral,0.193,mean,0,84,438,626,889,
+TF06,ipsilateral,0.193,+1sd,0,83,438,632,887,
+TF06,ipsilateral,0.225,-1sd,0,68,417,649,878,
+TF06,ipsilateral,0.225,mean,0,68,419,649,873,
+TF06,ipsilateral,0.225,+1sd,0,67,421,649,870,
+TF06,ipsilateral,0.258,-1sd,0,68,442,650,917,
+TF06,ipsilateral,0.258,mean,0,68,443,652,911,
+TF06,ipsilateral,0.258,+1sd,0,68,446,654,906,
+TF06,contralateral,0.129,-1sd,0,53,241,535,741,943.0
+TF06,contralateral,0.129,mean,0,50,355,547,747,943.0
+TF06,contralateral,0.129,+1sd,0,46,222,563,748,943.0
+TF06,contralateral,0.161,-1sd,0,51,265,534,730,887.0
+TF06,contralateral,0.161,mean,0,52,252,540,729,889.0
+TF06,contralateral,0.161,+1sd,0,53,160,546,728,890.0
+TF06,contralateral,0.193,-1sd,0,55,233,515,709,889.0
+TF06,contralateral,0.193,mean,0,54,263,522,711,888.0
+TF06,contralateral,0.193,+1sd,0,53,263,531,712,888.0
+TF06,contralateral,0.225,-1sd,0,49,220,490,710,889.0
+TF06,contralateral,0.225,mean,0,49,213,496,710,892.0
+TF06,contralateral,0.225,+1sd,0,48,213,501,710,897.0
+TF06,contralateral,0.258,-1sd,0,51,228,485,695,899.0
+TF06,contralateral,0.258,mean,0,51,228,491,694,899.0
+TF06,contralateral,0.258,+1sd,0,51,228,497,693,903.0
+TF07,ipsilateral,0.182,-1sd,0,152,485,726,899,
+TF07,ipsilateral,0.182,mean,0,153,485,726,903,
+TF07,ipsilateral,0.182,+1sd,0,154,484,726,907,
+TF07,ipsilateral,0.243,-1sd,0,484,637,822,936,
+TF07,ipsilateral,0.243,mean,0,131,486,641,908,
+TF07,ipsilateral,0.243,+1sd,0,133,487,644,841,
+TF07,ipsilateral,0.304,-1sd,0,112,478,696,931,
+TF07,ipsilateral,0.304,mean,0,120,452,628,826,
+TF07,ipsilateral,0.304,+1sd,0,128,479,671,928,
+TF07,ipsilateral,0.365,-1sd,0,99,474,618,804,
+TF07,ipsilateral,0.365,mean,0,84,475,618,804,
+TF07,ipsilateral,0.365,+1sd,0,76,619,805,931,
+TF07,ipsilateral,0.425,-1sd,0,72,430,607,812,
+TF07,ipsilateral,0.425,mean,0,66,433,609,809,
+TF07,ipsilateral,0.425,+1sd,0,62,434,610,806,
+TF07,contralateral,0.182,-1sd,0,71,244,457,623,872.0
+TF07,contralateral,0.182,mean,0,72,242,457,714,870.0
+TF07,contralateral,0.182,+1sd,0,72,243,450,626,867.0
+TF07,contralateral,0.243,-1sd,0,70,335,563,714,871.0
+TF07,contralateral,0.243,mean,0,72,335,560,711,870.0
+TF07,contralateral,0.243,+1sd,0,74,335,557,708,868.0
+TF07,contralateral,0.304,-1sd,0,76,322,548,697,875.0
+TF07,contralateral,0.304,mean,0,78,317,549,695,940.0
+TF07,contralateral,0.304,+1sd,0,79,339,550,692,874.0
+TF07,contralateral,0.365,-1sd,0,73,351,521,680,895.0
+TF07,contralateral,0.365,mean,0,75,350,520,678,896.0
+TF07,contralateral,0.365,+1sd,0,75,349,520,676,897.0
+TF07,contralateral,0.425,-1sd,0,69,218,344,493,661.0
+TF07,contralateral,0.425,mean,0,71,216,493,660,897.0
+TF07,contralateral,0.425,+1sd,0,73,214,340,492,658.0
+TF08,ipsilateral,0.185,-1sd,0,89,508,815,941,
+TF08,ipsilateral,0.185,mean,0,90,512,781,941,
+TF08,ipsilateral,0.185,+1sd,0,90,517,779,941,
+TF08,ipsilateral,0.247,-1sd,0,80,486,766,939,
+TF08,ipsilateral,0.247,mean,0,81,490,768,939,
+TF08,ipsilateral,0.247,+1sd,0,82,496,772,939,
+TF08,ipsilateral,0.309,-1sd,0,79,486,731,942,
+TF08,ipsilateral,0.309,mean,0,81,490,734,941,
+TF08,ipsilateral,0.309,+1sd,0,82,494,738,941,
+TF08,ipsilateral,0.371,-1sd,0,85,484,722,938,
+TF08,ipsilateral,0.371,mean,0,86,486,723,937,
+TF08,ipsilateral,0.371,+1sd,0,87,283,488,793,
+TF08,ipsilateral,0.43200000000000005,-1sd,0,85,484,730,939,
+TF08,ipsilateral,0.43200000000000005,mean,0,87,485,731,940,
+TF08,ipsilateral,0.43200000000000005,+1sd,0,89,265,486,803,
+TF08,contralateral,0.185,-1sd,0,73,360,536,755,938.0
+TF08,contralateral,0.185,mean,0,74,360,537,751,944.0
+TF08,contralateral,0.185,+1sd,0,75,357,539,746,947.0
+TF08,contralateral,0.247,-1sd,0,68,347,523,724,947.0
+TF08,contralateral,0.247,mean,0,69,348,525,719,947.0
+TF08,contralateral,0.247,+1sd,0,71,348,527,714,947.0
+TF08,contralateral,0.309,-1sd,0,73,368,498,704,941.0
+TF08,contralateral,0.309,mean,0,74,364,502,699,941.0
+TF08,contralateral,0.309,+1sd,0,75,360,506,693,941.0
+TF08,contralateral,0.371,-1sd,0,75,378,480,685,940.0
+TF08,contralateral,0.371,mean,0,77,382,483,681,944.0
+TF08,contralateral,0.371,+1sd,0,78,382,483,677,944.0
+TF08,contralateral,0.43200000000000005,-1sd,0,80,358,484,668,944.0
+TF08,contralateral,0.43200000000000005,mean,0,81,361,487,666,944.0
+TF08,contralateral,0.43200000000000005,+1sd,0,82,361,487,665,944.0
+TF09,ipsilateral,0.129,-1sd,0,65,456,734,910,
+TF09,ipsilateral,0.129,mean,0,64,460,727,903,
+TF09,ipsilateral,0.129,+1sd,0,64,468,745,921,
+TF09,ipsilateral,0.161,-1sd,0,68,452,732,908,
+TF09,ipsilateral,0.161,mean,0,69,453,731,908,
+TF09,ipsilateral,0.161,+1sd,0,69,455,729,907,
+TF09,ipsilateral,0.193,-1sd,0,66,441,724,825,
+TF09,ipsilateral,0.193,mean,0,67,443,728,895,
+TF09,ipsilateral,0.193,+1sd,0,68,447,729,892,
+TF09,ipsilateral,0.225,-1sd,0,60,419,738,941,
+TF09,ipsilateral,0.225,mean,0,60,424,734,941,
+TF09,ipsilateral,0.225,+1sd,0,60,435,628,843,
+TF09,ipsilateral,0.258,-1sd,0,58,437,737,947,
+TF09,ipsilateral,0.258,mean,0,59,437,735,947,
+TF09,ipsilateral,0.258,+1sd,0,59,438,621,827,
+TF09,contralateral,0.129,-1sd,0,42,242,406,573,810.0
+TF09,contralateral,0.129,mean,0,42,233,441,806,930.0
+TF09,contralateral,0.129,+1sd,0,43,166,444,572,804.0
+TF09,contralateral,0.161,-1sd,0,44,216,402,579,785.0
+TF09,contralateral,0.161,mean,0,43,210,405,785,930.0
+TF09,contralateral,0.161,+1sd,0,42,170,297,585,785.0
+TF09,contralateral,0.193,-1sd,0,44,225,329,569,767.0
+TF09,contralateral,0.193,mean,0,44,215,573,765,930.0
+TF09,contralateral,0.193,+1sd,0,44,212,359,576,764.0
+TF09,contralateral,0.225,-1sd,0,49,217,345,565,752.0
+TF09,contralateral,0.225,mean,0,50,217,567,752,930.0
+TF09,contralateral,0.225,+1sd,0,51,216,338,569,751.0
+TF09,contralateral,0.258,-1sd,0,55,215,370,522,732.0
+TF09,contralateral,0.258,mean,0,56,219,536,732,930.0
+TF09,contralateral,0.258,+1sd,0,57,219,392,543,732.0
+TF10,ipsilateral,0.131,-1sd,0,148,325,503,801,
+TF10,ipsilateral,0.131,mean,0,128,504,713,900,
+TF10,ipsilateral,0.131,+1sd,0,123,504,715,906,
+TF10,ipsilateral,0.163,-1sd,0,173,500,719,922,
+TF10,ipsilateral,0.163,mean,0,168,496,751,933,
+TF10,ipsilateral,0.163,+1sd,0,164,491,744,925,
+TF10,ipsilateral,0.196,-1sd,0,172,486,744,920,
+TF10,ipsilateral,0.196,mean,0,166,490,700,919,
+TF10,ipsilateral,0.196,+1sd,0,162,493,704,918,
+TF10,ipsilateral,0.22899999999999998,-1sd,0,475,657,760,880,
+TF10,ipsilateral,0.22899999999999998,mean,0,133,476,717,881,
+TF10,ipsilateral,0.22899999999999998,+1sd,0,131,477,720,882,
+TF10,ipsilateral,0.262,-1sd,0,120,296,474,777,
+TF10,ipsilateral,0.262,-1sd,0,133,476,717,881,
+TF10,ipsilateral,0.262,-1sd,0,131,477,720,882,
+TF10,contralateral,0.131,-1sd,0,52,242,563,739,925.0
+TF10,contralateral,0.131,mean,0,50,263,564,740,924.0
+TF10,contralateral,0.131,+1sd,0,46,273,505,742,925.0
+TF10,contralateral,0.163,-1sd,0,52,247,552,728,904.0
+TF10,contralateral,0.163,mean,0,50,243,551,727,903.0
+TF10,contralateral,0.163,+1sd,0,49,272,549,725,902.0
+TF10,contralateral,0.196,-1sd,0,62,167,562,709,879.0
+TF10,contralateral,0.196,mean,0,60,167,564,708,880.0
+TF10,contralateral,0.196,+1sd,0,59,167,566,708,880.0
+TF10,contralateral,0.22899999999999998,-1sd,0,63,166,378,549,700.0
+TF10,contralateral,0.22899999999999998,mean,0,63,379,548,697,880.0
+TF10,contralateral,0.22899999999999998,+1sd,0,64,170,387,547,695.0
+TF10,contralateral,0.262,-1sd,0,69,289,527,703,947.0
+TF10,contralateral,0.262,mean,0,70,289,526,702,947.0
+TF10,contralateral,0.262,+1sd,0,71,291,526,728,947.0
+TF11,ipsilateral,0.19399999999999998,-1sd,0,105,664,765,932,
+TF11,ipsilateral,0.19399999999999998,mean,0,107,465,764,921,
+TF11,ipsilateral,0.19399999999999998,+1sd,0,108,465,667,815,
+TF11,ipsilateral,0.259,-1sd,0,107,654,768,936,
+TF11,ipsilateral,0.259,mean,0,107,659,825,935,
+TF11,ipsilateral,0.259,+1sd,0,107,662,826,933,
+TF11,ipsilateral,0.324,-1sd,0,98,634,748,930,
+TF11,ipsilateral,0.324,mean,0,98,636,750,930,
+TF11,ipsilateral,0.324,+1sd,0,98,637,754,931,
+TF11,ipsilateral,0.389,-1sd,0,88,625,757,922,
+TF11,ipsilateral,0.389,mean,0,89,626,756,923,
+TF11,ipsilateral,0.389,+1sd,0,90,626,754,924,
+TF11,ipsilateral,0.45399999999999996,-1sd,0,79,614,729,924,
+TF11,ipsilateral,0.45399999999999996,mean,0,80,614,728,925,
+TF11,ipsilateral,0.45399999999999996,+1sd,0,81,614,726,925,
+TF11,contralateral,0.19399999999999998,-1sd,0,78,253,445,574,728.0
+TF11,contralateral,0.19399999999999998,mean,0,80,261,574,725,890.0
+TF11,contralateral,0.19399999999999998,+1sd,0,82,317,455,573,723.0
+TF11,contralateral,0.259,-1sd,0,80,272,533,702,882.0
+TF11,contralateral,0.259,mean,0,82,276,535,699,881.0
+TF11,contralateral,0.259,+1sd,0,84,276,536,695,884.0
+TF11,contralateral,0.324,-1sd,0,78,270,510,686,882.0
+TF11,contralateral,0.324,mean,0,80,269,500,676,886.0
+TF11,contralateral,0.324,+1sd,0,82,269,514,690,889.0
+TF11,contralateral,0.389,-1sd,0,74,280,481,654,883.0
+TF11,contralateral,0.389,mean,0,76,225,483,652,890.0
+TF11,contralateral,0.389,+1sd,0,77,226,356,485,651.0
+TF11,contralateral,0.45399999999999996,-1sd,0,71,200,307,458,649.0
+TF11,contralateral,0.45399999999999996,mean,0,73,303,460,647,890.0
+TF11,contralateral,0.45399999999999996,+1sd,0,75,205,306,462,646.0
+TF12,ipsilateral,0.124,-1sd,0,93,273,464,839,
+TF12,ipsilateral,0.124,mean,0,91,283,465,928,
+TF12,ipsilateral,0.124,+1sd,0,89,275,466,931,
+TF12,ipsilateral,0.155,-1sd,0,74,449,827,936,
+TF12,ipsilateral,0.155,mean,0,74,280,449,928,
+TF12,ipsilateral,0.155,+1sd,0,74,284,717,914,
+TF12,ipsilateral,0.18600000000000003,-1sd,0,74,441,694,933,
+TF12,ipsilateral,0.18600000000000003,mean,0,74,441,690,940,
+TF12,ipsilateral,0.18600000000000003,+1sd,0,69,440,728,943,
+TF12,ipsilateral,0.217,-1sd,0,428,669,823,936,
+TF12,ipsilateral,0.217,mean,0,75,430,736,939,
+TF12,ipsilateral,0.217,+1sd,0,75,432,740,939,
+TF12,ipsilateral,0.248,-1sd,0,75,445,815,932,
+TF12,ipsilateral,0.248,mean,0,75,445,817,936,
+TF12,ipsilateral,0.248,+1sd,0,445,679,819,939,
+TF12,contralateral,0.124,-1sd,0,89,295,469,622,816.0
+TF12,contralateral,0.124,mean,0,90,298,627,816,934.0
+TF12,contralateral,0.124,+1sd,0,93,302,480,632,817.0
+TF12,contralateral,0.155,-1sd,0,89,286,531,632,794.0
+TF12,contralateral,0.155,mean,0,90,294,529,795,934.0
+TF12,contralateral,0.155,+1sd,0,92,297,457,629,796.0
+TF12,contralateral,0.18600000000000003,-1sd,0,88,425,624,777,945.0
+TF12,contralateral,0.18600000000000003,mean,0,90,350,622,777,945.0
+TF12,contralateral,0.18600000000000003,+1sd,0,92,350,619,778,942.0
+TF12,contralateral,0.217,-1sd,0,99,391,612,769,937.0
+TF12,contralateral,0.217,mean,0,103,343,609,768,934.0
+TF12,contralateral,0.217,+1sd,0,106,342,605,768,934.0
+TF12,contralateral,0.248,-1sd,0,98,235,363,593,751.0
+TF12,contralateral,0.248,mean,0,101,241,590,751,930.0
+TF12,contralateral,0.248,+1sd,0,103,249,375,587,752.0
+TF13,ipsilateral,0.184,-1sd,0,74,689,799,911,
+TF13,ipsilateral,0.184,mean,0,75,499,686,922,
+TF13,ipsilateral,0.184,+1sd,0,75,503,683,927,
+TF13,ipsilateral,0.245,-1sd,0,66,482,658,943,
+TF13,ipsilateral,0.245,mean,0,68,481,657,940,
+TF13,ipsilateral,0.245,+1sd,0,69,488,733,924,
+TF13,ipsilateral,0.306,-1sd,0,474,645,760,940,
+TF13,ipsilateral,0.306,mean,0,67,477,647,758,
+TF13,ipsilateral,0.306,+1sd,0,67,649,755,935,
+TF13,ipsilateral,0.368,-1sd,0,65,470,768,944,
+TF13,ipsilateral,0.368,mean,0,64,472,731,939,
+TF13,ipsilateral,0.368,+1sd,0,64,474,732,938,
+TF13,ipsilateral,0.429,-1sd,0,64,638,772,939,
+TF13,ipsilateral,0.429,mean,0,64,467,638,768,
+TF13,ipsilateral,0.429,+1sd,0,64,467,765,938,
+TF13,contralateral,0.184,-1sd,0,51,152,283,584,734.0
+TF13,contralateral,0.184,mean,0,51,283,586,732,930.0
+TF13,contralateral,0.184,+1sd,0,50,162,283,590,730.0
+TF13,contralateral,0.245,-1sd,0,53,219,387,567,877.0
+TF13,contralateral,0.245,mean,0,53,364,566,881,930.0
+TF13,contralateral,0.245,+1sd,0,54,208,552,703,881.0
+TF13,contralateral,0.306,-1sd,0,51,227,547,723,941.0
+TF13,contralateral,0.306,mean,0,51,227,547,723,941.0
+TF13,contralateral,0.306,+1sd,0,52,229,547,735,941.0
+TF13,contralateral,0.368,-1sd,0,49,202,522,678,939.0
+TF13,contralateral,0.368,mean,0,49,207,521,676,939.0
+TF13,contralateral,0.368,+1sd,0,49,207,520,675,939.0
+TF13,contralateral,0.429,-1sd,0,53,236,487,658,932.0
+TF13,contralateral,0.429,mean,0,53,236,487,657,932.0
+TF13,contralateral,0.429,+1sd,0,52,236,486,657,932.0
+TF14,ipsilateral,0.128,-1sd,0,87,731,834,937,
+TF14,ipsilateral,0.128,mean,0,84,500,782,943,
+TF14,ipsilateral,0.128,+1sd,0,81,738,841,945,
+TF14,ipsilateral,0.16,-1sd,0,75,500,712,932,
+TF14,ipsilateral,0.16,mean,0,75,500,771,934,
+TF14,ipsilateral,0.16,+1sd,0,75,500,772,936,
+TF14,ipsilateral,0.192,-1sd,0,65,505,720,929,
+TF14,ipsilateral,0.192,mean,0,63,505,717,927,
+TF14,ipsilateral,0.192,+1sd,0,62,506,714,926,
+TF14,ipsilateral,0.223,-1sd,0,56,499,690,920,
+TF14,ipsilateral,0.223,mean,0,56,500,776,920,
+TF14,ipsilateral,0.223,+1sd,0,55,501,771,920,
+TF14,ipsilateral,0.255,-1sd,0,63,682,790,927,
+TF14,ipsilateral,0.255,mean,0,63,488,759,927,
+TF14,ipsilateral,0.255,+1sd,0,62,488,756,863,
+TF14,contralateral,0.128,-1sd,0,59,175,334,647,797.0
+TF14,contralateral,0.128,mean,0,60,341,652,796,907.0
+TF14,contralateral,0.128,+1sd,0,60,171,349,657,795.0
+TF14,contralateral,0.16,-1sd,0,61,221,322,629,783.0
+TF14,contralateral,0.16,mean,0,61,216,633,783,907.0
+TF14,contralateral,0.16,+1sd,0,60,210,324,637,784.0
+TF14,contralateral,0.192,-1sd,0,64,276,582,750,931.0
+TF14,contralateral,0.192,mean,0,63,284,587,751,947.0
+TF14,contralateral,0.192,+1sd,0,61,291,591,752,947.0
+TF14,contralateral,0.223,-1sd,0,69,250,571,740,907.0
+TF14,contralateral,0.223,mean,0,68,171,272,575,740.0
+TF14,contralateral,0.223,+1sd,0,67,177,278,579,739.0
+TF14,contralateral,0.255,-1sd,0,75,254,566,744,906.0
+TF14,contralateral,0.255,mean,0,75,254,569,744,907.0
+TF14,contralateral,0.255,+1sd,0,75,258,572,745,907.0
+TF15,ipsilateral,0.19,-1sd,0,84,492,697,918,
+TF15,ipsilateral,0.19,mean,0,83,496,690,919,
+TF15,ipsilateral,0.19,+1sd,0,82,502,691,919,
+TF15,ipsilateral,0.254,-1sd,0,82,480,657,913,
+TF15,ipsilateral,0.254,mean,0,83,482,658,943,
+TF15,ipsilateral,0.254,+1sd,0,84,486,662,912,
+TF15,ipsilateral,0.317,-1sd,0,82,471,740,932,
+TF15,ipsilateral,0.317,mean,0,84,474,650,931,
+TF15,ipsilateral,0.317,+1sd,0,85,481,657,931,
+TF15,ipsilateral,0.381,-1sd,0,70,458,703,922,
+TF15,ipsilateral,0.381,mean,0,71,268,460,766,
+TF15,ipsilateral,0.381,+1sd,0,72,463,740,916,
+TF15,ipsilateral,0.444,-1sd,0,70,615,770,913,
+TF15,ipsilateral,0.444,mean,0,464,616,768,915,
+TF15,ipsilateral,0.444,+1sd,0,464,616,768,916,
+TF15,contralateral,0.19,-1sd,0,55,285,567,720,846.0
+TF15,contralateral,0.19,mean,0,55,286,565,721,847.0
+TF15,contralateral,0.19,+1sd,0,54,283,563,723,932.0
+TF15,contralateral,0.254,-1sd,0,59,296,550,701,882.0
+TF15,contralateral,0.254,mean,0,59,292,554,699,878.0
+TF15,contralateral,0.254,+1sd,0,58,284,560,697,873.0
+TF15,contralateral,0.317,-1sd,0,59,300,519,676,837.0
+TF15,contralateral,0.317,mean,0,59,300,522,673,844.0
+TF15,contralateral,0.317,+1sd,0,59,300,525,670,910.0
+TF15,contralateral,0.381,-1sd,0,61,272,490,666,880.0
+TF15,contralateral,0.381,mean,0,61,272,488,664,884.0
+TF15,contralateral,0.381,+1sd,0,61,270,485,661,891.0
+TF15,contralateral,0.444,-1sd,0,59,263,474,628,853.0
+TF15,contralateral,0.444,mean,0,60,265,476,629,900.0
+TF15,contralateral,0.444,+1sd,0,61,267,476,630,854.0
+TF16,ipsilateral,0.188,-1sd,0,59,500,727,830,
+TF16,ipsilateral,0.188,mean,0,58,503,736,837,
+TF16,ipsilateral,0.188,+1sd,0,57,506,774,941,
+TF16,ipsilateral,0.25,-1sd,0,59,489,687,813,
+TF16,ipsilateral,0.25,mean,0,58,491,765,939,
+TF16,ipsilateral,0.25,+1sd,0,57,494,716,939,
+TF16,ipsilateral,0.313,-1sd,0,61,700,813,944,
+TF16,ipsilateral,0.313,mean,0,60,489,802,943,
+TF16,ipsilateral,0.313,+1sd,0,59,493,750,943,
+TF16,ipsilateral,0.376,-1sd,0,64,688,805,942,
+TF16,ipsilateral,0.376,mean,0,63,500,802,941,
+TF16,ipsilateral,0.376,+1sd,0,62,686,800,940,
+TF16,ipsilateral,0.43799999999999994,-1sd,0,57,664,811,935,
+TF16,ipsilateral,0.43799999999999994,mean,0,58,500,808,934,
+TF16,ipsilateral,0.43799999999999994,+1sd,0,58,664,807,934,
+TF16,contralateral,0.188,-1sd,0,75,182,333,580,768.0
+TF16,contralateral,0.188,mean,0,77,198,584,767,940.0
+TF16,contralateral,0.188,+1sd,0,79,202,345,587,767.0
+TF16,contralateral,0.25,-1sd,0,73,356,536,735,947.0
+TF16,contralateral,0.25,mean,0,73,288,538,734,947.0
+TF16,contralateral,0.25,+1sd,0,73,287,539,732,947.0
+TF16,contralateral,0.313,-1sd,0,72,173,512,708,946.0
+TF16,contralateral,0.313,mean,0,73,176,514,706,946.0
+TF16,contralateral,0.313,+1sd,0,74,176,516,705,946.0
+TF16,contralateral,0.376,-1sd,0,69,170,463,689,945.0
+TF16,contralateral,0.376,mean,0,70,172,470,687,945.0
+TF16,contralateral,0.376,+1sd,0,71,172,476,686,945.0
+TF16,contralateral,0.43799999999999994,-1sd,0,70,171,327,428,669.0
+TF16,contralateral,0.43799999999999994,mean,0,71,173,434,668,941.0
+TF16,contralateral,0.43799999999999994,+1sd,0,72,173,440,667,941.0
+TF17,ipsilateral,0.182,-1sd,0,41,446,685,886,
+TF17,ipsilateral,0.182,mean,0,40,447,694,886,
+TF17,ipsilateral,0.182,+1sd,0,40,449,759,941,
+TF17,ipsilateral,0.243,-1sd,0,38,238,446,768,
+TF17,ipsilateral,0.243,mean,0,39,446,677,932,
+TF17,ipsilateral,0.243,+1sd,0,39,447,680,935,
+TF17,ipsilateral,0.304,-1sd,0,38,449,754,930,
+TF17,ipsilateral,0.304,mean,0,39,449,664,912,
+TF17,ipsilateral,0.304,+1sd,0,39,450,661,837,
+TF17,ipsilateral,0.365,-1sd,0,39,445,647,925,
+TF17,ipsilateral,0.365,mean,0,39,446,749,927,
+TF17,ipsilateral,0.365,+1sd,0,39,447,646,837,
+TF17,ipsilateral,0.425,-1sd,0,39,449,641,846,
+TF17,ipsilateral,0.425,mean,0,39,450,643,846,
+TF17,ipsilateral,0.425,+1sd,0,39,451,758,934,
+TF17,contralateral,0.182,-1sd,0,57,280,577,753,933.0
+TF17,contralateral,0.182,mean,0,58,282,581,753,930.0
+TF17,contralateral,0.182,+1sd,0,59,282,585,752,923.0
+TF17,contralateral,0.243,-1sd,0,56,386,540,719,931.0
+TF17,contralateral,0.243,mean,0,57,390,542,718,943.0
+TF17,contralateral,0.243,+1sd,0,57,394,544,717,943.0
+TF17,contralateral,0.304,-1sd,0,53,327,528,696,943.0
+TF17,contralateral,0.304,mean,0,54,357,528,695,943.0
+TF17,contralateral,0.304,+1sd,0,54,357,528,694,943.0
+TF17,contralateral,0.365,-1sd,0,51,285,505,675,933.0
+TF17,contralateral,0.365,mean,0,52,292,507,674,933.0
+TF17,contralateral,0.365,+1sd,0,53,299,509,673,933.0
+TF17,contralateral,0.425,-1sd,0,50,258,359,496,657.0
+TF17,contralateral,0.425,mean,0,51,262,496,656,933.0
+TF17,contralateral,0.425,+1sd,0,51,266,367,496,655.0
+TF18,ipsilateral,0.128,-1sd,0,96,520,706,896,
+TF18,ipsilateral,0.128,mean,0,98,521,706,897,
+TF18,ipsilateral,0.128,+1sd,0,98,523,718,898,
+TF18,ipsilateral,0.16,-1sd,0,96,331,518,861,
+TF18,ipsilateral,0.16,mean,0,94,520,715,913,
+TF18,ipsilateral,0.16,+1sd,0,92,319,520,862,
+TF18,ipsilateral,0.192,-1sd,0,78,320,501,836,
+TF18,ipsilateral,0.192,mean,0,76,502,680,941,
+TF18,ipsilateral,0.192,+1sd,0,73,321,503,833,
+TF18,ipsilateral,0.223,-1sd,0,69,706,826,935,
+TF18,ipsilateral,0.223,mean,0,70,492,827,938,
+TF18,ipsilateral,0.223,+1sd,0,72,492,734,940,
+TF18,ipsilateral,0.255,-1sd,0,65,485,737,923,
+TF18,ipsilateral,0.255,mean,0,65,485,735,925,
+TF18,ipsilateral,0.255,+1sd,0,65,485,732,927,
+TF18,contralateral,0.128,-1sd,0,73,231,603,751,874.0
+TF18,contralateral,0.128,mean,0,72,231,602,753,878.0
+TF18,contralateral,0.128,+1sd,0,72,234,601,754,882.0
+TF18,contralateral,0.16,-1sd,0,85,213,603,757,943.0
+TF18,contralateral,0.16,mean,0,86,213,606,755,881.0
+TF18,contralateral,0.16,+1sd,0,86,212,609,753,880.0
+TF18,contralateral,0.192,-1sd,0,99,354,603,778,929.0
+TF18,contralateral,0.192,mean,0,99,272,456,607,775.0
+TF18,contralateral,0.192,+1sd,0,98,272,463,614,909.0
+TF18,contralateral,0.223,-1sd,0,110,271,573,757,897.0
+TF18,contralateral,0.223,mean,0,109,268,576,757,896.0
+TF18,contralateral,0.223,+1sd,0,108,268,580,756,894.0
+TF18,contralateral,0.255,-1sd,0,106,262,548,732,899.0
+TF18,contralateral,0.255,mean,0,108,260,549,735,897.0
+TF18,contralateral,0.255,+1sd,0,109,260,552,736,891.0
+TF19,ipsilateral,0.19899999999999998,-1sd,0,103,342,518,795,
+TF19,ipsilateral,0.19899999999999998,mean,0,103,517,795,815,
+TF19,ipsilateral,0.19899999999999998,+1sd,0,104,282,516,797,
+TF19,ipsilateral,0.266,-1sd,0,102,322,498,777,
+TF19,ipsilateral,0.266,mean,0,101,499,780,930,
+TF19,ipsilateral,0.266,+1sd,0,100,485,661,937,
+TF19,ipsilateral,0.332,-1sd,0,103,655,798,921,
+TF19,ipsilateral,0.332,mean,0,104,495,798,899,
+TF19,ipsilateral,0.332,+1sd,0,105,495,657,860,
+TF19,ipsilateral,0.39799999999999996,-1sd,0,100,483,714,815,
+TF19,ipsilateral,0.39799999999999996,mean,0,100,484,647,812,
+TF19,ipsilateral,0.39799999999999996,+1sd,0,485,648,810,930,
+TF19,ipsilateral,0.465,-1sd,0,74,635,744,913,
+TF19,ipsilateral,0.465,mean,0,77,481,635,815,
+TF19,ipsilateral,0.465,+1sd,0,80,483,734,897,
+TF19,contralateral,0.19899999999999998,-1sd,0,56,268,578,751,882.0
+TF19,contralateral,0.19899999999999998,mean,0,56,237,583,751,882.0
+TF19,contralateral,0.19899999999999998,+1sd,0,55,230,587,751,881.0
+TF19,contralateral,0.266,-1sd,0,54,225,534,714,877.0
+TF19,contralateral,0.266,mean,0,55,225,541,712,933.0
+TF19,contralateral,0.266,+1sd,0,56,229,547,711,870.0
+TF19,contralateral,0.332,-1sd,0,58,237,496,688,898.0
+TF19,contralateral,0.332,mean,0,59,229,498,685,892.0
+TF19,contralateral,0.332,+1sd,0,59,176,498,681,887.0
+TF19,contralateral,0.39799999999999996,-1sd,0,58,266,474,665,884.0
+TF19,contralateral,0.39799999999999996,mean,0,59,262,476,663,893.0
+TF19,contralateral,0.39799999999999996,+1sd,0,60,262,476,660,897.0
+TF19,contralateral,0.465,-1sd,0,63,274,464,652,945.0
+TF19,contralateral,0.465,mean,0,63,269,466,650,940.0
+TF19,contralateral,0.465,+1sd,0,63,269,468,648,933.0
+TF20,ipsilateral,0.126,-1sd,0,160,351,527,813,
+TF20,ipsilateral,0.126,mean,0,157,527,716,892,
+TF20,ipsilateral,0.126,+1sd,0,155,349,527,806,
+TF20,ipsilateral,0.157,-1sd,0,148,326,520,773,
+TF20,ipsilateral,0.157,mean,0,149,519,787,890,
+TF20,ipsilateral,0.157,+1sd,0,150,326,519,799,
+TF20,ipsilateral,0.18899999999999997,-1sd,0,117,293,497,813,
+TF20,ipsilateral,0.18899999999999997,mean,0,121,499,807,903,
+TF20,ipsilateral,0.18899999999999997,+1sd,0,124,322,499,803,
+TF20,ipsilateral,0.22,-1sd,0,87,263,487,824,
+TF20,ipsilateral,0.22,mean,0,92,485,684,906,
+TF20,ipsilateral,0.22,+1sd,0,95,482,679,912,
+TF20,ipsilateral,0.252,-1sd,0,86,262,640,900,
+TF20,ipsilateral,0.252,mean,0,91,278,486,812,
+TF20,ipsilateral,0.252,+1sd,0,97,275,486,808,
+TF20,contralateral,0.126,-1sd,0,82,183,463,601,813.0
+TF20,contralateral,0.126,mean,0,87,188,603,806,930.0
+TF20,contralateral,0.126,+1sd,0,93,387,489,606,794.0
+TF20,contralateral,0.157,-1sd,0,96,198,311,602,788.0
+TF20,contralateral,0.157,mean,0,99,200,603,780,930.0
+TF20,contralateral,0.157,+1sd,0,101,202,325,605,772.0
+TF20,contralateral,0.18899999999999997,-1sd,0,102,203,324,617,772.0
+TF20,contralateral,0.18899999999999997,mean,0,105,324,425,771,930.0
+TF20,contralateral,0.18899999999999997,+1sd,0,107,331,432,622,771.0
+TF20,contralateral,0.22,-1sd,0,99,202,318,593,747.0
+TF20,contralateral,0.22,mean,0,100,275,592,742,932.0
+TF20,contralateral,0.22,+1sd,0,101,282,383,590,735.0
+TF20,contralateral,0.252,-1sd,0,105,297,581,732,924.0
+TF20,contralateral,0.252,mean,0,108,297,572,723,932.0
+TF20,contralateral,0.252,+1sd,0,110,297,571,722,940.0

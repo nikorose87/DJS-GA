@@ -257,7 +257,11 @@ class plot_ankle_DJS(plot_dynamic):
                       'reg_linewidth': 0.8,
                       'sd_linewidth': 0.3*self.alpha/self.fig_size[0],
                       'grid':True,
-                      'text': False}
+                      'text': False,
+                      'tp_labels' : {'I.C.':(3,3),'ERP':(2.5,2.5),
+                     'LRP':(1.2,1.0),'DP':(1,1.1),'S':(1.2,1.1), 
+                     'TS':(1,1)},
+                      'instances': ['CP','ERP', 'LRP', 'DP', 'S']}
         
         if params is not None:
             self.params.update(params)
@@ -280,8 +284,12 @@ class plot_ankle_DJS(plot_dynamic):
         for _ , self.ax in np.ndenumerate(self.axs):
             try:
                 #This exception is for unpaired plots in order to get rid of empty axes
-                self.ang_mean = self.extract_data([rows[0], self.count, int(self.sd)])
-                self.mom_mean = self.extract_data([rows[1], self.count, int(self.sd)])
+                if self.sd:
+                    self.ang_mean = self.extract_data([rows[0], self.count, 1]).squeeze()
+                    self.mom_mean = self.extract_data([rows[1], self.count, 1]).squeeze()
+                else:
+                    self.ang_mean = self.extract_data([rows[0], self.count, self.count]).squeeze()
+                    self.mom_mean = self.extract_data([rows[1], self.count, self.count]).squeeze()
                 if self.sd:
                     self.sd_plot(rows)
                 if not self.params['grid']:
@@ -328,8 +336,12 @@ class plot_ankle_DJS(plot_dynamic):
         areas_abs = []
         direction = []
         for _ in enumerate(self.columns_first):
-            self.ang_mean = self.extract_data([rows[0], self.count, int(self.sd)])
-            self.mom_mean = self.extract_data([rows[1], self.count, int(self.sd)])
+            if self.sd:
+                self.ang_mean = self.extract_data([rows[0], self.count, 1]).squeeze()
+                self.mom_mean = self.extract_data([rows[1], self.count, 1]).squeeze()
+            else:
+                self.ang_mean = self.extract_data([rows[0], self.count, self.count]).squeeze()
+                self.mom_mean = self.extract_data([rows[1], self.count, self.count]).squeeze()
             if self.sd:
                 self.sd_plot(rows)
             if not self.params['grid']:
@@ -380,10 +392,8 @@ class plot_ankle_DJS(plot_dynamic):
 
     def labels_inside(self):
         #Printing point labels
-        tp_labels = {'I.C.':(3,3),'ERP':(2.5,2.5),
-                     'LRP':(1.2,1.0),'DP':(1,1.1),'S':(1.2,1.1), 
-                     'TS':(1,1)}
-        for n_, (tp_lab, val) in enumerate(tp_labels.items()):
+
+        for n_, (tp_lab, val) in enumerate(self.params['tp_labels'].items()):
             self.ax.text(self.ang_mean[self.TP.iloc[self.count, n_]]*val[0],
                          self.mom_mean[self.TP.iloc[self.count, n_]]*val[1],
                          tp_lab,
@@ -407,9 +417,14 @@ class plot_ankle_DJS(plot_dynamic):
         None.
 
         """
-        ind_ = self.columns_first
-        self.areas = pd.DataFrame(np.array([areas_abs, areas_prod, direction]).T, 
-                                  columns = ['work abs', 'work prod', 'direction'], index=ind_)
+        try:
+            ind_ = self.columns_first
+            self.areas = pd.DataFrame(np.array([areas_abs, areas_prod, direction]).T, 
+                                      columns = ['work abs', 'work prod', 'direction'], index=ind_)
+        except ValueError:
+            self.areas = pd.DataFrame(np.array([areas_abs, areas_prod, direction]).T, 
+                                      columns = ['work abs', 'work prod', 'direction'], 
+                                      index=self.reg_info_df.index.get_level_values(0).unique())
     def is_positive(self):
         signedarea = 0
         for len_arr in range(self.ang_mean.shape[0]-1):
@@ -462,6 +477,7 @@ class plot_ankle_DJS(plot_dynamic):
             #Integration cannot be done
             prod = 0
             absorb = 0
+            direction = 0
             
                 
         return prod, absorb, direction
@@ -471,7 +487,8 @@ class plot_ankle_DJS(plot_dynamic):
         # Plotting TP
         self.ax.scatter(self.ang_mean[self.TP.iloc[self.count]],
                         self.mom_mean[self.TP.iloc[self.count]],
-                        color=self.params['color_symbols'][self.count])
+                        color=self.params['color_symbols'][self.count],
+                        linewidth = self.alpha/3)
 
         for i in range(self.TP.shape[1]-2):
             ang_data = self.ang_mean[self.TP.iloc[self.count][i]: \
@@ -496,7 +513,7 @@ class plot_ankle_DJS(plot_dynamic):
             num = 0
 
         reg_info_df = pd.DataFrame(reg_info)
-        instance = ['CP','ERP', 'LRP', 'DP', 'S']
+        instance = self.params['instances']
         instance = instance[:reg_info_df.shape[0]]
         reg_idx= pd.MultiIndex.from_product([[self.columns_first[self.count]], [self.columns_second[num]],
                              instance], names=['Speed', 'instance','QS phase'])
@@ -563,7 +580,7 @@ class plot_ankle_DJS(plot_dynamic):
     
     def add_reg_lines(self, pred_df, label='Predicted'):
         pred_df_ind = pred_df.index.get_level_values(0)
-        for i, phase in enumerate(['CP','ERP', 'LRP', 'DP']):
+        for i, phase in enumerate(self.params['instances'][:-1]):
             stiffness = pred_df.loc[self.idx[pred_df_ind[self.count], phase]][1]
             intercept = pred_df.loc[self.idx[pred_df_ind[self.count], phase]][0]
             ang_data = self.ang_mean[self.TP.iloc[self.count][i]: \
@@ -705,7 +722,9 @@ class plot_ankle_DJS(plot_dynamic):
         return data
     
     def add_arrow(self, axs, direction='right', step=2):
+        
         """
+        
         Add an arrow to a line.
     
         line:       Line2D object

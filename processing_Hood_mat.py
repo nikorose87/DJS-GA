@@ -53,9 +53,15 @@ for sub_ID in np.r_[1,2,5:21]:
     res_contra = create_df(res_pd_mod.loc[:,idx[:,'contralateral', 'avg']].droplevel([1,2], axis=1), 
                          res_pd_mod.loc[:,idx[:,'contralateral', 'stdev']].droplevel([1,2], axis=1))
     # Fancier labels
-    vel_labels = [r'{}.{} m/s'.format(vel[-3],vel[-1]) for vel in vels]
+    vel_ = [float('{}.{}'.format(vel[-3],vel[-1])) for vel in vels]
+    #Hood number instead
+    froude = lambda v, l: v/(9.81*l)**0.5
+    froude_calc = [np.round(froude(vel, meta_data.loc[sub[1:], 'Height (m)']*0.5747),3) for vel in vel_]
+    # vel_label_ranges = [r'$v* < 0.227$',r'$0.227 < v* < 0.363$',r'$0.363 < v* < 0.500$',
+    #                                          r'$0.500 < v* < 0.636$','$v* > 0.636$']
     complete_labels = pd.MultiIndex.from_product([[sub[1:]],
-                    ['ipsilateral', 'contralateral'],vel_labels, ['-1sd', 'mean', '+1sd']])
+                                                  ['ipsilateral', 'contralateral'],
+                                                  froude_calc, ['-1sd', 'mean', '+1sd']])
     res_total_sub = pd.concat([res_ipsi, res_contra], axis=1)
     res_total_sub.columns = complete_labels
     os.chdir(root)
