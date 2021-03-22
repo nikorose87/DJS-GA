@@ -287,9 +287,11 @@ class plot_ankle_DJS(plot_dynamic):
                 if self.sd:
                     self.ang_mean = self.extract_data([rows[0], self.count, 1]).squeeze()
                     self.mom_mean = self.extract_data([rows[1], self.count, 1]).squeeze()
+                    label = self.columns_first[self.count]
                 else:
-                    self.ang_mean = self.extract_data([rows[0], self.count, self.count]).squeeze()
-                    self.mom_mean = self.extract_data([rows[1], self.count, self.count]).squeeze()
+                    self.ang_mean = self.extract_data([rows[0], 0, self.count]).squeeze()
+                    self.mom_mean = self.extract_data([rows[1], 0, self.count]).squeeze()
+                    label = self.columns_second[self.count]
                 if self.sd:
                     self.sd_plot(rows)
                 if not self.params['grid']:
@@ -298,7 +300,7 @@ class plot_ankle_DJS(plot_dynamic):
                     self.ax.spines['top'].set_visible(False)
                 line_plot = self.ax.plot(self.ang_mean, self.mom_mean, 
                              color= self.params['color_DJS'][self.count],
-                             label= self.columns_first[self.count],
+                             label= label,
                              linewidth=self.params['DJS_linewidth'])
                 if self.integrate:
                     _prod, _abs, _dir = self.areas()
@@ -325,7 +327,7 @@ class plot_ankle_DJS(plot_dynamic):
                     self.ax.legend(ncol=int(len(self.columns_first)/2), fancybox=True,
                                    loc = 'upper left')                       
                 self.count +=1
-            except IndexError:
+            except ValueError:
                 #Because plots does not match
                 continue
         if self.integrate:
@@ -418,13 +420,16 @@ class plot_ankle_DJS(plot_dynamic):
 
         """
         try:
-            ind_ = self.columns_first
+            if self.sd:
+                ind_ = self.columns_first
+            else:
+                ind_ = self.columns_second
             self.areas = pd.DataFrame(np.array([areas_abs, areas_prod, direction]).T, 
                                       columns = ['work abs', 'work prod', 'direction'], index=ind_)
         except ValueError:
             self.areas = pd.DataFrame(np.array([areas_abs, areas_prod, direction]).T, 
                                       columns = ['work abs', 'work prod', 'direction'], 
-                                      index=self.reg_info_df.index.get_level_values(0).unique())
+                                      index=self.reg_info_df.index.get_level_values(1).unique())
     def is_positive(self):
         signedarea = 0
         for len_arr in range(self.ang_mean.shape[0]-1):
@@ -515,7 +520,11 @@ class plot_ankle_DJS(plot_dynamic):
         reg_info_df = pd.DataFrame(reg_info)
         instance = self.params['instances']
         instance = instance[:reg_info_df.shape[0]]
-        reg_idx= pd.MultiIndex.from_product([[self.columns_first[self.count]], [self.columns_second[num]],
+        if self.sd:
+            reg_idx= pd.MultiIndex.from_product([[self.columns_first[self.count]], [self.columns_second[num]],
+                             instance], names=['Speed', 'instance','QS phase'])
+        else:
+            reg_idx= pd.MultiIndex.from_product([self.columns_first, [self.columns_second[self.count]],
                              instance], names=['Speed', 'instance','QS phase'])
         reg_info_df.index = reg_idx
 

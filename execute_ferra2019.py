@@ -38,17 +38,17 @@ meta_data = meta_data.sort_values(['ID', 'speed'], ascending=[True, True])
 
 #Modifying Meta data
 
-def define_range_vel(x):
+def define_range_vel(x, string= True):
     if x <= 0.227:
-        cel = r'$v* < 0.227$'
+        cel = [r'$v* < 0.227$' if string == False else 'VS'][0]
     elif 0.227 <= x <= 0.363:
-        cel = r'$0.227 < v* < 0.363$'
+        cel = [r'$0.227 < v* < 0.363$' if string == False else 'S'][0]
     elif 0.363 <= x <= 0.500:
-        cel = r'$0.363 < v* < 0.500$'
+        cel = [r'$0.363 < v* < 0.500$' if string == False else 'C'][0]
     elif 0.500 <= x <= 0.636:
-        cel = r'$0.500 < v* < 0.636$'
+        cel = [r'$0.500 < v* < 0.636$' if string == False else 'F'][0]
     elif x >= 0.636:
-        cel = r'$v* > 0.636$'
+        cel = [r'$v* > 0.636$' if string == False else 'VF'][0]
     
     return cel
 
@@ -100,47 +100,112 @@ params_ind = {'sharex':False, 'sharey':True, 'left_margin': 0.05, 'arr_size':5,
           'line_width': 1.0,
           'grid':False}
 
-tic = time.time()
-op = 'load'
-for id_sub in np.r_[1:51]:
-    sub = 'Subject{}'.format(id_sub)
-    sub_df = ferra_QS.loc[:,idx[sub,'Walking',:,:]].droplevel([1,2], axis=1)
-    Ferra2019_DJS = ankle_DJS(sub_df, dir_loc = 'Ferrarin2019',
-                          exp_name = 'Children and adults 2019')
+process_ind = False
+if process_ind:
+    tic = time.time()
+    op = 'load'
+    for id_sub in np.r_[1:51]:
+        sub = 'Subject{}'.format(id_sub)
+        sub_df = ferra_QS.loc[:,idx[sub,'Walking',:,:]].droplevel([1,2], axis=1)
+        Ferra2019_DJS = ankle_DJS(sub_df, dir_loc = 'Ferrarin2019',
+                              exp_name = 'Children and adults 2019')
+        
+        Ferra2019_QS = Ferra2019_DJS.extract_df_QS_data(idx=[0,1])
+        
+        Ferra2019_QS = Ferra2019_DJS.interpolate_ankledf(replace=True)
+        
+        if op == 'manual':
+            df_turn = Ferra2019_DJS.get_turning_points(rows=[0,1], turning_points=5, 
+                                                       param_1=3, cluster_radius=25)
+        elif op == 'opt':
+            df_turn = best_hyper(Ferra2019_QS, save='Ferrarin2019/turn_params_{}.csv'.format(sub), 
+                                 TP = [5], smooth_radius=range(1,10,2),
+                                 cluster_radius=range(30,60,6), verbose=True, rows=[0,1])
+        elif op == 'load':
+            df_turn =  pd.read_csv('Ferrarin2019/turn_params_{}.csv'.format(sub), index_col=[0,1])
+        
+        # speeds_sub =list(Ferra2019_QS.columns.get_level_values(1))
+        # Ferra2019_QS.columns = pd.MultiIndex.from_arrays([speeds_sub, speeds_sub])
+        DJS_ind = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=[int(np.sqrt(sub_df.shape[1])),
+                                                                            int(np.sqrt(sub_df.shape[1]))],
+                                  alpha=4.0, fig_size=[8,8], params=params_ind)
+        
+        fig_ind = DJS_ind.plot_DJS(Ferra2019_QS, cols=None, rows= np.r_[0,1],
+                            title="Ankle DJS subject comparison at {}".format(sub), 
+                            legend=True, reg=df_turn.loc[idx[sub,:],:], header=None,
+                            integration= True, rad = True)
+        if id_sub == 1:
+            reg_info_ind = pd.DataFrame(DJS_ind.reg_info_df)
+            work_ind = pd.DataFrame(DJS_ind.areas)
+            all_df_turn = df_turn
+        else:
+            reg_info_ind = pd.concat([reg_info_ind, DJS_ind.reg_info_df])
+            all_df_turn = pd.concat([all_df_turn, df_turn]) 
+            work_ind = pd.concat([work_ind, DJS_ind.areas])
+            
     
-    Ferra2019_QS = Ferra2019_DJS.extract_df_QS_data(idx=[0,1])
-    
-    Ferra2019_QS = Ferra2019_DJS.interpolate_ankledf(replace=True)
-    
-    if op == 'manual':
-        df_turn = Ferra2019_DJS.get_turning_points(rows=[0,1], turning_points=5, 
-                                                   param_1=3, cluster_radius=25)
-    elif op == 'opt':
-        df_turn = best_hyper(Ferra2019_QS, save='Ferrarin2019/turn_params_{}.csv'.format(sub), 
-                             TP = [5], smooth_radius=range(1,10,2),
-                             cluster_radius=range(30,60,6), verbose=True, rows=[0,1])
-    elif op == 'load':
-        df_turn =  pd.read_csv('Ferrarin2019/turn_params_{}.csv'.format(sub), index_col=[0,1])
-    
-    speeds_sub =list(Ferra2019_QS.columns.get_level_values(1))
-    Ferra2019_QS.columns = pd.MultiIndex.from_arrays([speeds_sub, speeds_sub])
-    DJS_ind = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=[int(np.sqrt(sub_df.shape[1])),
-                                                                        int(np.sqrt(sub_df.shape[1]))],
-                              alpha=4.0, fig_size=[8,8], params=params_ind)
-    
-    fig_ind = DJS_ind.plot_DJS(Ferra2019_QS, cols=None, rows= np.r_[0,1],
-                        title="Ankle DJS subject comparison at {}".format(sub), 
-                        legend=True, reg=df_turn.loc[idx[sub,:],:], header=None,
-                        integration= True, rad = True)
-    if id_sub == 1:
-        reg_info_ind = pd.DataFrame(DJS_ind.reg_info_df)
-        work_ind = pd.DataFrame(DJS_ind.areas)
-    else:
-        reg_info_ind = pd.concat([reg_info_ind, DJS_ind.reg_info_df])
-        work_ind = pd.concat([work_ind, DJS_ind.areas])
+    reg_info_ind = reg_info_ind.round(3)
+    work_ind = work_ind.round(3)
+    #save
+    reg_info_ind.to_csv("Ferrarin2019/reg_info_ind_walk.csv")
+    work_ind.to_csv("Ferrarin2019/work_ind_walk.csv")
+    all_df_turn.to_csv("Ferrarin2019/turn_params_all.csv")
+    toc= time.time()
+else:
+    reg_info_ind = pd.read_csv("Ferrarin2019/reg_info_ind_walk.csv", index_col=[0,1,2])
+    work_ind = pd.read_csv("Ferrarin2019/work_ind_walk.csv", index_col=[0])
+    all_df_turn = pd.read_csv("Ferrarin2019/turn_params_all.csv", index_col=[0,1])
 
-reg_info_ind = reg_info_ind.round(3)
-work_ind = work_ind.round(3)
-toc= time.time()
+R2 = reg_info_ind['R2'].unstack(level=2)
+R2.columns = ['R2_{}'.format(i) for i in ['CP','ERP','LRP','DP']]
+MSE = reg_info_ind['MSE'].unstack(level=2)
+MSE.columns = ['MSE_{}'.format(i) for i in ['CP','ERP','LRP','DP']]
+
+R2MSE = pd.concat([reg_info_ind['stiffness'].unstack(level=2), R2,MSE], axis=1)
+R2MSE.index = pd.MultiIndex.from_arrays([R2MSE.index.get_level_values(0), 
+                                         np.round(R2MSE.index.get_level_values(1),6)])
+
+metrics_label = pd.MultiIndex.from_product([['R2','MSE'],['mean', 'std']])
+Ferra_metrics = pd.concat([R2.mean(axis=0), R2.std(axis=0), 
+                           MSE.mean(axis=0), MSE.std(axis=0)], axis=1)
+Ferra_metrics.columns = metrics_label
+work_ind.index = R2.index
+
+#Building the DF
+meta_data_walk = meta_data.query("Task == 'Walking'")
+meta_data_walk.index = pd.MultiIndex.from_arrays([meta_data_walk.subject, 
+                                                  np.round(meta_data_walk.speed,6)])
+
+all_df_turn.index = pd.MultiIndex.from_arrays([all_df_turn.index.get_level_values(0), 
+                                                  np.round(all_df_turn.index.get_level_values(1),6)])
+
+meta_data_walk = pd.concat([meta_data_walk, all_df_turn/3, R2MSE, work_ind], 
+                           axis=1, ignore_index=False)
+
+meta_data_walk = meta_data_walk.dropna(axis=0)
+meta_data_walk = meta_data_walk.rename(columns = {'Age (years)':'Age', 'range vel': 'Range'})
+meta_data_walk.to_csv("Ferrarin2019/meta_info_ferra.csv")
+#Deviding results per groups
+vel_labels = ['Very Slow', 'Slow', 'Free', 'Fast', 'Very Fast']
+meta_data_walk_ch = {vel: meta_data_walk.query("Age <= 18 and Range == '{}'".format(vel)) for vel in vel_labels}
+meta_data_walk_ya = {vel: meta_data_walk.query("Age >= 22 and Age <= 35 and Range == '{}'".format(vel)) for vel in vel_labels}
+meta_data_walk_a = {vel: meta_data_walk.query("Age > 35 and Age <= 54 and Range == '{}'".format(vel)) for vel in vel_labels}
+meta_data_walk_old = {vel: meta_data_walk.query("Age > 54 and Range == '{}'".format(vel)) for vel in vel_labels}
+
+# samples per group
+samples_groups = {key: [metas[vel].shape[0] for vel in vel_labels] for key, metas in [('Children', meta_data_walk_ch), 
+                                                                        ('Young Adults',meta_data_walk_ya),
+                                                                        ('Adults', meta_data_walk_a),
+                                                                        ('Elderly',meta_data_walk_old)]}
+samples_groups = pd.DataFrame(samples_groups,
+                              index=['Fast', 'Free', 'Slow', 'Very Fast', 'Very Slow'])
+
+samples_groups = samples_groups.reindex(vel_labels, axis=0)
+
+
+
+
+
+
 
 

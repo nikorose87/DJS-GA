@@ -14,12 +14,12 @@ from utilities_QS import ttest, hyperparams, best_hyper, change_labels
 import operator
 
 
-ttest_ = True
+ttest_ = False
 plot_theory = False
 optimize_params = False
 plot_pairs = False
 plot_sample = False
-plot_per_group = False
+plot_per_group = True
 # =============================================================================
 # Ferrarin execution 
 # =============================================================================

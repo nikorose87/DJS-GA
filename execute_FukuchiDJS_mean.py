@@ -243,7 +243,6 @@ if instances:
     # Performing overall average over modes
     # =============================================================================
     
-    # Let us filter only the ankle information of the right foot
     Fukuchi_mean_modes = Fukuchi_df_modes.groupby(level=1, axis=1).mean()
     Fukuchi_sd_modes = Fukuchi_df_modes.groupby(level=1, axis=1).std()
     
@@ -684,7 +683,7 @@ if individuals:
     work_ind = work_ind.sort_index(level=0, axis=0)
     df_turn_ind_all = df_turn_ind_all.sort_index(level=0, axis=0)
     df_turn_ind_all = df_turn_ind_all.reindex(new_dict_labels, level=1, axis=0)
-    df_turn_ind_allGC = df_turn_ind_all.apply(lambda x: np.int64(x/times))
+    df_turn_ind_allGC = df_turn_ind_all.apply(lambda x: x/times)
     
     #How many samples have got a bad R2 but a good MSE (below 0.0001)
     reg_info_badR2 = reg_info_ind.query("R2 <= 0.2 and MSE <= 0.0001") # 55 samples with 
@@ -1401,8 +1400,16 @@ if individuals:
     significance_group = significance_group.drop(['point 5'], axis=0, level=0)
     with open("Fukuchi/table3.tex", "w+") as pt:
         significance_group.to_latex(buf=pt, col_space=10, longtable=False, multirow=True, 
-                            caption=r'Significant differences ($\rho$ value) between '+\
+                            caption=r'Significant differences (p value) between '+\
                             r'three different gait speeds: Slow ({})'.format(vel_labels[-3])+\
                             r', Free ({}) and Fast({})'.format(vel_labels[-2], vel_labels[-1])+\
                                 ' for each population group.',
                             label='tab:table3')
+
+#Meta info_anova to csv
+#Creating a categorical value to define speeds from Very Slow to Very Fast
+speed_cat_simp = {'OC': 'C', 'OS':'S', 'OF':'F', 'T01': 'VS',
+             'T02': 'VS', 'T03': 'S', 'T04': 'S', 'T05': 'C',
+             'T06': 'F', 'T07': 'F', 'T08': 'VF'}
+meta_info_anova['speed'] = meta_info_anova.index.get_level_values(1).map(speed_cat_simp)
+meta_info_anova.to_csv("Fukuchi/meta_info_Fukuchi.csv")
