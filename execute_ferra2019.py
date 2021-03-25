@@ -33,6 +33,10 @@ sns.set_style("whitegrid")
 #Reading data
 meta_data = pd.read_csv('Ferrarin2019/meta_info.csv', index_col=[0])
 ferra_QS = pd.read_csv('Ferrarin2019/dynamics_QS.csv', index_col=[0,1], header=[0,1])
+ferra_QS_export = ferra_QS.drop('Ankle Power', axis=0, level=0)
+ferra_QS_export.to_csv("Ferrarin2019/dynamic_data_Lencioni.csv")
+bad_samples = pd.read_csv('Ferrarin2019/ferra_failed_walk.csv', 
+                          engine='python', index_col=[0])
 meta_data['ID'] = meta_data['subject'].apply(lambda x: int(x[7:]))
 meta_data = meta_data.sort_values(['ID', 'speed'], ascending=[True, True])
 

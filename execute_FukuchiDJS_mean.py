@@ -810,7 +810,9 @@ if individuals:
         
         #Removing samples that visually are not coherent
         meta_info_anova = meta_info_anova.drop(bad_samples, axis=0)
-        
+        Fukuchi_df_nan = Fukuchi_df_nan.drop(bad_samples, axis=1)
+        Fukuchi_df_export = Fukuchi_df_nan.drop(['Vertical Force','Ankle Power [W]'],level=0)
+        Fukuchi_df_export.to_csv("Fukuchi/dynamic_data_Fukuchi.csv")
         # =============================================================================
         #         How many are negatives and in which cases
         # =============================================================================
