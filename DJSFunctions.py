@@ -726,7 +726,7 @@ class ankle_DJS(extract_preprocess_data):
         self.second_lev_columns = df_.columns.get_level_values(1).unique()
         
         
-    def extract_df_QS_data(self, idx = [0,1], units=True):
+    def extract_df_QS_data(self, idx = [0,1]):
         """
         As we like to read either preprocessed or raw data. It is needed to build
         this object so as to define the objects from a dataframe only for the Quasi-stiffness
@@ -749,7 +749,7 @@ class ankle_DJS(extract_preprocess_data):
         self.angles_ankle =  self.all_dfs.loc[index[idx[0]]]
         self.moment_ankle =  self.all_dfs.loc[index[idx[1]]]
         self.all_dfs_QS = pd.concat([self.angles_ankle, self.moment_ankle], axis=0)
-        if units:
+        if self.units:
             self.features[0] += self.units[0] #Ankle angle
             self.features[2] += self.units[2] #Ankle moment
         self.index_ankle = pd.MultiIndex.from_product([[self.features[0],self.features[2]],

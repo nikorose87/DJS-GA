@@ -33,8 +33,6 @@ sns.set_style("whitegrid")
 #Reading data
 meta_data = pd.read_csv('Ferrarin2019/meta_info.csv', index_col=[0])
 ferra_QS = pd.read_csv('Ferrarin2019/dynamics_QS.csv', index_col=[0,1], header=[0,1])
-ferra_QS_export = ferra_QS.drop('Ankle Power', axis=0, level=0)
-ferra_QS_export.to_csv("Ferrarin2019/dynamic_data_Lencioni.csv")
 bad_samples = pd.read_csv('Ferrarin2019/ferra_failed_walk.csv', 
                           engine='python', index_col=[0])
 meta_data['ID'] = meta_data['subject'].apply(lambda x: int(x[7:]))
@@ -45,11 +43,11 @@ meta_data = meta_data.sort_values(['ID', 'speed'], ascending=[True, True])
 def define_range_vel(x, string= True):
     if x <= 0.227:
         cel = [r'$v* < 0.227$' if string == False else 'VS'][0]
-    elif 0.227 <= x <= 0.363:
+    elif 0.227 < x <= 0.363:
         cel = [r'$0.227 < v* < 0.363$' if string == False else 'S'][0]
-    elif 0.363 <= x <= 0.500:
+    elif 0.363 < x <= 0.500:
         cel = [r'$0.363 < v* < 0.500$' if string == False else 'C'][0]
-    elif 0.500 <= x <= 0.636:
+    elif 0.500 < x <= 0.636:
         cel = [r'$0.500 < v* < 0.636$' if string == False else 'F'][0]
     elif x >= 0.636:
         cel = [r'$v* > 0.636$' if string == False else 'VF'][0]
@@ -139,10 +137,13 @@ if process_ind:
                             legend=True, reg=df_turn.loc[idx[sub,:],:], header=None,
                             integration= True, rad = True)
         if id_sub == 1:
+            ferra_QS_export = Ferra2019_QS
             reg_info_ind = pd.DataFrame(DJS_ind.reg_info_df)
             work_ind = pd.DataFrame(DJS_ind.areas)
             all_df_turn = df_turn
         else:
+            Ferra2019_QS.index = ferra_QS_export.index
+            ferra_QS_export = pd.concat([ferra_QS_export, Ferra2019_QS], axis=1)
             reg_info_ind = pd.concat([reg_info_ind, DJS_ind.reg_info_df])
             all_df_turn = pd.concat([all_df_turn, df_turn]) 
             work_ind = pd.concat([work_ind, DJS_ind.areas])
@@ -154,11 +155,13 @@ if process_ind:
     reg_info_ind.to_csv("Ferrarin2019/reg_info_ind_walk.csv")
     work_ind.to_csv("Ferrarin2019/work_ind_walk.csv")
     all_df_turn.to_csv("Ferrarin2019/turn_params_all.csv")
+    ferra_QS_export.to_csv("Ferrarin2019/dynamic_data_Lencioni.csv")
     toc= time.time()
 else:
     reg_info_ind = pd.read_csv("Ferrarin2019/reg_info_ind_walk.csv", index_col=[0,1,2])
     work_ind = pd.read_csv("Ferrarin2019/work_ind_walk.csv", index_col=[0])
     all_df_turn = pd.read_csv("Ferrarin2019/turn_params_all.csv", index_col=[0,1])
+    ferra_QS_export = pd.read_csv("Ferrarin2019/dynamic_data_Lencioni.csv", index_col=[0,1], header=[0,1])
 
 R2 = reg_info_ind['R2'].unstack(level=2)
 R2.columns = ['R2_{}'.format(i) for i in ['CP','ERP','LRP','DP']]
@@ -206,6 +209,11 @@ samples_groups = pd.DataFrame(samples_groups,
 
 samples_groups = samples_groups.reindex(vel_labels, axis=0)
 
+#Ferra QS to export
+ferra_QS_export.columns = pd.MultiIndex.from_arrays([ferra_QS_export.columns.get_level_values(0), 
+                                         np.round(ferra_QS_export.columns.get_level_values(1).astype(np.float64),6)])
+ferra_QS_export_red = ferra_QS_export.loc[:,meta_data_walk.index]
+ferra_QS_export_red.to_csv("Ferrarin2019/dynamic_data_Lencioni.csv")
 
 
 

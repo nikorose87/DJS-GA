@@ -27,6 +27,12 @@ import seaborn as sns
 from scipy.stats.mstats import kruskal
 import scikit_posthocs as sp
 
+# =============================================================================
+# General task configs
+# =============================================================================
+wanna_plot = False
+wanna_stats = True
+
 def agegroup(age):
     if age <= 18: 
         ageg = 'Children'
@@ -110,7 +116,10 @@ Fukuchi_data_red.columns = uniform_labels
 # =============================================================================
 
 concat_data = pd.concat([Fukuchi_data_red, Ferra_data_red])
-concat_data.to_csv('DatasetPaper.csv')
+concat_data.to_csv('ConcatDatasets/DatasetPaper.csv')
+#Replacing some values
+concat_data['Gender'] = concat_data['Gender'].replace('M', 'Males')
+concat_data['Gender'] = concat_data['Gender'].replace('F', 'Females')
 vels = ['VS','S','C','F','VF']
 groups = ['Children', 'YoungAdults', 'Adults', 'Elderly']
 #Ordenating subgroups in a dict
@@ -159,4 +168,117 @@ with open("table_samples.tex", "w+") as pt:
                         label='tab:table1')
 
 
+# =============================================================================
+# Analyzing the complete dataset
+# =============================================================================
+
+Ferra_dynamics = pd.read_csv("Ferrarin2019/dynamic_data_Lencioni.csv", index_col=[0,1], header=[0,1])
+Fukuchi_dynamics = pd.read_csv("Fukuchi/dynamic_data_Fukuchi.csv", index_col=[0,1], header=[0,1])
+Fukuchi_dynamics = Fukuchi_dynamics.sort_index(level=[0,1], axis=1)
+#Homogenizing the index
+index_QS = pd.MultiIndex.from_product([['Ankle Dorsi/Plantarflexion Deg [°]', 
+                                        'Ankle Dorsi/Plantarflexion [Nm/kg]'], np.linspace(0,1,303)])
+Ferra_dynamics.index = index_QS
+Fukuchi_dynamics.index = index_QS
+
+dynamics_concat = pd.concat([Fukuchi_dynamics, Ferra_dynamics], axis=1)
+
+#Making many levels to group
+dynamics_concat.columns = pd.MultiIndex.from_arrays([concat_data['ID'], concat_data['AgeGroup'],
+                                                     concat_data['Gender'], concat_data['Mode'], 
+                                                     concat_data['Speed']])
+
+dynamics_concat.to_csv('ConcatDatasets/dynamics_QS.csv')
+
+# =============================================================================
+# Plotting groups DJS plots
+# =============================================================================
+#General plot configuration 
+#Params for all comparatives plots
+color_labels = ['blue','red','green','violet','orange','grey','goldenrod']
+color_regs = ['dark'+i for i in color_labels]
+Colors_tab = [i[1] for i in mcolors.TABLEAU_COLORS.items()]
+Color_DJS = [mcolors.CSS4_COLORS[item] for item in color_labels]
+Color_reg = [mcolors.CSS4_COLORS[item] for item in color_regs]
+params = {'sharex':False, 'sharey':False, 'left_margin': 0.2, 'arr_size':12,
+          'yticks': np.arange(-0.25, 1.80, 0.25), 'xticks':None, 
+          'color_reg': Color_reg, 'color_symbols': Color_reg, 'color_DJS': Color_DJS,
+          'alpha_prod': 0.3, 'alpha_absorb': 0.0, 'DJS_linewidth': 1.5,
+          'sd_linewidth': 0.08,'reg_linewidth': 1.0}
+
+times=3
+smooth_ = [2,3,4]
+cluster_ = range(15*times, 20*times, times)
+idx= pd.IndexSlice
+if wanna_plot:
+    QS_df = {}
+    opt = False
+    for feat in ['Gender','AgeGroup','Mode']: #
+        _QS = dynamics_concat.groupby([feat,'Speed'], axis=1)
+        mean_QS = _QS.mean()
+        mean_QS.columns = mean_QS.columns.map('{0[0]} {0[1]}'.format)
+        std_QS = _QS.std()
+        std_QS.columns = std_QS.columns.map('{0[0]} {0[1]}'.format)
+        QS_df.update({feat: create_df(mean_QS, std_QS)})
+        
+        # =============================================================================
+        # Setting variables and plotting in individuals
+        # =============================================================================
+        
+        
+        _instance = ankle_DJS(QS_df[feat])
+        df_instance = _instance.extract_df_QS_data([0,1])
+        
+        
+        #_instance = _instance.change_labels(["Free O", "Fast O", 'Slow O', 'Slow T', 
+        #                                 'Free T', 'Fast T'])
     
+        if opt == True:
+            df_turn_instance = best_hyper(df_instance, save='ConcatDatasets/best_params_instance_{}.csv'.format(feat),
+                                      smooth_radius=smooth_,
+                                      cluster_radius=cluster_, verbose=False,
+                                      rows=[0,1])
+        else: 
+            df_turn_instance = pd.read_csv('ConcatDatasets/best_params_instance_{}.csv'.format(feat), 
+                                           index_col=[0,1])
+        #Sensitive results may vary when integrating degrees, the best is to do in radians
+        _instance.deg_to_rad()
+        total_work_instance = _instance.total_work()  
+    
+        # # =============================================================================
+        # # Obtaining the mechanical work through power instances in regular walking 
+        # # =============================================================================
+        if feat == 'AgeGroup':
+            cols_to_group = [(9,19,4,14, False), (7,17,2,12, True), (5,15,0,10, True), 
+                             (6,16,1,11, True), (8,18,3,13, True)]
+        else:
+            cols_to_group = [(4,9, False), (2,7, True), 
+                             (0,5, True), (1,6, True), (3,8, True)]
+        cols_to_joint = {r'$v* \leq 0.227$': cols_to_group[0], 
+                        r'$0.227 \le v* \leq 0.363$': cols_to_group[1],
+                        r'$0.363 \le v* \leq 0.500$': cols_to_group[2],
+                        r'$0.500 \le v* \leq 0.636$': cols_to_group[3],
+                        r'$v* \ge 0.636$': cols_to_group[4]}
+        
+        for num, key in enumerate(cols_to_joint.keys()):
+            params.update({'hide_labels': (False, cols_to_joint[key][-1])})
+            DJS_instances = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
+                                      alpha=1.5, fig_size=[2.2, 2.5], params=params)
+            fig = DJS_instances.plot_DJS(df_instance, 
+                                cols=list(cols_to_joint[key][:-1]), rows= np.r_[0,1],
+                                title="Ankle DJS {} group comparison at {}".format(feat, key), 
+                                legend=True, reg=df_turn_instance.loc[idx[:,'mean'],:],
+                                integration= True, rad = True, header= key)
+            if num == 0:
+                reg_info_ins = pd.DataFrame(DJS_instances.reg_info_df)
+                work_ins = pd.DataFrame(DJS_instances.areas)
+            else:
+                reg_info_ins = pd.concat([reg_info_ins, DJS_instances.reg_info_df])
+                work_ins = pd.concat([work_ins, DJS_instances.areas])
+        
+        reg_info_ins = reg_info_ins.round(3)
+        work_ins = work_ins.round(3)
+        
+        params.update({'hide_labels': (False, False)})
+    
+#Perform the LDA Once the plots are done, we are seeing lots of statistical differences.  

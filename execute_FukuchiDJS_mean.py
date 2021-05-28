@@ -812,7 +812,14 @@ if individuals:
         meta_info_anova = meta_info_anova.drop(bad_samples, axis=0)
         Fukuchi_df_nan = Fukuchi_df_nan.drop(bad_samples, axis=1)
         Fukuchi_df_export = Fukuchi_df_nan.drop(['Vertical Force','Ankle Power [W]'],level=0)
-        Fukuchi_df_export.to_csv("Fukuchi/dynamic_data_Fukuchi.csv")
+        
+        Fukuchi_DJS = ankle_DJS(Fukuchi_df_export, dir_loc = 'Fukuchi',
+                              exp_name = 'Adults and Elderle in Over and Tread')
+        
+        Fukuchi_DJS_QS = Fukuchi_DJS.extract_df_QS_data(idx=[0,1])
+        
+        Fukuchi_DJS_QS = Fukuchi_DJS.interpolate_ankledf(replace=True)
+        Fukuchi_DJS_QS.to_csv("Fukuchi/dynamic_data_Fukuchi.csv")
         # =============================================================================
         #         How many are negatives and in which cases
         # =============================================================================

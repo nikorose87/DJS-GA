@@ -374,7 +374,7 @@ class plot_ankle_DJS(plot_dynamic):
                 self.ax.set_ylabel(self.y_label)
             if self.legend == True:
                 try:
-                    self.ax.legend(ncol=int(len(self.columns_first)/2), fancybox=True, 
+                    self.ax.legend(ncol=1, fancybox=True, #int(len(self.columns_first)/2)
                                loc = 'upper left')
                 except ZeroDivisionError:
                     self.ax.legend(ncol=1, fancybox=True, 
