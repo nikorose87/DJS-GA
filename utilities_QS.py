@@ -249,7 +249,7 @@ def hyperparams(df_, TP, smooth_radius, c_radius, features=
                                             integration= False, rad = True)
                         R2 = DJS_all.reg_info_df['R2'].mean() #Consider to establish weights
                         df_turn_r2.update({'sr_{}_cr_{}'.format(i,j): R2})
-                except NameError as e: #(IndexError, KeyError)
+                except (ValueError,NameError) as e: #(IndexError, KeyError)
                     if verbose:
                         print('parameters {},{} failed, probably because data indexion or because points are the same'.format(i,j))
                     continue

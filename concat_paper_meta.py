@@ -68,14 +68,15 @@ Ferra_data['mode'] = 'Overground'
 Ferra_data['AgeGroup'] = Ferra_data['Age'].apply(agegroup)
 Ferra_data['Id'] = Ferra_data.index
 Ferra_data['Id'] = Ferra_data['Id'].apply(lambda x:x[:5])
+Ferra_data['Origin'] = 'European' 
 
-Ferra_data_red = Ferra_data[['Id', 'Age', 'AgeGroup', 'Gender', 'Body Height (cm)', 
+Ferra_data_red = Ferra_data[['Id', 'Age', 'AgeGroup', 'Origin','Gender', 'Body Height (cm)', 
                              'Body Mass (kg)', 'mode',
                              'Range', 'direction','point 1', 'point 2',
                              'point 3', 'point 4', 'point 5', 'work abs', 'work prod',
                              'CP', 'ERP', 'LRP', 'DP']]
 
-uniform_labels = ['ID','Age','AgeGroup', 'Gender','Height', 'Weight','Mode',
+uniform_labels = ['ID','Age','AgeGroup', 'Origin', 'Gender', 'Height', 'Weight','Mode',
                   'Speed','LoopDirection','initERP', 'initLRP', 'initDP', 
                   'initS', 'initTS', 'WorkAbs', 'WorkNet',
                   'CP', 'ERP', 'LRP', 'DP']
@@ -102,11 +103,13 @@ Fukuchi_data['AgeGroup'] = Fukuchi_data['Age'].apply(agegroup)
 
 Fukuchi_data['Id'] = Fukuchi_data.index
 Fukuchi_data['Id'] = Fukuchi_data['Id'].apply(lambda x:x[:5])
+Fukuchi_data['Origin'] = 'South American' 
 
-Fukuchi_data_red = Fukuchi_data[['Id', 'Age', 'AgeGroup', 'Gender', 'Height', 'Mass', 'mode',
-                             'speed', 'direction','point 1', 'point 2',
-                             'point 3', 'point 4', 'point 5', 'work abs', 'work prod',
-                             'CP', 'ERP', 'LRP', 'DP']]
+Fukuchi_data_red = Fukuchi_data[['Id', 'Age', 'AgeGroup', 'Origin', 'Gender', 
+                                 'Height', 'Mass', 'mode',
+                                 'speed', 'direction','point 1', 'point 2',
+                                 'point 3', 'point 4', 'point 5', 'work abs', 'work prod',
+                                 'CP', 'ERP', 'LRP', 'DP']]
 
 Fukuchi_data_red.columns = uniform_labels
 
@@ -124,8 +127,10 @@ vels = ['VS','S','C','F','VF']
 groups = ['Children', 'YoungAdults', 'Adults', 'Elderly']
 #Ordenating subgroups in a dict
 sub_groups_age = {'{}_{}'.format(k1,k2): concat_data.query("AgeGroup == '{}' and Speed == '{}'".format(k1,k2)) for k2 in vels for k1 in groups} 
-sub_groups_gen = {'{}_{}'.format(k1,k2): concat_data.query("Gender == '{}' and Speed == '{}'".format(k1,k2)) for k2 in vels for k1 in ['M','F']} 
+sub_groups_gen = {'{}_{}'.format(k1,k2): concat_data.query("Gender == '{}' and Speed == '{}'".format(k1,k2)) for k2 in vels for k1 in ['Males','Females']} 
 sub_groups_cond  = {'{}_{}'.format(k1,k2): concat_data.query("Mode == '{}' and Speed == '{}'".format(k1,k2)) for k2 in vels for k1 in ['Overground','Treadmill']} 
+sub_groups_origin  = {'{}_{}'.format(k1,k2): concat_data.query("Origin == '{}' and Speed == '{}'".format(k1,k2)) for k2 in vels for k1 in ['South American', 'European']} 
+
 
 Fem_group = concat_data.query("Gender == 'F'")
 Male_group = concat_data.query("Gender == 'M'")
@@ -136,7 +141,7 @@ num_sub_age = [len(item['ID'].unique()) for item in Age_groups.values()]
 #Making formal indexes
 labels_samples = [pd.MultiIndex.from_product([['Very Slow', 'Slow', 'Free', 'Fast', 
                 'Very Fast'],i]) for i in [groups,['Males','Females'], 
-                                         ['Overground', 'Treadmill']]]
+                                         ['Overground', 'Treadmill'], ['South American', 'European']]]
                                          
 #Making Series if the number of samples
 samples_age = pd.Series({key: item.shape[0] for key, item in sub_groups_age.items()})
@@ -145,27 +150,20 @@ samples_gender = pd.Series({key: item.shape[0] for key, item in sub_groups_gen.i
 samples_gender.index = labels_samples[1]
 samples_mode = pd.Series({key: item.shape[0] for key, item in sub_groups_cond.items()})
 samples_mode.index = labels_samples[2]
+samples_origin = pd.Series({key: item.shape[0] for key, item in sub_groups_origin.items()})
+samples_origin.index = labels_samples[3]
                   
 #Concatenating
-samples_all = pd.concat([samples_age, samples_gender, samples_mode])
+samples_all = pd.concat([samples_age, samples_gender, samples_mode, samples_origin])
 samples_all = samples_all.swaplevel()
 samples_all = samples_all.unstack(level=1).reindex(['Children', 'YoungAdults', 
                                                     'Adults', 'Elderly', 'Females', 'Males',
-                                                    'Overground', 'Treadmill'])
+                                                    'Overground', 'Treadmill','South American', 'European'])
 samples_all = samples_all.reindex(['Very Slow', 'Slow', 'Free', 'Fast', 
                 'Very Fast'], axis=1)
 
-samples_all.index = pd.MultiIndex.from_arrays([['Age']*4+['Gender']*2+['Walking Condition']*2, 
+samples_all.index = pd.MultiIndex.from_arrays([['Age']*4+['Gender']*2+['Walking Condition']*2+['Ethnicity']*2, 
                                                list(samples_all.index)])
-
-with open("table_samples.tex", "w+") as pt:
-    samples_all.to_latex(buf=pt, col_space=10, longtable=False, multirow=True, 
-                        caption=r'Dataset groups by population age, sex, walking '+\
-                            'condition and gait speed reporting the number $N$ of '+\
-                                r'individuals. Range speeds varies from Very Slow ($v \leq 0.227$)'+\
-                                    r',Slow ($0.227 < v* \leq 0.363$), Free ($0.363 < v* \leq 0.500$), '+\
-                                        r'Fast ($0.500 < v* \leq  0.636$) and Very Fast ($v* \geq 0.636$)',
-                        label='tab:table1')
 
 
 # =============================================================================
@@ -184,7 +182,7 @@ Fukuchi_dynamics.index = index_QS
 dynamics_concat = pd.concat([Fukuchi_dynamics, Ferra_dynamics], axis=1)
 
 #Making many levels to group
-dynamics_concat.columns = pd.MultiIndex.from_arrays([concat_data['ID'], concat_data['AgeGroup'],
+dynamics_concat.columns = pd.MultiIndex.from_arrays([concat_data['ID'], concat_data['Origin'], concat_data['AgeGroup'],
                                                      concat_data['Gender'], concat_data['Mode'], 
                                                      concat_data['Speed']])
 
@@ -211,10 +209,24 @@ smooth_ = [2,3,4]
 cluster_ = range(15*times, 20*times, times)
 idx= pd.IndexSlice
 if wanna_plot:
+    with open("table_samples.tex", "w+") as pt:
+        samples_all.to_latex(buf=pt, col_space=10, longtable=False, multirow=True, 
+                            caption=r'Dataset groups by population age, sex, walking '+\
+                                'condition, ethnicity and gait speed reporting the number $N$ of '+\
+                                    r'individuals. Range speeds varies from Very Slow ($v \leq 0.227$)'+\
+                                        r',Slow ($0.227 < v* \leq 0.363$), Free ($0.363 < v* \leq 0.500$), '+\
+                                            r'Fast ($0.500 < v* \leq  0.636$) and Very Fast ($v* \geq 0.636$)',
+                            label='tab:table1')
+
+
     QS_df = {}
     opt = False
-    for feat in ['Gender','AgeGroup','Mode']: #
-        _QS = dynamics_concat.groupby([feat,'Speed'], axis=1)
+    for feat in ['Gender','AgeGroup','Mode']: # ['Origin']
+        if feat != 'Mode':
+            dynamics_concat_O = dynamics_concat.drop('Treadmill', level=4, axis=1)
+            _QS = dynamics_concat_O.groupby([feat,'Speed'], axis=1)
+        else:
+            _QS = dynamics_concat.groupby([feat,'Speed'], axis=1)
         mean_QS = _QS.mean()
         mean_QS.columns = mean_QS.columns.map('{0[0]} {0[1]}'.format)
         std_QS = _QS.std()
@@ -249,16 +261,22 @@ if wanna_plot:
         # # Obtaining the mechanical work through power instances in regular walking 
         # # =============================================================================
         if feat == 'AgeGroup':
-            cols_to_group = [(9,19,4,14, False), (7,17,2,12, True), (5,15,0,10, True), 
-                             (6,16,1,11, True), (8,18,3,13, True)]
+            cols_to_group = [(8,3,17, False), (6,14,2,11, True), (4,12,0,9, True), 
+                             (5,13,1,10, True), (7,16, True)]
         else:
             cols_to_group = [(4,9, False), (2,7, True), 
                              (0,5, True), (1,6, True), (3,8, True)]
-        cols_to_joint = {r'$v* \leq 0.227$': cols_to_group[0], 
-                        r'$0.227 \le v* \leq 0.363$': cols_to_group[1],
-                        r'$0.363 \le v* \leq 0.500$': cols_to_group[2],
-                        r'$0.500 \le v* \leq 0.636$': cols_to_group[3],
-                        r'$v* \ge 0.636$': cols_to_group[4]}
+        if feat == 'Mode':
+            cols_to_joint = {r'$v* \leq 0.227$': cols_to_group[0], 
+                            r'$0.227 \le v* \leq 0.363$': cols_to_group[1],
+                            r'$0.363 \le v* \leq 0.500$': cols_to_group[2],
+                            r'$0.500 \le v* \leq 0.636$': cols_to_group[3],
+                            r'$v* \ge 0.636$': cols_to_group[4]}
+        else:
+            cols_to_joint = {r'$0.227 \le v* \leq 0.363$': cols_to_group[1],
+                r'$0.363 \le v* \leq 0.500$': cols_to_group[2],
+                r'$0.500 \le v* \leq 0.636$': cols_to_group[3]}
+                
         
         for num, key in enumerate(cols_to_joint.keys()):
             params.update({'hide_labels': (False, cols_to_joint[key][-1])})

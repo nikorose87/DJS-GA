@@ -212,7 +212,7 @@ samples_groups = samples_groups.reindex(vel_labels, axis=0)
 #Ferra QS to export
 ferra_QS_export.columns = pd.MultiIndex.from_arrays([ferra_QS_export.columns.get_level_values(0), 
                                          np.round(ferra_QS_export.columns.get_level_values(1).astype(np.float64),6)])
-ferra_QS_export_red = ferra_QS_export.loc[:,meta_data_walk.index]
+ferra_QS_export_red = ferra_QS_export.reindex(columns = meta_data_walk.index)
 ferra_QS_export_red.to_csv("Ferrarin2019/dynamic_data_Lencioni.csv")
 
 

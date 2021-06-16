@@ -38,7 +38,6 @@ Age_group_gen = False
 Gender = False
 individuals = True
 statistics = True
-
 sns.set_context('paper', font_scale=1.5)
 sns.set_style("whitegrid")
 

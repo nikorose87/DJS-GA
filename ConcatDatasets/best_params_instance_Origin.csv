@@ -1,0 +1,25 @@
+,,point 0,point 1,point 2,point 3,point 4,point 5
+European C,-1sd,0,13,59,126,189,250
+European C,mean,0,14,81,128,189,250
+European C,+1sd,0,14,81,129,189,250
+European F,-1sd,0,12,62,122,183,259
+European F,mean,0,13,78,124,183,259
+European F,+1sd,0,14,80,126,184,259
+European S,-1sd,0,13,59,133,196,249
+European S,mean,0,14,62,134,196,249
+European S,+1sd,0,14,62,136,196,249
+European VF,-1sd,0,13,82,128,177,253
+European VF,mean,0,13,79,125,177,253
+European VF,+1sd,0,13,76,122,177,252
+European VS,-1sd,0,11,57,135,202,249
+European VS,mean,0,12,95,141,204,250
+European VS,+1sd,0,12,96,146,206,252
+South American C,-1sd,0,18,68,136,195,256
+South American C,mean,0,18,89,138,195,254
+South American C,+1sd,0,18,87,138,194,252
+South American F,-1sd,0,18,74,129,191,254
+South American F,mean,0,19,77,132,191,253
+South American F,+1sd,0,19,80,135,190,252
+South American S,-1sd,0,17,94,145,202,252
+South American S,mean,0,17,94,145,200,251
+South American S,+1sd,0,16,91,146,199,249
