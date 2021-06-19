@@ -78,7 +78,15 @@ def shapiro_test(ds, dep_vars, name='No name', df=True):
         shapiro_ = {item: stats.shapiro(ds[item]).pvalue for item in dep_vars}
         return shapiro_
 
-
+# =============================================================================
+#    Kruskal Wallis test on ranks
+# =============================================================================
+def kruskal_groups(ds1, ds2, dep_vars, name):
+    kruskal_deps = pd.Series({item: kruskal(ds1[item].values, 
+                                              ds2[item].values).pvalue < 0.05 for item in dep_vars})
+    kruskal_deps.name = name
+    return kruskal_deps
+        
 
 os.chdir('ConcatDatasets/')
 concat_QS = pd.read_csv('DatasetPaper.csv', index_col=[0])
@@ -115,17 +123,25 @@ brazilian_ds =  overground_ds.query("Origin == 'South American'")
 
 #Gender comparison on overground
 male_ds = overground_ds.query("Gender == 'M'")
-norm_male = shapiro_test(male_ds, dep_vars, 'Male')
+
 female_ds = overground_ds.query("Gender == 'F'")
 
+norm_groups = pd.concat([shapiro_test(ds, dep_vars, 
+                        etiquete) for ds, etiquete in zip([male_ds, female_ds, european_ds,
+                                                           brazilian_ds, overground_ds, treadmill_ds],
+                                                           ['Males', 'Females','European','South American',
+                                                            'Overground', 'Treadmill'])], axis=1)
+
+                          
+#If true, significant differences are detected 
+kruskal_gen = kruskal_groups(male_ds, female_ds, dep_vars, 'Gender')
+kruskal_origin = kruskal_groups(european_ds, brazilian_ds, dep_vars, 'Ethnicity')
+kruskal_mode = kruskal_groups(overground_ds, treadmill_ds, dep_vars, 'Mode')
+
+kruskall_all = pd.concat([kruskal_gen, kruskal_origin, kruskal_mode], axis=1)
 
 
-# =============================================================================
-#     ttest student analysis
-# =============================================================================
 
-
-    
 
 
 
