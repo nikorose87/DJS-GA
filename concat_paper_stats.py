@@ -134,11 +134,26 @@ norm_groups = pd.concat([shapiro_test(ds, dep_vars,
 
                           
 #If true, significant differences are detected 
-kruskal_gen = kruskal_groups(male_ds, female_ds, dep_vars, 'Gender')
-kruskal_origin = kruskal_groups(european_ds, brazilian_ds, dep_vars, 'Ethnicity')
-kruskal_mode = kruskal_groups(overground_ds, treadmill_ds, dep_vars, 'Mode')
+kruskal_gen = pd.concat([kruskal_groups(male_ds.query("Speed == '{}'".format(speed)), 
+                              female_ds.query("Speed == '{}'".format(speed)), 
+                             dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
+kruskal_origin = pd.concat([kruskal_groups(european_ds.query("Speed == '{}'".format(speed)), 
+                              brazilian_ds.query("Speed == '{}'".format(speed)), 
+                             dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
+kruskal_mode = pd.concat([kruskal_groups(overground_ds.query("Speed == '{}'".format(speed)), 
+                              treadmill_ds.query("Speed == '{}'".format(speed)), 
+                             dep_vars, '{}'.format(speed)) for speed in ['VS', 'S', 'C', 'F', 'VF']], axis=1)
 
+#Making fnacier columns
+m_index_krus_gen = pd.MultiIndex.from_product([['Gender'],['S', 'C', 'F']])
+m_index_krus_ori = pd.MultiIndex.from_product([['Ethnicity'],['S', 'C', 'F']])
+m_index_krus_mode = pd.MultiIndex.from_product([['Mode'],['VS', 'S', 'C', 'F', 'VF']])
+kruskal_gen.columns = m_index_krus_gen
+kruskal_origin.columns = m_index_krus_ori
+kruskal_mode.columns = m_index_krus_mode
 kruskall_all = pd.concat([kruskal_gen, kruskal_origin, kruskal_mode], axis=1)
+
+
 
 
 
