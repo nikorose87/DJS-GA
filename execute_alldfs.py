@@ -18,8 +18,8 @@ ttest_ = False
 plot_theory = False
 optimize_params = False
 plot_pairs = False
-plot_sample = False
-plot_per_group = True
+plot_sample = True
+plot_per_group = False
 # =============================================================================
 # Ferrarin execution 
 # =============================================================================
@@ -289,20 +289,29 @@ if plot_per_group:
 # =============================================================================
 # Plotting one sample with labels, theoretical
 # =============================================================================
+
 if plot_sample: 
-    params_sample = {'sharex':False, 'sharey':True, 'color_DJS':['slategray']*20, 
+
+    cases = {0: [None, 'None'], 
+             1:[best_df_turn.loc[idx[:,'mean'],['point 0', 'point 1', 'point 3']], ['Control Plantar-flexion \n (CPF)']],
+             2:[best_df_turn.loc[idx[:,'mean'],['point 1', 'point 3', 'point 4']], ['Dorsi-flexion (DF)']],
+             3:[best_df_turn.loc[idx[:,'mean'],['point 1', 'point 3', 'point 4', 'point 5']], ['Dorsi-flexion (DF)', 'Plantar-flexion (PF)']],
+             4:[best_df_turn.loc[idx[:,'mean'],['point 0', 'point 1', 'point 3', 'point 4', 'point 5']], ['CPF', 'DF', 'PF']],
+             5:[best_df_turn.loc[idx[:,'mean'],:], ['CPF', 'Early RP', 'Late RP', 'DP']]}
+    for key, case in cases.items():
+        params_sample = {'sharex':False, 'sharey':True, 'color_DJS':['slategray']*20, 
                      'color_reg':['black']*20, 'color_symbols': ['slategray']*20, 
-                     'arr_size': 13, 'left_margin': 0.15, 'DJS_linewidth': 0.2, 
+                     'arr_size': 13, 'left_margin': 0.25, 'DJS_linewidth': 0.2, 
                      'reg_linewidth': 1.0, 'grid': False, 'alpha_prod': 0.4,
-                     'alpha_absorb': 0.1, 'text':True}
-    
-    DJS_sample = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
+                     'alpha_absorb': 0.1, 'text':True, 'instances':case[1], 
+                     'tp_labels' : {'':(1.5,0.6)}}
+        DJS_sample = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
                               alpha=3.0, fig_size=[4,4], params=params_sample)
-    fig6 = DJS_sample.plot_DJS(concat_.all_dfs_ankle, 
-                        cols=[-3], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
-                        title="Ankle DJS sample", 
-                        legend=True, reg=best_df_turn.loc[idx[:,'mean'],:],
-                        integration= True, rad = True, header= None)
+        fig6 = DJS_sample.plot_DJS(concat_.all_dfs_ankle, 
+                            cols=[-3], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
+                            title="Ankle DJS sample {}".format(key), 
+                            legend=True, reg=case[0],
+                            integration= True, rad = True, header= None)
     
     #Only regressions
     
@@ -312,13 +321,13 @@ if plot_sample:
                      'reg_linewidth': 1.0, 'grid': False, 'alpha_prod': 0.0,
                      'alpha_absorb': 0.0, 'text':False, 'hide_labels': (True,True)}
     
-    DJS_simple = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
-                              alpha=2.0, fig_size=[2,2], params=params_simple)
-    fig6 = DJS_simple.plot_DJS(concat_.all_dfs_ankle, 
-                        cols=[-1], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
-                        title="Ankle DJS sample dir", 
-                        legend=False, reg=best_df_turn.loc[idx[:,'mean'],:],
-                        integration= True, rad = True, header= None)
+    # DJS_simple = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
+    #                           alpha=2.0, fig_size=[2,2], params=params_simple)
+    # fig6 = DJS_simple.plot_DJS(concat_.all_dfs_ankle, 
+    #                     cols=[-1], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
+    #                     title="Ankle DJS sample dir", 
+    #                     legend=False, reg=best_df_turn.loc[idx[:,'mean'],:],
+    #                     integration= True, rad = True, header= None)
 if ttest_:
     # =============================================================================
     # Obtaining the ttest of children (Schwartz) against youth (Ferrarin)

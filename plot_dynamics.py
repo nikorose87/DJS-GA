@@ -303,7 +303,7 @@ class plot_ankle_DJS(plot_dynamic):
                              label= label,
                              linewidth=self.params['DJS_linewidth'])
                 if self.integrate:
-                    _prod, _abs, _dir = self.areas()
+                    _prod, _abs, _dir = self.areas_fun()
                     areas_abs.append(_abs)
                     areas_prod.append(_prod)
                     direction.append(_dir)
@@ -355,7 +355,7 @@ class plot_ankle_DJS(plot_dynamic):
                          label= self.columns_first[self.count],
                          linewidth=self.params['DJS_linewidth'])
             if self.integrate:
-                _prod, _abs, _dir = self.areas()
+                _prod, _abs, _dir = self.areas_fun()
                 areas_abs.append(_abs)
                 areas_prod.append(_prod)
                 direction.append(_dir)
@@ -366,7 +366,7 @@ class plot_ankle_DJS(plot_dynamic):
             else:
                 arr_space = 20
             self.add_arrow(line_plot, step=arr_space)
-            if self.params['text']:
+            if self.params['text'] and self.TP is not None:
                 self.labels_inside()
             if not self.params['hide_labels'][0]:
                 self.ax.set_xlabel(self.x_label)
@@ -440,7 +440,7 @@ class plot_ankle_DJS(plot_dynamic):
         else:
             return 'ccw'
                 
-    def areas(self):
+    def areas_fun(self):
         #We are making the integration of the closed loop
         try: 
             prod = self.integration(self.ang_mean, self.mom_mean, 
@@ -459,7 +459,6 @@ class plot_ankle_DJS(plot_dynamic):
             except IndexError:
                 #In few cases no max ang is found, setting and average
                 max_ang = int(len_vars*0.5)
-            
             
             direction = self.is_positive()
             #We pretend to integer the area under the loop
