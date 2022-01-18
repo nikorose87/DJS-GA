@@ -31,7 +31,7 @@ sns.set_style("whitegrid")
 
 #plots 
 all_plot = False
-plot_bechmark = False
+plot_bechmark = True
 plot_sample = False
 box_plot = False
 
@@ -53,7 +53,7 @@ Color = [i[1] for i in mcolors.TABLEAU_COLORS.items()]*3
 
 params_mono = {'sharex':False, 'sharey':True, 'color_DJS':['slategray']*20, 
                  'color_reg':['black']*20, 'color_symbols': ['slategray']*20, 
-                 'arr_size': 13, 'left_margin': 0.1, 'DJS_linewidth': 0.2, 
+                 'arr_size': 20, 'left_margin': 0.1, 'DJS_linewidth': 0.2, 
                  'reg_linewidth': 1.0, 'grid': True, 'alpha_prod': 0.4,
                  'alpha_absorb': 0.1, 'text':False}
 
@@ -62,17 +62,17 @@ params_all = {'sharex':False, 'sharey':True, 'left_margin': 0.30, 'arr_size':5,
           'xticks':np.arange(-0.2, 0.3, 0.1), 'alpha_prod':0.0, 'alpha_absorb':0.0, 'line_width': 1.0,
           'grid':False}
 
-params_ind = {'sharex':False, 'sharey':True, 'left_margin': 0.25, 'arr_size':5,
+params_ind = {'sharex':False, 'sharey':True, 'left_margin': 0.05, 'arr_size':5,
           'hide_labels':(True, True), 'yticks': np.arange(-0.2, 2.30, 0.6), 
           'xticks':None, 'alpha_prod':0.3, 'alpha_absorb':0.1, 
-          'line_width': 1.0,
-          'grid':False}
+          'line_width': 0.4,
+          'grid':True}
 
 count = 0
 
 if all_plot:
     op_ = 'load'
-    for sub_ID in np.r_[1,2,5:21]: #np.r_[1,2,5:21]
+    for sub_ID in np.r_[1,5:21]: #np.r_[1,2,5:21]
         sub_df = pd.read_csv('Hood/Hood_TF{:02d}.csv'.format(sub_ID), index_col=[0,1], header=[0,1,2,3])
         for lat in ['ipsilateral', 'contralateral']: #
             sub_df_ = sub_df.loc[:,idx[:, lat,:,:]]
@@ -104,46 +104,48 @@ if all_plot:
                 
             
             DJS_vis = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[1,5],
-                                      alpha=1.5, fig_size=[2,6], params=params_mono)
+                                      alpha=1.5, fig_size=[2,6], params=params_ind)
+            try:
+                fig_vis = DJS_vis.plot_DJS(Hood_sub1.all_dfs_QS, 
+                                    cols=None, rows= np.r_[0,1],
+                                    title="Ankle DJS amputee {} TF{:02d}".format(lat, sub_ID), 
+                                    legend=True, reg= df_turn.loc[idx[:,'mean'],:],
+                                    integration= True, rad = True)
             
-            fig_vis = DJS_vis.plot_DJS(Hood_sub1.all_dfs_QS, 
-                                cols=None, rows= np.r_[0,1],
-                                title="Ankle DJS amputee {} TF{:02d}".format(lat, sub_ID), 
-                                legend=True, reg= df_turn.loc[idx[:,'mean'],:],
-                                integration= True, rad = True)
-            
-            df_turn.index = label_(sub_ID, lat, df_turn)
-            #Saving work
-            area_ = DJS_vis.areas
-            area_.index = label_(sub_ID, lat, area_)
-            #Regressions
-            reg_info = DJS_vis.reg_info_df
-            reg_info = reg_info.droplevel(1, axis=0)
-            label_turn_reg = label_(sub_ID, lat, reg_info)
-            reg_info.index = label_turn_reg
-            
-            if count == 0:
-                df_turn_all = df_turn
-                work_amp = area_
-                reg_info_all = reg_info
-                count=1
-            else:
-                df_turn_all = pd.concat([df_turn_all, df_turn], axis=0)
-                work_amp = pd.concat([work_amp, area_], axis=0)
-                reg_info_all = pd.concat([reg_info_all, reg_info], axis=0)
+                df_turn.index = label_(sub_ID, lat, df_turn)
+                #Saving work
+                area_ = DJS_vis.areas
+                area_.index = label_(sub_ID, lat, area_)
+                #Regressions
+                reg_info = DJS_vis.reg_info_df
+                reg_info = reg_info.droplevel(1, axis=0)
+                label_turn_reg = label_(sub_ID, lat, reg_info)
+                reg_info.index = label_turn_reg
+                
+                if count == 0:
+                    df_turn_all = df_turn
+                    work_amp = area_
+                    reg_info_all = reg_info
+                    count=1
+                else:
+                    df_turn_all = pd.concat([df_turn_all, df_turn], axis=0)
+                    work_amp = pd.concat([work_amp, area_], axis=0)
+                    reg_info_all = pd.concat([reg_info_all, reg_info], axis=0)
+            except IndexError:
+                continue
             
             df_turn_all.to_csv('Hood/Hood_TP.csv')
             work_amp.to_csv('Hood/hood_work_info.csv')
             reg_info_all.to_csv('Hood/Hood_regressions.csv')
 else:
     df_turn_all = pd.read_csv('Hood/Hood_TP.csv', header=[0], index_col=[0,1,2,3])
-    
     work_amp = pd.read_csv('Hood/hood_work_info.csv', header=[0], index_col=[0,1,2])
     reg_info_all = pd.read_csv('Hood/Hood_regressions.csv', header=[0], index_col=[0,1,2,3])
-    #Changing labels in ipsilateral in second and third variables
-    ipsi_reg_df = reg_info_all.loc[idx[:,'ipsilateral',:,:],:]
-    ipsi_reg_df =  change_labels(ipsi_reg_df, ['CP','CDF', 'PP'], level=3, index=True)
-    contra_reg_df = reg_info_all.loc[idx[:,'contralateral',:,:],:]
+
+#Changing labels in ipsilateral in second and third variables
+ipsi_reg_df = reg_info_all.loc[idx[:,'ipsilateral',:,:],:]
+ipsi_reg_df =  change_labels(ipsi_reg_df, ['CP','CDF', 'PP'], level=3, index=True)
+contra_reg_df = reg_info_all.loc[idx[:,'contralateral',:,:],:]
     
 # Main statistics about regression
 results = {}
@@ -180,7 +182,7 @@ for et, limb in [('ipsilateral', ipsi_reg_df/10), ('contralateral', contra_reg_d
     #Making vel as column but no level
     reg_res['velocity'] = reg_res.index.get_level_values(2)  
     reg_res['Range'] = reg_res['velocity'].apply(define_range_vel)
-    for sub in meta_data.index:
+    for sub in reg_res.index.get_level_values(0).unique():
         reg_res.loc[idx[sub,:,:],'subject'] = sub
         for col in meta_data.columns:
             reg_res.loc[idx[sub,:,:], col] = meta_data.loc[sub,col]
@@ -232,10 +234,10 @@ if plot_sample:
         DJS_sample = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
                                   alpha=3.0, fig_size=[4,4], params=params_sample)
         fig_sample = DJS_sample.plot_DJS(Hood_sub1.all_dfs_QS, 
-                            cols=np.r_[1], rows= np.r_[0,1], #[1,0,2,3,4], np.r_[5:10]
+                            cols=np.r_[3], rows= np.r_[0,1], #[1,0,2,3,4], np.r_[5:10]
                             title="amputee_convention_{}".format(lat), 
                             legend=True, 
-                            reg=df_turn_all.loc[idx['TF{:02d}'.format(sub), lat,:,'mean'],:].dropna(axis=1).astype(np.int64),
+                            reg=df_turn_all.loc[idx['TF{:02d}'.format(sub), lat,:,'mean'],:].dropna(axis=1),
                             integration= True, rad = True, header= None)
 
 series_brands = meta_data['Foot Prosthesis']
@@ -259,23 +261,26 @@ if plot_bechmark:
             if lat == 'ipsilateral':
                 DJS_all = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=False,
                                           alpha=1.5, fig_size=[1,1.5], params=params_all)
-                
-                fig_all = DJS_all.plot_DJS(Hood_sub1.all_dfs_QS, 
-                                    cols=None, rows= np.r_[0,1],
-                                    title="Ankle DJS amputee {} TF{:02d} concat".format(lat, sub_ID), 
-                                    legend='sep', reg= False, #df_turn_all.loc[idx['TF{:02d}'.format(sub_ID),lat,:,'mean'],:].dropna(axis=1),
-                                    integration= True, rad = True)
-            
+                try:
+                    fig_all = DJS_all.plot_DJS(Hood_sub1.all_dfs_QS, 
+                                        cols=None, rows= np.r_[0,1],
+                                        title="Ankle DJS amputee {} TF{:02d} concat".format(lat, sub_ID), 
+                                        legend=True, reg= False, #df_turn_all.loc[idx['TF{:02d}'.format(sub_ID),lat,:,'mean'],:].dropna(axis=1),
+                                        integration= True, rad = True)
+                except IndexError:
+                    continue
             DJS_limb = plot_ankle_DJS(SD=False, save=True, plt_style='bmh', sep=False,
                                       alpha=1.5, fig_size=[1,1.2], params=params_ind)
             
-            fig_limb = DJS_limb.plot_DJS(Hood_sub1.all_dfs_QS, 
-                                cols=[4 if meta_data.loc['TF{:02d}'.format(sub_ID)]['K-Level'] else 1], rows= np.r_[0,1],
-                                title="Ankle DJS amputee {} TF{:02d} ind".format(lat, sub_ID), 
-                                legend= False, 
-                                reg=df_turn_all.loc[idx['TF{:02d}'.format(sub_ID),lat,:,'mean'],:].dropna(axis=1).astype(np.int64),
-                                integration= True, rad = True)
-
+            try:
+                fig_limb = DJS_limb.plot_DJS(Hood_sub1.all_dfs_QS, 
+                                    cols=[4 if meta_data.loc['TF{:02d}'.format(sub_ID)]['K-Level'] else 1], rows= np.r_[0,1],
+                                    title="Ankle DJS amputee {} TF{:02d} ind".format(lat, sub_ID), 
+                                    legend= False, 
+                                    reg=df_turn_all.loc[idx['TF{:02d}'.format(sub_ID),lat,:,'mean'],:].dropna(axis=1).astype(np.int64),
+                                    integration= True, rad = True)
+            except IndexError:
+                    continue
 #Reading natural references from Fukucho
 old_labels_cl = results['contralateral results'].columns[-11:]
 old_labels_il = results['ipsilateral results'].columns[-9:]

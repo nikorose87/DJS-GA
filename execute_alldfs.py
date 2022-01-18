@@ -12,13 +12,14 @@ import numpy as np
 import matplotlib.colors as mcolors
 from utilities_QS import ttest, hyperparams, best_hyper, change_labels
 import operator
+import seaborn as sns
 
 
-ttest_ = False
+ttest_ = True
 plot_theory = False
 optimize_params = False
 plot_pairs = False
-plot_sample = True
+plot_sample = False
 plot_per_group = False
 # =============================================================================
 # Ferrarin execution 
@@ -182,6 +183,11 @@ concat_dep = concat_dep.reindex(labels_idx)
 concat_dep.index = pd.MultiIndex.from_product([['Very Slow', 'Slow', 'Free', 'Medium', 'Very Fast'], ['C', 'Y', 'A']], names=['Gait Speed','Group'])
 concat_dep.columns = pd.MultiIndex.from_arrays([[r'Turning Point [$\%GC$]']*5+[r'Stiffness [$\frac{Nm}{kg\times rad}$]']*4+[r'Work $\frac{J}{kg}$']*3,
                                                 ['ERP','LRP','DP','S','TS','CP','ERP','LRP','DP','Abs.', 'Net.', 'Direction']])
+# =============================================================================
+# Plotting the results of concat_dep
+# =============================================================================
+concat_dep_red = concat_dep.xs(r'Stiffness [$\frac{Nm}{kg\times rad}$]', axis=1)
+
 
 with open("Ferrarin/ferra_DJS.tex", "w+") as pt:
     concat_dep.to_latex(buf=pt, col_space=10, longtable=False, multirow=True, 

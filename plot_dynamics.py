@@ -621,9 +621,9 @@ class plot_ankle_DJS(plot_dynamic):
         self.title = title
         if cols is None:
             cols = self.columns_first
-            self.df_ =  df_.loc[:,self.idx[self.columns_first,:]]
+            self.df_ = df_.loc[:,self.idx[self.columns_first,:]]
         else:
-            self.df_ =  df_.loc[:,self.idx[self.columns_first[cols],:]]
+            self.df_ = df_.loc[:,self.idx[self.columns_first[cols],:]]
             #To keep the index column order
             self.df_ = self.df_.reindex(self.columns_first[cols], level=0, axis=1)
             #To keep the order of the TP
@@ -710,6 +710,7 @@ class plot_ankle_DJS(plot_dynamic):
         return
         
     def extract_data(self, idx_):
+        
         """
         Extract the specific feature information
         Parameters
@@ -727,6 +728,7 @@ class plot_ankle_DJS(plot_dynamic):
         data = self.df_.loc[self.idx[self.index_first[idx_[0]] , :], 
                                     self.idx[self.columns_first[idx_[1]], 
                                         self.columns_second[idx_[2]]]]
+        #print(data.name)
         return data
     
     def add_arrow(self, axs, direction='right', step=2):

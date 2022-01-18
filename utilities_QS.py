@@ -30,12 +30,14 @@ def change_labels(df_, new_labels, level=0, index=True):
         idx_old = df_.index.get_level_values(level).unique()
         for num, name in enumerate(new_labels):
             df_.index = df_.index.set_levels(\
-                    df_.index.levels[level].str.replace(idx_old[num], name), level=level)
+                    df_.index.levels[level].str.replace(idx_old[num], name), 
+                    level=level)
     else:
         idx_old = df_.columns.get_level_values(level).unique()
         for num, name in enumerate(new_labels):
             df_.columns = df_.columns.set_levels(\
-                    df_.columns.levels[level].str.replace(idx_old[num], name), level=level)
+                    df_.columns.levels[level].str.replace(idx_old[num], name), 
+                    level=level)
     return df_
 
 def multi_idx(name, df_, idx=True, level=0):
