@@ -26,9 +26,73 @@ from statsmodels.stats.multicomp import MultiComparison
 import seaborn as sns
 from scipy.stats.mstats import kruskal
 import scikit_posthocs as sp
+from statannotations.Annotator import Annotator #Significant differences
 
 # =============================================================================
 # Helper functions 
+# =============================================================================
+
+print_tables = False
+__plots = True
+sns.set_context('paper', font_scale=1.5)
+sns.set_style("whitegrid")
+
+
+# =============================================================================
+# Class to plot the box plots
+# =============================================================================
+
+class obt_box_plot:
+    def __init__(self, dep_vars, formal_labels, nrows = 3, ncols = 3, figsize = (12,12), 
+                 wspace = 0.3, left_space = 0.1, labels_take = np.r_[:4,5:11]):
+        self.ncols = ncols
+        self.nrows = nrows
+        self.fig1, self.axes = plt.subplots(nrows, ncols, figsize = figsize)
+        self.fig1.tight_layout()
+        self.fig1.subplots_adjust(wspace= wspace, left= left_space)
+        self.labels_to_take = labels_take
+        self.axes = self.trim_axs(self.axes, len(self.labels_to_take))
+        self.deps_mod_ = dep_vars[self.labels_to_take]
+        self.labels_mod_ = np.array(formal_labels)[self.labels_to_take]
+        
+    def plot_boxplot(self, varx,  dataset, xlabel, hue ='Speed', order=None,
+                       hue_order = ["VS", 'S', 'C', 'F', 'VF'], legend_pos = 4, rot = 0):
+        self.hue = hue
+        for num,  self.ax in enumerate(np.ravel(self.axes)):
+            if num < (self.nrows * self.ncols) - 1:
+                sns.boxplot(x = varx, y = self.deps_mod_[num], hue = self.hue, 
+                            data= dataset, ax = self.ax, hue_order = hue_order, order = order)
+                self.ax.set_ylabel(self.labels_mod_[num])
+                if num != legend_pos:
+                    self.ax.get_legend().remove()
+                else:
+                    self.ax.legend(loc='lower right')
+                self.ax.set_xlabel(xlabel)
+                if rot != 0:
+                    plt.setp(self.ax.get_xticklabels(), rotation= rot)
+            else:
+                continue
+
+        return
+    
+    def trim_axs(self, axs, N):
+        """
+        Reduce *axs* to *N* Axes. All further Axes are removed from the figure.
+        Copied from pyplot webpage
+        """
+        axs = axs.flat
+        for ax in axs[N:]:
+            ax.remove()
+        return axs[:N]
+        
+    def save_fig(self, fig_name, sup_title = False):
+        if sup_title:
+            self.fig1.suptitle('Variables with statistical differences in OvsT and speed', fontsize = 18)
+        self.fig1.savefig(fig_name)
+        return self.fig1
+    
+# =============================================================================
+# Function to do test student test
 # =============================================================================
 
 def ttest_(ds1, ds2, dep_vars):
@@ -156,6 +220,7 @@ kruskal_gen = pd.concat([kruskal_groups(male_ds.query("Speed == '{}'".format(spe
 kruskal_origin = pd.concat([kruskal_groups(european_ds.query("Speed == '{}'".format(speed)), 
                               brazilian_ds.query("Speed == '{}'".format(speed)), 
                              dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
+
 #Only children and young adults are compared
 kruskal_age_ch = pd.concat([kruskal_groups(children_ds.query("Speed == '{}'".format(speed)), 
                               younga_ds.query("Speed == '{}'".format(speed)),
@@ -249,11 +314,40 @@ groups =  [['Overground', 'Treadmill', 'European','South American'],
            ['Children', 'Young Adults', 'Adults', 'Elderly'],
            ['Males', 'Females']]
 
-for num, subgroup in enumerate(groups):
-    sub_summary = summary.loc[:,idx[subgroup, :]]
-    with open("table2_{}.tex".format(num), "w+") as pt:
-        sub_summary.to_latex(buf=pt, col_space=10, longtable=True, multirow=True, 
-                            caption='Cuantitative ankle DJS characteristics at different population groups'+\
-                            r' three different gait speeds: Very Slow (VS)[{}], Slow (S)[({})]'.format(vel_labels[0], vel_labels[-3])+\
-                            r', Free (C)[{}], Fast (F)[{}] and, Very Fast (VF)[{}]'.format(vel_labels[-2], vel_labels[-1], vel_labels[-4]),
-                            label='tab:main_stats_DJS')
+summary = summary.drop(["95% CI min", "95% CI max"], level=1)
+groups_label = ["Environment", "Age", "Sex"]
+
+if print_tables:
+    for num, subgroup in enumerate(groups):
+        sub_summary = summary.loc[:,idx[subgroup, :]]
+        with open("table2_{}.tex".format(num), "w+") as pt:
+            sub_summary.to_latex(buf=pt, col_space=10, longtable=True, multirow=True, 
+                                caption='Cuantitative ankle DJS characteristics at different population groups'+\
+                                r' three different gait speeds: Very Slow (VS)[{}], Slow (S)[({})]'.format(vel_labels[0], vel_labels[-3])+\
+                                r', Free (C)[{}], Fast (F)[{}] and, Very Fast (VF)[{}]'.format(vel_labels[-2], vel_labels[-1], vel_labels[-4]),
+                                label='tab:main_stats_{}'.format(groups_label[num]))
+
+#Building the formal math labels
+
+stiff_labels = ['CP', 'ERP', 'LRP','DP']
+formal_labels = ['Init {} '.format(i)+r'$[\%GC]$' for i in ['ERP', 'LRP', 'DP', 'S', 'TS']]
+formal_labels.extend(['Work Absorbed '+r'$\frac{J}{kg}$', 'Net Work '+r'$\frac{J}{kg}$'])
+formal_labels.extend(['Stiffness {}'.format(stiff)+r'$\frac{Nm}{kg \times rad}$' for stiff in stiff_labels])
+
+
+if __plots:
+    # Plotting the overground vs treadmill boxplots
+    mode_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
+    mode_class.plot_boxplot("Mode", dataset = concat_QS, xlabel = "Walking mode")
+    mode_class.save_fig("stats_diff_mode_speed.png")
+    
+    # Plotting the Agegroup boxplots
+    age_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
+    age_class.plot_boxplot("AgeGroup", dataset = concat_QS, xlabel = "Age Groups", 
+                           order = ["Children","YoungAdults","Adults","Elderly"], rot= 15)
+    age_class.save_fig("stats_diff_age_speed.png") #Change angle xlabel, try to visualize in a better way
+    
+    # Ploting the Gender comparison boxplot
+    gender_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
+    gender_class.plot_boxplot("Gender", dataset = concat_QS, xlabel = "Sex")
+    gender_class.save_fig("stats_diff_gender_speed.png") #Change angle xlabel
