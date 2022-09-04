@@ -170,8 +170,10 @@ def shapiro_test(ds, dep_vars, name='No name', df=True):
 
 
 def kruskal_groups(ds1, ds2, dep_vars, name):
-    kruskal_deps = pd.Series({item: kruskal(ds1[item].values,
-                                            ds2[item].values).pvalue < 0.05 for item in dep_vars})
+    kruskal_deps = pd.Series({item: kruskal(ds1[item].values, 
+                                              ds2[item].values).pvalue < 0.05 for item in dep_vars})
+    kruskal_deps = kruskal_deps.replace(True,1)
+    kruskal_deps = kruskal_deps.replace(False,0)
     kruskal_deps.name = name
     return kruskal_deps
 
@@ -250,23 +252,22 @@ kruskal_origin = pd.concat([kruskal_groups(european_ds.query("Speed == '{}'".for
                                                "Speed == '{}'".format(speed)),
                                            dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
 
-# Only children and young adults are compared
-kruskal_age_ch = pd.concat([kruskal_groups(children_ds.query("Speed == '{}'".format(speed)),
-                                           younga_ds.query(
-                                               "Speed == '{}'".format(speed)),
-                                           dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
-kruskal_age_a = pd.concat([kruskal_groups(younga_ds.query("Speed == '{}'".format(speed)),
-                                          adults_ds.query(
-                                              "Speed == '{}'".format(speed)),
-                                          dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
-kruskal_age_e = pd.concat([kruskal_groups(adults_ds.query("Speed == '{}'".format(speed)),
-                                          elder_ds.query(
-                                              "Speed == '{}'".format(speed)),
-                                          dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
-kruskal_mode = pd.concat([kruskal_groups(overground_ds.query("Speed == '{}'".format(speed)),
-                                         treadmill_ds.query(
-                                             "Speed == '{}'".format(speed)),
-                                         dep_vars, '{}'.format(speed)) for speed in ['VS', 'S', 'C', 'F', 'VF']], axis=1)
+#Only children and young adults are compared
+kruskal_age_ch = pd.concat([kruskal_groups(children_ds.query("Speed == '{}'".format(speed)), 
+                              younga_ds.query("Speed == '{}'".format(speed)),
+                             dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
+kruskal_age_ya = pd.concat([kruskal_groups(younga_ds.query("Speed == '{}'".format(speed)), 
+                              adults_ds.query("Speed == '{}'".format(speed)),
+                             dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
+kruskal_age_a = pd.concat([kruskal_groups(adults_ds.query("Speed == '{}'".format(speed)), 
+                              adults_ds.query("Speed == '{}'".format(speed)),
+                             dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
+kruskal_age_e = pd.concat([kruskal_groups(adults_ds.query("Speed == '{}'".format(speed)), 
+                              elder_ds.query("Speed == '{}'".format(speed)),
+                             dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
+kruskal_mode = pd.concat([kruskal_groups(overground_ds.query("Speed == '{}'".format(speed)), 
+                              treadmill_ds.query("Speed == '{}'".format(speed)), 
+                             dep_vars, '{}'.format(speed)) for speed in ['VS', 'S', 'C', 'F', 'VF']], axis=1)
 
 # Making fancier columns
 m_index_krus_gen = pd.MultiIndex.from_product([['Gender'], ['S', 'C', 'F']])
@@ -275,16 +276,13 @@ m_index_krus_mode = pd.MultiIndex.from_product(
     [['Mode'], ['VS', 'S', 'C', 'F', 'VF']])
 kruskal_gen.columns = m_index_krus_gen
 kruskal_origin.columns = m_index_krus_ori
-kruskal_age_ch.columns = pd.MultiIndex.from_product(
-    [['$Age \leq 30$'], ['S', 'C', 'F']])
-kruskal_age_a.columns = pd.MultiIndex.from_product(
-    [['$30 \le Age \leq 50$'], ['S', 'C', 'F']])
-kruskal_age_e.columns = pd.MultiIndex.from_product(
-    [['$Age \ge 50$'], ['S', 'C', 'F']])
+kruskal_age_ch.columns = pd.MultiIndex.from_product([['Children'],['S', 'C', 'F']])
+kruskal_age_ya.columns = pd.MultiIndex.from_product([['YoungAdults'],['S', 'C', 'F']])
+kruskal_age_a.columns = pd.MultiIndex.from_product([['Adults'],['S', 'C', 'F']])
+kruskal_age_e.columns = pd.MultiIndex.from_product([['Elderly'],['S', 'C', 'F']])
 kruskal_mode.columns = m_index_krus_mode
 kruskall_all = pd.concat([kruskal_gen, kruskal_origin, kruskal_mode], axis=1)
-kruskall_age = pd.concat(
-    [kruskal_age_ch, kruskal_age_a, kruskal_age_e], axis=1)
+kruskall_age = pd.concat([kruskal_age_ch, kruskal_age_ya,kruskal_age_a, kruskal_age_e], axis=1)
 
 
 # =============================================================================
