@@ -33,7 +33,7 @@ from statannotations.Annotator import Annotator  # Significant differences
 # Helper functions
 # =============================================================================
 
-print_tables = False
+print_tables = True
 __plots = True
 sns.set_context('paper', font_scale=1.5)
 sns.set_style("whitegrid")
@@ -179,7 +179,7 @@ def kruskal_groups(ds1, ds2, dep_vars, name):
 
 
 os.chdir('ConcatDatasets/')
-concat_QS = pd.read_csv('DatasetPaper.csv', index_col=[0])
+concat_QS = pd.read_csv('PostProcessedDatasets.csv', index_col=[0])
 
 # Defining the labels to use
 dep_vars = concat_QS.columns[10:]
@@ -230,8 +230,7 @@ female_ds = overground_ds.query("Gender == 'F'")
 main_groups = [overground_ds, treadmill_ds, european_ds, brazilian_ds,
                children_ds, younga_ds, adults_ds, elder_ds, male_ds, female_ds]
 
-main_labels = ['Overground', 'Treadmill', 'European', 'South American',
-               'Children', 'Young Adults', 'Adults', 'Elderly',
+main_labels = ['Overground', 'Treadmill', 'Children', 'Young Adults', 'Adults', 'Elderly',
                'Males', 'Females']
 
 norm_groups = pd.concat([shapiro_test(ds, dep_vars,
@@ -271,17 +270,17 @@ kruskal_mode = pd.concat([kruskal_groups(overground_ds.query("Speed == '{}'".for
 
 # Making fancier columns
 m_index_krus_gen = pd.MultiIndex.from_product([['Gender'], ['S', 'C', 'F']])
-m_index_krus_ori = pd.MultiIndex.from_product([['Ethnicity'], ['S', 'C', 'F']])
+# m_index_krus_ori = pd.MultiIndex.from_product([['Ethnicity'], ['S', 'C', 'F']])
 m_index_krus_mode = pd.MultiIndex.from_product(
     [['Mode'], ['VS', 'S', 'C', 'F', 'VF']])
 kruskal_gen.columns = m_index_krus_gen
-kruskal_origin.columns = m_index_krus_ori
+# kruskal_origin.columns = m_index_krus_ori
 kruskal_age_ch.columns = pd.MultiIndex.from_product([['Children'],['S', 'C', 'F']])
 kruskal_age_ya.columns = pd.MultiIndex.from_product([['YoungAdults'],['S', 'C', 'F']])
 kruskal_age_a.columns = pd.MultiIndex.from_product([['Adults'],['S', 'C', 'F']])
 kruskal_age_e.columns = pd.MultiIndex.from_product([['Elderly'],['S', 'C', 'F']])
 kruskal_mode.columns = m_index_krus_mode
-kruskall_all = pd.concat([kruskal_gen, kruskal_origin, kruskal_mode], axis=1)
+kruskall_all = pd.concat([kruskal_gen, kruskal_mode], axis=1)
 kruskall_age = pd.concat([kruskal_age_ch, kruskal_age_ya,kruskal_age_a, kruskal_age_e], axis=1)
 
 
@@ -348,7 +347,7 @@ with open("table2.tex", "w+") as pt:
                          vel_labels[-2], vel_labels[-1], vel_labels[-4]),
                      label='tab:main_stats_DJS')
 
-groups = [['Overground', 'Treadmill', 'European', 'South American'],
+groups = [['Overground', 'Treadmill'],
           ['Children', 'Young Adults', 'Adults', 'Elderly'],
           ['Males', 'Females']]
 
