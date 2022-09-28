@@ -227,7 +227,7 @@ elder_ds = overground_ds.query("AgeGroup == 'Elderly'")
 male_ds = overground_ds.query("Gender == 'M'")
 female_ds = overground_ds.query("Gender == 'F'")
 
-main_groups = [overground_ds, treadmill_ds, european_ds, brazilian_ds,
+main_groups = [overground_ds, treadmill_ds,
                children_ds, younga_ds, adults_ds, elder_ds, male_ds, female_ds]
 
 main_labels = ['Overground', 'Treadmill', 'Children', 'Young Adults', 'Adults', 'Elderly',
