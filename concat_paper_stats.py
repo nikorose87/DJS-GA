@@ -246,10 +246,6 @@ kruskal_gen = pd.concat([kruskal_groups(male_ds.query("Speed == '{}'".format(spe
                                         female_ds.query(
                                             "Speed == '{}'".format(speed)),
                                         dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
-kruskal_origin = pd.concat([kruskal_groups(european_ds.query("Speed == '{}'".format(speed)),
-                                           brazilian_ds.query(
-                                               "Speed == '{}'".format(speed)),
-                                           dep_vars, '{}'.format(speed)) for speed in ['S', 'C', 'F']], axis=1)
 
 #Only children and young adults are compared
 kruskal_age_ch = pd.concat([kruskal_groups(children_ds.query("Speed == '{}'".format(speed)), 
@@ -270,7 +266,6 @@ kruskal_mode = pd.concat([kruskal_groups(overground_ds.query("Speed == '{}'".for
 
 # Making fancier columns
 m_index_krus_gen = pd.MultiIndex.from_product([['Gender'], ['S', 'C', 'F']])
-# m_index_krus_ori = pd.MultiIndex.from_product([['Ethnicity'], ['S', 'C', 'F']])
 m_index_krus_mode = pd.MultiIndex.from_product(
     [['Mode'], ['VS', 'S', 'C', 'F', 'VF']])
 kruskal_gen.columns = m_index_krus_gen
