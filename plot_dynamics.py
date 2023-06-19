@@ -696,10 +696,11 @@ class plot_ankle_DJS(plot_dynamic):
         self.ang_sd2 = self.extract_data([rows[0], self.count, 2])
         self.mom_sd1 = self.extract_data([rows[1], self.count, 0])
         self.mom_sd2 = self.extract_data([rows[1], self.count, 2])
-        self.err_ang = [self.ang_mean - self.ang_sd1, 
-                           self.ang_sd2 - self.ang_mean]
-        self.err_mom = [self.mom_mean - self.mom_sd1, 
-                           self.mom_sd2 - self.mom_mean]
+        self.err_ang = np.abs([self.ang_mean - self.ang_sd1, 
+                           self.ang_sd2 - self.ang_mean])
+        self.err_mom = np.abs([self.mom_mean - self.mom_sd1, 
+                           self.mom_sd2 - self.mom_mean])
+        # print(f"Printing Error angle: {self.err_ang}")
         self.ax.errorbar(self.ang_mean, self.mom_mean, xerr=self.err_ang,
                          color= self.params['color_DJS'][self.count],
                          elinewidth = self.params['sd_linewidth'])
@@ -787,6 +788,7 @@ class plot_ankle_DJS(plot_dynamic):
         # Making pairs
         list_area = list(zip(var1, var2))
         multi_point = MultiPoint(list_area)
+        # print(f"list area: {multi_point}")
         poly2 = Polygon([[p.x, p.y] for p in multi_point])
         x,y = poly2.exterior.xy
         poly1patch = PolygonPatch(poly2, fc= color, ec=color, 

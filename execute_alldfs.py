@@ -15,12 +15,16 @@ import operator
 import seaborn as sns
 
 
-ttest_ = True
+# Testers
+
+ttest_ = False
 plot_theory = False
 optimize_params = False
 plot_pairs = False
-plot_sample = False
+plot_sample_per_step = False
+plot_fig_paper = True
 plot_per_group = False
+plot_children = False
 # =============================================================================
 # Ferrarin execution 
 # =============================================================================
@@ -145,73 +149,74 @@ total_work = concat_.total_work()
 # =============================================================================
 # Plotting ankle Quasi-Stiffness
 # =============================================================================
-Color = [i[1] for i in mcolors.TABLEAU_COLORS.items()]*3
-params = {'sharex':False, 'sharey':True, 'color_DJS':['slategray']*20, 'color_reg':['black']*20, 
-          'color_symbols': ['slategray']*20, 'arr_size': 6, 'left_margin': 0.1, 
-          'DJS_linewidth': 0.2, 'reg_linewidth': 1.0, 'grid': False}
+if plot_children:
+    Color = [i[1] for i in mcolors.TABLEAU_COLORS.items()]*3
+    params = {'sharex':False, 'sharey':True, 'color_DJS':['slategray']*20, 'color_reg':['black']*20, 
+            'color_symbols': ['slategray']*20, 'arr_size': 6, 'left_margin': 0.1, 
+            'DJS_linewidth': 0.2, 'reg_linewidth': 1.0, 'grid': False}
 
-DJS_all_ch = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[3,5],
-                      alpha=3, fig_size=[9,11], params=params, ext='png')
-DJS_all_ch.colors = Color
-#Previuos config for Y, A and CH
-#All np.r_[10,1,6,11,2,7,12,0,5,13,3,8,14,4,9]
-# config for more rows np.r_[5,1,6,2,7,0,8,3,9,4]
-# Only Ferra np.r_[1,2,0,3,4,10:15]
-fig4 = DJS_all_ch.plot_DJS(concat_.all_dfs_ankle, 
-                    cols=np.r_[10,1,6,11,2,7,12,0,5,13,3,8,14,4,9], rows= np.r_[0,2],
-                    title="Individual ankle DJS Children", 
-                    legend=True, reg=best_df_turn.loc[idx[:,'mean'],:],
-                    integration= True, rad = True)
+    DJS_all_ch = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[3,5],
+                        alpha=3, fig_size=[9,11], params=params, ext='png')
+    DJS_all_ch.colors = Color
+    #Previuos config for Y, A and CH
+    #All np.r_[10,1,6,11,2,7,12,0,5,13,3,8,14,4,9]
+    # config for more rows np.r_[5,1,6,2,7,0,8,3,9,4]
+    # Only Ferra np.r_[1,2,0,3,4,10:15]
+    # fig4 = DJS_all_ch.plot_DJS(concat_.all_dfs_ankle, 
+    #                     cols=np.r_[10,1,6,11,2,7,12,0,5,13,3,8,14,4,9], rows= np.r_[0,2],
+    #                     title="Individual ankle DJS Children", 
+    #                     legend=True, reg=best_df_turn.loc[idx[:,'mean'],:],
+    #                     integration= True, rad = True)
 
-reg_info_concat_all = DJS_all_ch.reg_info_df.round(3)
-reg_info_concat_all = reg_info_concat_all
-#Read the metrics from this
-metrics_all = reg_info_concat_all.mean(axis=0)
+    # reg_info_concat_all = DJS_all_ch.reg_info_df.round(3)
+    # reg_info_concat_all = reg_info_concat_all
+    #Read the metrics from this
+    metrics_all = reg_info_concat_all.mean(axis=0)
 
-concat_dep = best_df_turnGC.loc[idx[:,'mean'], 'point 1':].droplevel(1)
-
-
-#Work data handling
-work_all = DJS_all_ch.areas
-work_all['direction'] = work_all['direction'].replace('cw',0)
-work_all['direction'] = work_all['direction'].replace('ccw',1)
-work_all = work_all.astype(np.float64).round(3)
-
-concat_dep = pd.concat([concat_dep, reg_info_concat_all['stiffness'].unstack().droplevel(1), work_all], axis=1)
-labels_idx = ['{} {}'.format(i,j) for i in ['Very Slow', 'Slow', 'Free', 'Medium', 'Fast'] for j in ['C', 'Y', 'A']]
-concat_dep = concat_dep.reindex(labels_idx)
-concat_dep.index = pd.MultiIndex.from_product([['Very Slow', 'Slow', 'Free', 'Medium', 'Very Fast'], ['C', 'Y', 'A']], names=['Gait Speed','Group'])
-concat_dep.columns = pd.MultiIndex.from_arrays([[r'Turning Point [$\%GC$]']*5+[r'Stiffness [$\frac{Nm}{kg\times rad}$]']*4+[r'Work $\frac{J}{kg}$']*3,
-                                                ['ERP','LRP','DP','S','TS','CP','ERP','LRP','DP','Abs.', 'Net.', 'Direction']])
-# =============================================================================
-# Plotting the results of concat_dep
-# =============================================================================
-concat_dep_red = concat_dep.xs(r'Stiffness [$\frac{Nm}{kg\times rad}$]', axis=1)
+    concat_dep = best_df_turnGC.loc[idx[:,'mean'], 'point 1':].droplevel(1)
 
 
-with open("Ferrarin/ferra_DJS.tex", "w+") as pt:
-    concat_dep.to_latex(buf=pt, col_space=10, longtable=False, multirow=True, 
-                        caption=r'Cuantitative ankle DJS characteristics depicted in Fig. \ref{fig:comp_speed_QS_ferra} for children and adult groups',
-                        label='tab:table_ferra')
-# =============================================================================
-# Showing the DJS results for youths and adults
-# =============================================================================
+    #Work data handling
+    work_all = DJS_all_ch.areas
+    work_all['direction'] = work_all['direction'].replace('cw',0)
+    work_all['direction'] = work_all['direction'].replace('ccw',1)
+    work_all = work_all.astype(np.float64).round(3)
+
+    concat_dep = pd.concat([concat_dep, reg_info_concat_all['stiffness'].unstack().droplevel(1), work_all], axis=1)
+    labels_idx = ['{} {}'.format(i,j) for i in ['Very Slow', 'Slow', 'Free', 'Medium', 'Fast'] for j in ['C', 'Y', 'A']]
+    concat_dep = concat_dep.reindex(labels_idx)
+    concat_dep.index = pd.MultiIndex.from_product([['Very Slow', 'Slow', 'Free', 'Medium', 'Very Fast'], ['C', 'Y', 'A']], names=['Gait Speed','Group'])
+    concat_dep.columns = pd.MultiIndex.from_arrays([[r'Turning Point [$\%GC$]']*5+[r'Stiffness [$\frac{Nm}{kg\times rad}$]']*4+[r'Work $\frac{J}{kg}$']*3,
+                                                    ['ERP','LRP','DP','S','TS','CP','ERP','LRP','DP','Abs.', 'Net.', 'Direction']])
+    # =============================================================================
+    # Plotting the results of concat_dep
+    # =============================================================================
+    concat_dep_red = concat_dep.xs(r'Stiffness [$\frac{Nm}{kg\times rad}$]', axis=1)
+
+
+    with open("Ferrarin/ferra_DJS.tex", "w+") as pt:
+        concat_dep.to_latex(buf=pt, col_space=10, longtable=False, multirow=True, 
+                            caption=r'Cuantitative ankle DJS characteristics depicted in Fig. \ref{fig:comp_speed_QS_ferra} for children and adult groups',
+                            label='tab:table_ferra')
+    # =============================================================================
+    # Showing the DJS results for youths and adults
+    # =============================================================================
 
 
 
-DJS_all_ad = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[2,5],
-                      alpha=2, fig_size=[3,7], params=params, ext='png')
-DJS_all_ad.colors = Color
-#Previuos config for Y, A and CH
-#np.r_[10,1,6,11,2,7,12,0,5,13,3,8,14,4,9]
-# config for more rows np.r_[5,1,6,2,7,0,8,3,9,4]
-fig5 = DJS_all_ad.plot_DJS(concat_.all_dfs_ankle, 
-                    cols=np.r_[1,2,0,3,4,6,7,5,8,9], rows= np.r_[0,2],
-                    title="Individual ankle DJS Y v A", 
-                    legend=True, reg=best_df_turn.loc[idx[:,'mean'],:],
-                    integration= True, rad = True)
+    DJS_all_ad = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=[2,5],
+                        alpha=2, fig_size=[3,7], params=params, ext='png')
+    DJS_all_ad.colors = Color
+    #Previuos config for Y, A and CH
+    #np.r_[10,1,6,11,2,7,12,0,5,13,3,8,14,4,9]
+    # config for more rows np.r_[5,1,6,2,7,0,8,3,9,4]
+    fig5 = DJS_all_ad.plot_DJS(concat_.all_dfs_ankle, 
+                        cols=np.r_[1,2,0,3,4,6,7,5,8,9], rows= np.r_[0,2],
+                        title="Individual ankle DJS Y v A", 
+                        legend=True, reg=best_df_turn.loc[idx[:,'mean'],:],
+                        integration= True, rad = True)
 
-reg_info_concat_ad = DJS_all_ad.reg_info_df.round(3)
+    reg_info_concat_ad = DJS_all_ad.reg_info_df.round(3)
 
 # =============================================================================
 # Showing in the regular way, comparing Schwartz and Ferrarin 
@@ -296,7 +301,7 @@ if plot_per_group:
 # Plotting one sample with labels, theoretical
 # =============================================================================
 
-if plot_sample: 
+if plot_sample_per_step: 
 
     cases = {0: [None, 'None'], 
              1:[best_df_turn.loc[idx[:,'mean'],['point 0', 'point 1', 'point 3']], ['Control Plantar-flexion \n (CPF)']],
@@ -318,7 +323,29 @@ if plot_sample:
                             title="Ankle DJS sample {}".format(key), 
                             legend=True, reg=case[0],
                             integration= True, rad = True, header= None)
-    
+
+# =============================================================================
+# Plotting one sample with labels, theoretical
+# =============================================================================
+
+if plot_fig_paper: 
+
+    cases = {5:[best_df_turn.loc[idx[:,'mean'],:], ['CPF', 'ERP', 'LRP', 'DP']]}
+    for key, case in cases.items():
+        params_sample = {'sharex':False, 'sharey':True, 'color_DJS':['slategray']*20, 
+                     'color_reg':['black']*20, 'color_symbols': ['slategray']*20, 
+                     'arr_size': 13, 'left_margin': 0.25, 'DJS_linewidth': 0.2, 
+                     'reg_linewidth': 1.0, 'grid': False, 'alpha_prod': 0.4,
+                     'alpha_absorb': 0.1, 'text':True, 'instances':case[1], 
+                     'tp_labels' : {'a.':(2.5,2.5)}}
+        DJS_sample = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
+                              alpha=3.0, fig_size=[4,4], params=params_sample)
+        fig6 = DJS_sample.plot_DJS(concat_.all_dfs_ankle, 
+                            cols=[-2], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
+                            title="Ankle DJS sample {}".format(key), 
+                            legend=True, reg=case[0],
+                            integration= True, rad = True, header= None)
+
     #Only regressions
     
     params_simple = {'sharex':False, 'sharey':True, 'color_DJS':['white']*20, 
@@ -334,6 +361,7 @@ if plot_sample:
     #                     title="Ankle DJS sample dir", 
     #                     legend=False, reg=best_df_turn.loc[idx[:,'mean'],:],
     #                     integration= True, rad = True, header= None)
+    
 if ttest_:
     # =============================================================================
     # Obtaining the ttest of children (Schwartz) against youth (Ferrarin)
