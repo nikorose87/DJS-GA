@@ -23,6 +23,7 @@ optimize_params = False
 plot_pairs = False
 plot_sample_per_step = False
 plot_fig_paper = True
+plot_fig_graphical_abs = False
 plot_per_group = False
 plot_children = False
 # =============================================================================
@@ -319,9 +320,30 @@ if plot_sample_per_step:
         DJS_sample = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
                               alpha=3.0, fig_size=[4,4], params=params_sample)
         fig6 = DJS_sample.plot_DJS(concat_.all_dfs_ankle, 
-                            cols=[-3], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
+                            cols=[-1], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
                             title="Ankle DJS sample {}".format(key), 
                             legend=True, reg=case[0],
+                            integration= True, rad = True, header= None)
+
+if plot_fig_graphical_abs: 
+
+    cases = {"grahicalAbstract":[best_df_turn.loc[idx[:,'mean'],:], 
+                                 ['Controlled Plantar-Flexion (CP)', 
+                                  'Early Response Phase (ERP)', 'Late Response Phase (LRP)', 
+                                  'Descending Phase (DP)']]}
+    for key, case in cases.items():
+        params_sample = {'sharex':False, 'sharey':True, 'color_DJS':['slategray']*20, 
+                     'color_reg':['black']*20, 'color_symbols': ['slategray']*20, 
+                     'arr_size': 13, 'left_margin': 0.25, 'DJS_linewidth': 0.2, 
+                     'reg_linewidth': 1.5, "sd_linewidth": 0.0, 'grid': False, 'alpha_prod': 0.4,
+                     'alpha_absorb': 0.1, 'text':True, 'instances':case[1], 
+                     'tp_labels' : {'':(1.5,0.6)}}
+        DJS_sample = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
+                              alpha=3.0, fig_size=[3,3], params=params_sample)
+        fig6 = DJS_sample.plot_DJS(concat_.all_dfs_ankle, 
+                            cols=[-3], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
+                            title="Ankle DJS sample {}".format(key), 
+                            legend="sep", reg=case[0],
                             integration= True, rad = True, header= None)
 
 # =============================================================================
@@ -330,17 +352,18 @@ if plot_sample_per_step:
 
 if plot_fig_paper: 
 
-    cases = {5:[best_df_turn.loc[idx[:,'mean'],:], ['CPF', 'ERP', 'LRP', 'DP']]}
+    cases = {5:[best_df_turn.loc[idx[:,'mean'],:], ['CP', 'ERP', 'LRP', 'DP']]}
     for key, case in cases.items():
         params_sample = {'sharex':False, 'sharey':True, 'color_DJS':['slategray']*20, 
                      'color_reg':['black']*20, 'color_symbols': ['slategray']*20, 
                      'arr_size': 13, 'left_margin': 0.25, 'DJS_linewidth': 0.2, 
                      'reg_linewidth': 1.0, 'grid': False, 'alpha_prod': 0.4,
                      'alpha_absorb': 0.1, 'text':True, 'instances':case[1], 
-                     'tp_labels' : {'a.':(2.5,2.5)}}
+                     'tp_labels' : {'a.':(1.4, 1.4), 'b.':(1.6,1.3), 'c.':(1.2,1.0),
+                                    'd.':(1,1.14),'e.':(1.15,1.1)}}
         DJS_sample = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
-                              alpha=3.0, fig_size=[4,4], params=params_sample)
-        fig6 = DJS_sample.plot_DJS(concat_.all_dfs_ankle, 
+                              alpha=3.0, fig_size=[5,5], params=params_sample)
+        fig6 = DJS_sample.plot_DJS(concat_.all_dfs_ankle,
                             cols=[-2], rows= np.r_[0,2], #[1,0,2,3,4], np.r_[5:10]
                             title="Ankle DJS sample {}".format(key), 
                             legend=True, reg=case[0],

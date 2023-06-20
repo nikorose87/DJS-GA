@@ -91,7 +91,12 @@ class plot_dynamic:
         mpl.rcParams['figure.figsize'] = ncols, nrows
         #backgroud color
         mpl.rcParams['axes.facecolor'] = 'white'
-    
+        # Font type configuration
+        mpl.rcParams['mathtext.fontset'] = 'custom'
+        mpl.rcParams['mathtext.it'] = 'Arial'
+        mpl.rcParams['mathtext.rm'] = 'Arial'
+        mpl.rcParams['mathtext.bf'] = 'Arial'
+
     def get_mult_num(self, integer):
       """
       Function to generate the best combination among a number of plots
@@ -324,8 +329,10 @@ class plot_ankle_DJS(plot_dynamic):
                     if self.count >= (self.sep[0]-1)*self.sep[1]:
                         self.ax.set_xlabel(self.x_label)
                 if self.legend:
-                    self.ax.legend(ncol=int(len(self.columns_first)/2), fancybox=True,
-                                   loc = 'upper left')                       
+                    h, l = self.ax.get_legend_handles_labels()
+                    self.ax.legend(handles=[item for item in h[1:]], labels= [item for item in l[1:]],
+                                ncol=int(len(self.columns_first)/2), fancybox=True,
+                                loc = 'upper left')                       
                 self.count +=1
             except ValueError:
                 #Because plots does not match
@@ -374,17 +381,17 @@ class plot_ankle_DJS(plot_dynamic):
                 self.ax.set_ylabel(self.y_label)
             if self.legend == True:
                 try:
-                    self.ax.legend(ncol=1, fancybox=True, #int(len(self.columns_first)/2)
-                               loc = 'upper left')
+                    h, l = self.ax.get_legend_handles_labels()
+                    self.ax.legend(handles=[item for item in h[1:]], labels= [item for item in l[1:]],
+                                ncol=1, fancybox=True, loc = 'upper left')
                 except ZeroDivisionError:
                     self.ax.legend(ncol=1, fancybox=True, 
                                loc = 'upper left', fontsize=self.alpha*3)
                         
             elif self.legend == 'sep':
-                figLegend = pylab.figure(figsize = self.fig_size)
-                pylab.figlegend(*self.ax.get_legend_handles_labels(), 
-                                loc = 'upper left')
-                
+                h, l = self.ax.get_legend_handles_labels()
+                figLegend = pylab.figure(figsize=self.fig_size)
+                pylab.figlegend(h[1:], l[1:], ncol=1, fancybox=True, loc = 'upper left')
                 self.save_fig(figLegend, "legend_{}".format(self.title))
             else:
                 pass
@@ -400,11 +407,11 @@ class plot_ankle_DJS(plot_dynamic):
                          self.mom_mean[self.TP.iloc[self.count, n_]]*val[1],
                          tp_lab,
                          color=self.params['color_reg'][self.count])
-            self.ax.text(0.5, 0.3, r'$W_{net}$', horizontalalignment='center',
+            self.ax.text(0.6, 0.35, r'$W_{net}$', horizontalalignment='center',
                          verticalalignment='center', 
                          color=self.params['color_reg'][self.count],
                          transform=self.ax.transAxes)   
-            self.ax.text(0.85, 0.2, r'$W_{abs}$', horizontalalignment='center',
+            self.ax.text(0.85, 0.26, r'$W_{abs}$', horizontalalignment='center',
                          verticalalignment='center', transform=self.ax.transAxes,
                          color=self.params['color_reg'][self.count]) 
 
