@@ -33,7 +33,7 @@ from statannotations.Annotator import Annotator  # Significant differences
 # Helper functions
 # =============================================================================
 
-print_tables = True
+print_tables = False
 __plots = True
 sns.set_context('paper', font_scale=1.5)
 sns.set_style("whitegrid")
@@ -223,9 +223,11 @@ younga_ds = overground_ds.query("AgeGroup == 'YoungAdults'")
 adults_ds = overground_ds.query("AgeGroup == 'Adults'")
 elder_ds = overground_ds.query("AgeGroup == 'Elderly'")
 
+# let us replace the gender labels to show in the boxplot
+overground_ds["Gender"].replace({"M": "Male", "F": "Female"}, inplace=True)
 # Gender comparison on overground
-male_ds = overground_ds.query("Gender == 'M'")
-female_ds = overground_ds.query("Gender == 'F'")
+male_ds = overground_ds.query("Gender == 'Male'")
+female_ds = overground_ds.query("Gender == 'Female'")
 
 main_groups = [overground_ds, treadmill_ds,
                children_ds, younga_ds, adults_ds, elder_ds, male_ds, female_ds]
@@ -363,7 +365,7 @@ if print_tables:
 # Building the formal math labels
 
 stiff_labels = ['CP', 'ERP', 'LRP', 'DP']
-formal_labels = ['Init {} '.format(
+formal_labels = ['Onset {} '.format(
     i)+r'$[\%GC]$' for i in ['ERP', 'LRP', 'DP', 'S', 'TS']]
 formal_labels.extend(
     ['Work Absorbed '+r'$\frac{J}{kg}$', 'Net Work '+r'$\frac{J}{kg}$'])
