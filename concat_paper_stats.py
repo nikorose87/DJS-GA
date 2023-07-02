@@ -66,9 +66,9 @@ class obt_box_plot:
             if num < (self.nrows * self.ncols) - 1:
                 sns.boxplot(x=varx, y=self.deps_mod_[num], hue=self.hue,
                             data=dataset, ax=self.ax, hue_order=hue_order, order=order)
-                self.ax.set_ylabel(self.labels_mod_[num], fontsize = self.font_size)
+                self.ax.set_ylabel(self.labels_mod_[num], fontsize = self.font_size, fontdict={'weight': 'bold'})
                 self.ax.get_legend().remove()
-                self.ax.set_xlabel(xlabel, fontsize = self.font_size)
+                self.ax.set_xlabel(xlabel, fontsize = self.font_size, fontdict={'weight': 'bold'})
                 plt.setp(self.ax.get_xticklabels(), rotation=rot, fontsize=self.font_size)
             else:
                 continue
@@ -373,21 +373,21 @@ formal_labels.extend(['Stiffness {}'.format(
 
 if __plots:
     # Plotting the overground vs treadmill boxplots
-    # mode_class = obt_box_plot(dep_vars, formal_labels,
-    #                           nrows=4, ncols=3, labels_take=np.r_[:11])
-    # mode_class.plot_boxplot("Mode", dataset=concat_QS, xlabel="Walking mode")
-    # mode_class.save_fig("stats_diff_mode_speed.pdf")
+    mode_class = obt_box_plot(dep_vars, formal_labels,
+                              nrows=4, ncols=3, labels_take=np.r_[:11])
+    mode_class.plot_boxplot("Mode", dataset=concat_QS, xlabel="Walking mode")
+    mode_class.save_fig("Figure7BoxplotWalkingEnvironment.pdf")
 
     # Plotting the Agegroup boxplots
     age_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, 
                              labels_take= np.r_[:11], font_size=12, wspace=0.3)
-    age_class.plot_boxplot("AgeGroup", dataset = concat_QS, xlabel = "Age Groups",
+    age_class.plot_boxplot("AgeGroup", dataset = concat_QS, xlabel = " ",
                             order = ["Children","YoungAdults","Adults","Elderly"], rot= 15)
-    age_class.save_fig("stats_diff_age_speed.pdf")
+    age_class.save_fig("Figure5BoxplotAgeComparison.pdf")
     
     # Ploting the Gender comparison boxplot
-    # gender_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
-    # gender_class.plot_boxplot("Gender", dataset = concat_QS, xlabel = "Sex")
-    # gender_class.save_fig("stats_diff_gender_speed.pdf") 
+    gender_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
+    gender_class.plot_boxplot("Gender", dataset = concat_QS, xlabel = "Sex")
+    gender_class.save_fig("Figure6BoxplotSexComparison.pdf") 
 plt.close()
 plt.clf()
