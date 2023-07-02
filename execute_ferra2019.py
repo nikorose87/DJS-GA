@@ -195,7 +195,7 @@ meta_data_walk.to_csv("Ferrarin2019/meta_info_ferra.csv")
 #Deviding results per groups
 vel_labels = ['Very Slow', 'Slow', 'Free', 'Fast', 'Very Fast']
 meta_data_walk_ch = {vel: meta_data_walk.query("Age <= 18 and Range == '{}'".format(vel)) for vel in vel_labels}
-meta_data_walk_ya = {vel: meta_data_walk.query("Age >= 22 and Age <= 35 and Range == '{}'".format(vel)) for vel in vel_labels}
+meta_data_walk_ya = {vel: meta_data_walk.query("Age >= 18 and Age <= 35 and Range == '{}'".format(vel)) for vel in vel_labels}
 meta_data_walk_a = {vel: meta_data_walk.query("Age > 35 and Age <= 54 and Range == '{}'".format(vel)) for vel in vel_labels}
 meta_data_walk_old = {vel: meta_data_walk.query("Age > 54 and Range == '{}'".format(vel)) for vel in vel_labels}
 
