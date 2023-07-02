@@ -149,16 +149,24 @@ processed_dir = info_dir + '/WBDSascii'
 # Index where the dynamic information is
 index_angtxt = [j for j, i in enumerate(meta_info['FileName']) if 'ang.txt' in i]
 index_knttxt = [j for j, i in enumerate(meta_info['FileName']) if 'knt.txt' in i]
-
+index_grftxt = [j for j, i in enumerate(meta_info['FileName']) if 'grf.txt' in i]
+index_c3d = [j for j, i in enumerate(meta_info['FileName']) if '.c3d' in i]
 #Index labels
 labels_ang = meta_info['FileName'][index_angtxt]
 labels_knt = meta_info['FileName'][index_knttxt]
 
+
+#Obtaining fraude number
+meta_info.replace('--', np.nan, inplace=True)
+meta_info['Fraude'] = meta_info['GaitSpeed(m/s)']/(np.sqrt(9.81*meta_info['LegLength']))
+
+# TODO: If numeric speed is required we will need to generate the GRF dataset and 
+# combine with the reduced one and 
+
+#Meta info reduced
 meta_info_red = meta_info.filter(index_angtxt, axis=0)
 meta_info_red['Subject'] = Fukuchi_df.columns.get_level_values(0)
 meta_info_red['Mode'] = Fukuchi_df.columns.get_level_values(1)
-
-
 # =============================================================================
 # Obtaining the gait speed on each
 # ============================================================================
@@ -182,8 +190,6 @@ meta_info_valid['Mode'] = meta_info_valid['Trial'].apply(lambda x: x[0])
 meta_info_valid['Mode'] = meta_info_valid['Mode'].replace(['T', 'O'], ['Treadmill', 'Overground'])
 #Type column
 meta_info_valid['Type'] = meta_info_valid['Trial'].apply(lambda x: x[-1])
-#Obtaining fraude number
-meta_info_valid['Fraude'] = meta_info_valid['GaitSpeed(m/s)']/(np.sqrt(9.81*meta_info_valid['LegLength']))
 #Obtaining Stansfiels number
 meta_info_valid['Stansfield'] = 100*meta_info_valid['GaitSpeed(m/s)']/meta_info_valid['Height']
 
@@ -835,9 +841,9 @@ if individuals:
         # =============================================================================
         #         #Redifining labels
         # =============================================================================
-        dep_vars = meta_info_anova.columns[np.r_[11:18,19:23]]
+        dep_vars = meta_info_anova.columns[np.r_[11:18, 19:23]] 
         
-        labels = ['Init {} '.format(i)+r'$[\%GC]$' for i in ['ERP', 'LRP', 'DP', 'S', 'TS']]
+        labels = ['Onset {} '.format(i)+r'$[\%GC]$' for i in ['ERP', 'LRP', 'DP', 'S', 'TS']]
         labels.extend(['Work Absorbed '+r'$\frac{J}{kg}$', 'Net Work '+r'$\frac{J}{kg}$'])
         labels.extend(['Stiffness {}'.format(stiff)+r'$\frac{Nm}{kg \times rad}$' for stiff in stiff_labels])
         

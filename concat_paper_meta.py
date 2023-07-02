@@ -77,8 +77,8 @@ Ferra_data_red = Ferra_data[['Id', 'Age', 'AgeGroup', 'Origin','Gender', 'Body H
                              'CP', 'ERP', 'LRP', 'DP']]
 
 uniform_labels = ['ID','Age','AgeGroup', 'Origin', 'Gender', 'Height', 'Weight','Mode',
-                  'Speed','LoopDirection','initERP', 'initLRP', 'initDP', 
-                  'initS', 'initTS', 'WorkAbs', 'WorkNet',
+                  'Speed','LoopDirection','OnsetERP', 'OnsetLRP', 'OnsetDP', 
+                  'OnsetS', 'OnsetTS', 'WorkAbs', 'WorkNet',
                   'CP', 'ERP', 'LRP', 'DP']
 Ferra_data_red.columns = uniform_labels
 
@@ -119,10 +119,12 @@ Fukuchi_data_red.columns = uniform_labels
 # =============================================================================
 
 concat_data = pd.concat([Fukuchi_data_red, Ferra_data_red])
-concat_data.to_csv('ConcatDatasets/DatasetPaper.csv')
+#Renaming labels
+concat_data.rename({"Speed": "Speed Range"})
 #Replacing some values
-concat_data['Gender'] = concat_data['Gender'].replace('M', 'Males')
-concat_data['Gender'] = concat_data['Gender'].replace('F', 'Females')
+concat_data['Gender'] = concat_data['Gender'].replace('M', 'Male')
+concat_data['Gender'] = concat_data['Gender'].replace('F', 'Female')
+concat_data.to_csv('ConcatDatasets/DatasetPaper.csv')
 vels = ['VS','S','C','F','VF']
 groups = ['Children', 'YoungAdults', 'Adults', 'Elderly']
 #Ordenating subgroups in a dict

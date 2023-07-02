@@ -6,17 +6,16 @@ Created on Monday June 7th
 @author: enprietop
 """
 
-from DJSFunctions import extract_preprocess_data, ankle_DJS
-from plot_dynamics import plot_ankle_DJS
 import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 from scipy import stats
 from utilities_QS import multi_idx, create_df, best_hyper, change_labels
 import itertools as it
 from itertools import permutations
+
+
 
 # stats
 import researchpy as rp
@@ -45,9 +44,10 @@ sns.set_style("whitegrid")
 
 class obt_box_plot:
     def __init__(self, dep_vars, formal_labels, nrows=3, ncols=3, figsize=(12, 12),
-                 wspace=0.3, left_space=0.1, labels_take=np.r_[:4, 5:11]):
+                 wspace=0.3, left_space=0.1, labels_take=np.r_[:4, 5:11], font_size=14):
         self.ncols = ncols
         self.nrows = nrows
+        self.font_size = font_size
         self.fig1, self.axes = plt.subplots(nrows, ncols, figsize=figsize)
         self.fig1.tight_layout()
         self.fig1.subplots_adjust(wspace=wspace, left=left_space)
@@ -59,24 +59,22 @@ class obt_box_plot:
         self.hue_order = [] 
 
     def plot_boxplot(self, varx,  dataset, xlabel, hue='Speed', order=None,
-                     hue_order=["VS", 'S', 'C', 'F', 'VF'], legend_pos=4, rot=0):
+                     hue_order=["VS", 'S', 'C', 'F', 'VF'], rot=0):
         self.hue = hue
         self.hue_order = hue_order
         for num,  self.ax in enumerate(np.ravel(self.axes)):
             if num < (self.nrows * self.ncols) - 1:
                 sns.boxplot(x=varx, y=self.deps_mod_[num], hue=self.hue,
                             data=dataset, ax=self.ax, hue_order=hue_order, order=order)
-                self.ax.set_ylabel(self.labels_mod_[num])
-                if num != legend_pos:
-                    self.ax.get_legend().remove()
-                else:
-                    self.ax.legend(loc='lower right')
-                self.ax.set_xlabel(xlabel)
-                if rot != 0:
-                    plt.setp(self.ax.get_xticklabels(), rotation=rot)
+                self.ax.set_ylabel(self.labels_mod_[num], fontsize = self.font_size)
+                self.ax.get_legend().remove()
+                self.ax.set_xlabel(xlabel, fontsize = self.font_size)
+                plt.setp(self.ax.get_xticklabels(), rotation=rot, fontsize=self.font_size)
             else:
                 continue
-
+        # add legend
+        handles, labels = self.ax.get_legend_handles_labels()
+        self.fig1.legend(handles, labels, ncol=1, loc='lower right', bbox_to_anchor=(0.89, 0.095))
         return 
     
     def annotate_(self):
@@ -375,18 +373,21 @@ formal_labels.extend(['Stiffness {}'.format(
 
 if __plots:
     # Plotting the overground vs treadmill boxplots
-    mode_class = obt_box_plot(dep_vars, formal_labels,
-                              nrows=4, ncols=3, labels_take=np.r_[:11])
-    mode_class.plot_boxplot("Mode", dataset=concat_QS, xlabel="Walking mode")
-    mode_class.save_fig("stats_diff_mode_speed.pdf")
+    # mode_class = obt_box_plot(dep_vars, formal_labels,
+    #                           nrows=4, ncols=3, labels_take=np.r_[:11])
+    # mode_class.plot_boxplot("Mode", dataset=concat_QS, xlabel="Walking mode")
+    # mode_class.save_fig("stats_diff_mode_speed.pdf")
 
     # Plotting the Agegroup boxplots
-    age_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
+    age_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, 
+                             labels_take= np.r_[:11], font_size=12, wspace=0.3)
     age_class.plot_boxplot("AgeGroup", dataset = concat_QS, xlabel = "Age Groups",
                             order = ["Children","YoungAdults","Adults","Elderly"], rot= 15)
-    age_class.save_fig("stats_diff_age_speed.pdf") #Change angle xlabel, try to visualize in a better way
-
+    age_class.save_fig("stats_diff_age_speed.pdf")
+    
     # Ploting the Gender comparison boxplot
-    gender_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
-    gender_class.plot_boxplot("Gender", dataset = concat_QS, xlabel = "Sex")
-    gender_class.save_fig("stats_diff_gender_speed.pdf") #Change angle xlabel
+    # gender_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
+    # gender_class.plot_boxplot("Gender", dataset = concat_QS, xlabel = "Sex")
+    # gender_class.save_fig("stats_diff_gender_speed.pdf") 
+plt.close()
+plt.clf()
