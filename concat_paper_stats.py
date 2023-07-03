@@ -347,7 +347,7 @@ groups = [['Overground', 'Treadmill'],
           ['Males', 'Females']]
 
 summary = summary.drop(["95% CI min", "95% CI max"], level=1)
-groups_label = ["Environment", "Age", "Sex"]
+groups_label = ["Environment", "Age", "Gender"]
 
 if print_tables:
     for num, subgroup in enumerate(groups):
@@ -363,12 +363,12 @@ if print_tables:
 # Building the formal math labels
 
 stiff_labels = ['CP', 'ERP', 'LRP', 'DP']
-formal_labels = ['Onset {} '.format(
-    i)+r'$[\%GC]$' for i in ['ERP', 'LRP', 'DP', 'S', 'TS']]
+formal_labels = ['{} Onset'.format(
+    i)+r' [%GC]' for i in ['ERP', 'LRP', 'DP', 'SP', 'TS']]
 formal_labels.extend(
-    ['Work Absorbed '+r'$\frac{J}{kg}$', 'Net Work '+r'$\frac{J}{kg}$'])
+    ['Work Absorbed '+r'$\mathrm{[\frac{J}{kg}]}$', 'Net Work '+r'$\mathrm{[\frac{J}{kg}]}$'])
 formal_labels.extend(['Stiffness {}'.format(
-    stiff)+r'$\frac{Nm}{kg \times rad}$' for stiff in stiff_labels])
+    stiff)+r'$\mathrm{[\frac{Nm}{kg \times rad}]}$' for stiff in stiff_labels])
 
 
 if __plots:
@@ -376,18 +376,18 @@ if __plots:
     mode_class = obt_box_plot(dep_vars, formal_labels,
                               nrows=4, ncols=3, labels_take=np.r_[:11])
     mode_class.plot_boxplot("Mode", dataset=concat_QS, xlabel="Walking mode")
-    mode_class.save_fig("Figure7BoxplotWalkingEnvironment.pdf")
+    mode_class.save_fig("Figure5BoxplotWalkingEnvironment.pdf")
 
     # Plotting the Agegroup boxplots
     age_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, 
                              labels_take= np.r_[:11], font_size=12, wspace=0.3)
     age_class.plot_boxplot("AgeGroup", dataset = concat_QS, xlabel = " ",
                             order = ["Children","YoungAdults","Adults","Elderly"], rot= 15)
-    age_class.save_fig("Figure5BoxplotAgeComparison.pdf")
+    age_class.save_fig("Figure3BoxplotAgeComparison.pdf")
     
     # Ploting the Gender comparison boxplot
     gender_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
     gender_class.plot_boxplot("Gender", dataset = concat_QS, xlabel = "Sex")
-    gender_class.save_fig("Figure6BoxplotSexComparison.pdf") 
+    gender_class.save_fig("Figure4BoxplotSexComparison.pdf") 
 plt.close()
 plt.clf()

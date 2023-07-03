@@ -359,8 +359,8 @@ if plot_fig_paper:
                      'arr_size': 13, 'left_margin': 0.25, 'DJS_linewidth': 0.2, 
                      'reg_linewidth': 1.0, 'grid': False, 'alpha_prod': 0.4,
                      'alpha_absorb': 0.1, 'text':True, 'instances':case[1], 
-                     'tp_labels' : {'':(1.4, 1.4), 'a.':(1.6,1.3), 'b.':(1.2,1.0),
-                                    'c.':(1,1.14),'d.':(1.15,1.1), 'e.':(1.5,1.1)}}
+                     'tp_labels' : {'a.':(0,0), 'b.':(1.6,1.3), 'c.':(1.2,1.0),
+                                    'd.':(1,1.14),'e.':(1.15,1.1), 'f.':(1.5,1.1)}}
         DJS_sample = plot_ankle_DJS(SD=True, save=True, plt_style='bmh', sep=False,
                               alpha=3.0, fig_size=[5,5], params=params_sample)
         fig6 = DJS_sample.plot_DJS(concat_.all_dfs_ankle,

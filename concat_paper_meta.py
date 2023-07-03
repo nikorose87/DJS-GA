@@ -78,7 +78,7 @@ Ferra_data_red = Ferra_data[['Id', 'Age', 'AgeGroup', 'Origin','Gender', 'Body H
 
 uniform_labels = ['ID','Age','AgeGroup', 'Origin', 'Gender', 'Height', 'Weight','Mode',
                   'Speed','LoopDirection','OnsetERP', 'OnsetLRP', 'OnsetDP', 
-                  'OnsetS', 'OnsetTS', 'WorkAbs', 'WorkNet',
+                  'OnsetSP', 'OnsetTS', 'WorkAbs', 'WorkNet',
                   'CP', 'ERP', 'LRP', 'DP']
 Ferra_data_red.columns = uniform_labels
 

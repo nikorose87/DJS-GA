@@ -623,7 +623,7 @@ class plot_ankle_DJS(plot_dynamic):
         self.index_second = df_.index.get_level_values(1).unique()
         self.columns_first = df_.columns.get_level_values(0).unique()
         self.columns_second = df_.columns.get_level_values(1).unique()
-        self.y_label = 'Moment '+ r'$[\frac{Nm}{kg}]$'
+        self.y_label = 'Moment '+ r'$\mathrm{[\frac{Nm}{kg}]}$'
         self.x_label = 'Angle [deg]'
         self.title = title
         if cols is None:
