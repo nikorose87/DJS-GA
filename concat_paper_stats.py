@@ -376,18 +376,18 @@ if __plots:
     mode_class = obt_box_plot(dep_vars, formal_labels,
                               nrows=4, ncols=3, labels_take=np.r_[:11])
     mode_class.plot_boxplot("Mode", dataset=concat_QS, xlabel="Walking mode")
-    mode_class.save_fig("Figure5BoxplotWalkingEnvironment.pdf")
+    mode_class.save_fig("Figure5BoxplotWalkingEnvironment.png")
 
     # Plotting the Agegroup boxplots
     age_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, 
                              labels_take= np.r_[:11], font_size=12, wspace=0.3)
     age_class.plot_boxplot("AgeGroup", dataset = concat_QS, xlabel = " ",
                             order = ["Children","YoungAdults","Adults","Elderly"], rot= 15)
-    age_class.save_fig("Figure3BoxplotAgeComparison.pdf")
+    age_class.save_fig("Figure3BoxplotAgeComparison.png")
     
     # Ploting the Gender comparison boxplot
     gender_class = obt_box_plot(dep_vars, formal_labels, nrows= 4, ncols = 3, labels_take= np.r_[:11])
     gender_class.plot_boxplot("Gender", dataset = concat_QS, xlabel = "Gender")
-    gender_class.save_fig("Figure4BoxplotSexComparison.pdf") 
+    gender_class.save_fig("Figure4BoxplotSexComparison.png") 
 plt.close()
 plt.clf()
