@@ -375,7 +375,8 @@ if __plots:
     # Plotting the overground vs treadmill boxplots
     mode_class = obt_box_plot(dep_vars, formal_labels,
                               nrows=4, ncols=3, labels_take=np.r_[:11])
-    mode_class.plot_boxplot("Mode", dataset=concat_QS, xlabel="Walking mode")
+    mode_class.plot_boxplot("Mode", dataset=concat_QS, xlabel="Walking condition",
+                            order = ["Overground", "Treadmill"])
     mode_class.save_fig("Figure5BoxplotWalkingEnvironment.png")
 
     # Plotting the Agegroup boxplots
